@@ -158,6 +158,19 @@ To use this repo, simply type
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
+## Security and Privacy
+Click the links to learn more about the given Topic.
+- **Meta-Data** :  [Meta-Data](https://github.com/ProtDos/Veilo/blob/main/Documentation/METADATA.md)
+- **Encryption** : ⚪
+- **Authentication** : ⚪
+- **Sealed Sender** : ⚪
+- **Sealed Receiver** : ⚪
+- **Peer to Peer** : ⚪
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
+---
+
 
 <!-- ROADMAP -->
 ## Roadmap
@@ -166,7 +179,7 @@ To use this repo, simply type
   - [ ] Encryption
   - [ ] Authentication
 - [ ] Sealed Messaging
-  -[ ]  Sealed Sender
+  - [ ]  Sealed Sender
   - [ ] Sealed Receiver
 - [ ] Cross Platform
   - [ ] SMS
