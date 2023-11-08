@@ -60,8 +60,6 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://github.com/ProtDos/Veilo)
-
 Revolutionize your chats with our quantum-secure app, ensuring the highest levels of privacy and security. The aim of this project is to create an app that is absolutely secure, but also very easy to use. Quantum-safe algorithms will help with this and (virtually) no metadata will be sent.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
