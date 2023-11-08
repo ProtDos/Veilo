@@ -1,0 +1,11 @@
+cryptography
+password_strength
+librosa
+plyer
+pyjnius
+rsa
+qrcode
+kivy
+kivymd
+deep_translator
+dmk
