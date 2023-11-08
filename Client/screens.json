@@ -1,0 +1,92 @@
+{
+    "auth": {
+        "import": "from baseclass.auth_screen import AuthScreen",
+        "object": "AuthScreen()",
+        "kv": "libs/uix/kv/auth_screen.kv"
+    },
+    "chat": {
+        "import": "from baseclass.chat_screen import ChatScreen",
+        "object": "ChatScreen()",
+        "kv": "libs/uix/kv/chat_screen.kv"
+    },
+    "home": {
+        "import": "from baseclass.home_screen import HomeScreen",
+        "object": "HomeScreen()",
+        "kv": "libs/uix/kv/home_screen.kv"
+    },
+    "settings": {
+        "import": "from baseclass.settings_screen import SettingsScreen",
+        "object": "SettingsScreen()",
+        "kv": "libs/uix/kv/settings_screen.kv"
+    },
+    "user_settings": {
+        "import": "from baseclass.user_settings import UserSettings",
+        "object": "UserSettings()",
+        "kv": "libs/uix/kv/user_settings.kv"
+    },
+    "select_mfa": {
+        "import": "from baseclass.select_mfa import SelectMFA",
+        "object": "SelectMFA()",
+        "kv": "libs/uix/kv/select_mfa.kv"
+    },
+    "contact_profile": {
+        "import": "from baseclass.contact_profile import ContactProfile",
+        "object": "ContactProfile()",
+        "kv": "libs/uix/kv/contact_profile.kv"
+    },
+    "pin": {
+        "import": "from baseclass.pin import Pin",
+        "object": "Pin()",
+        "kv": "libs/uix/kv/pin.kv"
+    },
+    "other": {
+        "import": "from baseclass.other import Other",
+        "object": "Other()",
+        "kv": "libs/uix/kv/other.kv"
+    },
+    "processing": {
+        "import": "from baseclass.processing import Processing",
+        "object": "Processing()",
+        "kv": "libs/uix/kv/processing.kv"
+    },
+    "export_data": {
+        "import": "from baseclass.export_data import Export",
+        "object": "Export()",
+        "kv": "libs/uix/kv/export_data.kv"
+    },
+    "account_swap": {
+        "import": "from baseclass.account_swap import Swap",
+        "object": "Swap()",
+        "kv": "libs/uix/kv/account_swap.kv"
+    },
+    "enable_2fa": {
+        "import": "from baseclass.enable_2fa import E2FA",
+        "object": "E2FA()",
+        "kv": "libs/uix/kv/enable_2fa.kv"
+    },
+    "disable_2fa": {
+        "import": "from baseclass.disable_2fa import D2FA",
+        "object": "D2FA()",
+        "kv": "libs/uix/kv/disable_2fa.kv"
+    },
+    "2fa_verify": {
+        "import": "from baseclass.twofa_verify import V2FA",
+        "object": "V2FA()",
+        "kv": "libs/uix/kv/2fa_verify.kv"
+    },
+    "startup": {
+        "import": "from baseclass.startup import Startup",
+        "object": "Startup()",
+        "kv": "libs/uix/kv/startup.kv"
+    },
+    "verify_identity": {
+        "import": "from baseclass.verify_identity import Verify",
+        "object": "Verify()",
+        "kv": "libs/uix/kv/verify_identity.kv"
+    },
+    "theming": {
+        "import": "from baseclass.theming import Theming",
+        "object": "Theming()",
+        "kv": "libs/uix/kv/theming.kv"
+    }
+}
