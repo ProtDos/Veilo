@@ -1,0 +1,122 @@
+#: import webbrowser webbrowser
+#: import get_color_from_hex kivy.utils.get_color_from_hex
+
+<Verify>
+    PBoxLayout:
+        orientation: "vertical"
+        pos_hint: {"top": 1}
+
+        PToolbar:
+            original: "Verify Security"
+            title: self.original if app.language == 'EN' else app.translate(self.original)
+            left_action_items: [["arrow-left", lambda x: root.manager.goto_previous_screen()]]
+
+        ScrollView:
+            PBoxLayout:
+                adaptive_height: True
+                padding: dp(20)
+                spacing: dp(10)
+                orientation: "vertical"
+
+                PIcon2:
+                    icon: "account_circle"
+                    pos_hint: {"center_x": .5}
+                    size_hint: None, None
+                    font_size: dp(65)
+
+                    canvas.before:
+                        Color:
+                            rgba: get_color_from_hex("#684bbf")
+                        Ellipse:
+                            size: self.size
+                            pos: self.pos
+
+                # Widget:
+                #     size_hint_y: None
+                #     height: dp(29)
+
+                PBoxLayout:
+                    adaptive_height: True
+                    orientation: "horizontal"
+                    spacing: 10
+                    size_hint_x: .7
+                    pos_hint: {"center_x": .5}
+
+                    PBoxLayout:
+                        orientation: "vertical"
+                        spacing: 2
+                        size_hint_y: .55
+
+                        PLabel:
+                            text: "0000"
+                        PLabel:
+                            text: "0000"
+                        PLabel:
+                            text: "0000"
+                        PLabel:
+                            text: "0000"
+
+                    PBoxLayout:
+                        orientation: "vertical"
+                        spacing: 2
+                        size_hint_y: .55
+
+                        PLabel:
+                            text: "0000"
+                        PLabel:
+                            text: "0000"
+                        PLabel:
+                            text: "0000"
+                        PLabel:
+                            text: "0000"
+                    PBoxLayout:
+                        orientation: "vertical"
+                        spacing: 2
+                        size_hint_y: .55
+
+                        PLabel:
+                            text: "0000"
+                        PLabel:
+                            text: "0000"
+                        PLabel:
+                            text: "0000"
+                        PLabel:
+                            text: "0000"
+
+                    PBoxLayout:
+                        orientation: "vertical"
+                        spacing: 2
+                        size_hint_y: .55
+
+                        PLabel:
+                            text: "0000"
+                        PLabel:
+                            text: "0000"
+                        PLabel:
+                            text: "0000"
+                        PLabel:
+                            text: "0000"
+
+
+                PLabel:
+                    original: "To verify that messages are\nend-to-end encrypted and authenticated, \ncompare these numbers"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    text_size: self.width, None
+                    halign: "center"
+                    adaptive_height: True
+
+                PLabel:
+                    id: okay
+                    original: "Learn more"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    text_color: get_color_from_hex("#3C7290")
+                    text_size: self.width * 0.6, None
+                    halign: "center"
+                    adaptive_height: True
+
+                    on_touch_down:
+                        root.label_press(*args)
+
+

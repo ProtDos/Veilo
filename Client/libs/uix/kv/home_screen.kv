@@ -1,0 +1,281 @@
+<HomeScreen>
+
+    PBoxLayout:
+        orientation: "vertical"
+
+
+        PBoxLayout:
+            padding: [dp(25), dp(30), dp(5), dp(0)]
+            adaptive_height: True
+
+            PLabel:
+                original: "Chats"
+                text: self.original if app.language == 'EN' else app.translate(self.original)
+                font_size: sp(40)
+                font_name: "LexendMedium"
+                adaptive_height: True
+                text_size: self.width, None
+
+            PIconButton:
+                icon: "more-vertical"
+                mode: "unstyled"
+                font_size: sp(30)
+                on_release: root.show_menu()
+
+        PBoxLayout:
+            id: labelcase
+            size_hint_y: 0 if root.text_hidden == "0" else None
+            padding: [0,] if root.text_hidden == "0" else [dp(25), dp(5), dp(5), dp(10)]
+            adaptive_height: True
+
+
+
+            PLabel:
+                id: first
+                opacity: 0
+                original: "Create a chat first"
+                text: self.original if app.language == 'EN' else app.translate(self.original)
+                font_size: sp(0) if root.text_hidden == "0" else sp(14)
+                font_name: "LexendMedium"
+                adaptive_height: True
+                text_size: (None, None) if root.text_hidden == "0" else (self.width, None)
+
+        PLabel:
+            opacity: 1 if app.refreshing else 0
+            adaptive_height: True
+            font_name: "LexendMedium"
+            halign: "center"
+            size_hint_y: None
+            text_size: (None, None) if not app.refreshing else (self.width, None)
+            font_size: sp(0) if not app.refreshing else sp(14)
+            pos_hint: {'top': 1}
+            text: 'Refreshing…' if app.refreshing else 'Pull down to refresh'
+
+        RecycleView:
+            id: aaaa
+            data: root.chats
+            viewclass: "ChatListItem"
+
+            do_scroll_y: True
+            do_scroll_x: False
+            on_scroll_y: app.check_pull_refresh(self, grid)
+
+            RecycleBoxLayout:
+                id: grid
+                padding: dp(10)
+                spacing: dp(10)
+                orientation: "vertical"
+                size_hint_y: None
+                height: self.minimum_size[1]
+                default_size_hint: 1, None
+                default_size: None, None
+
+    AnchorLayout:
+        id: lll
+        anchor_x: "right"
+        anchor_y: "bottom"
+        padding: dp(25)
+
+        PIconButton:
+            id: create
+            icon: "plus"
+            on_release:
+                root.ann()
+                root.create()
+
+            font_size: dp(32)
+
+            canvas.before:
+                PushMatrix
+                Rotate:
+                    angle: root.angle
+                    # axis: 0, 0, 1
+                    origin: create.center
+            canvas.after:
+                PopMatrix
+
+
+<MenuDialogContent>
+    orientation: "vertical"
+    adaptive_height: True
+    padding: dp(15)
+    spacing: dp(10)
+
+    ListItem:
+        original: "Account"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+
+        original2: "Account details"
+        secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
+
+        icon: "user"
+        on_release:
+            root.parent.parent.dismiss()
+            app.root.set_current("user_settings")
+
+    ListItem:
+        original: "Settings"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+
+        original2: "App preferences"
+        secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
+
+        icon: "tool"
+        on_release:
+            root.parent.parent.dismiss()
+            app.root.set_current("settings")
+
+    ListItem:
+        original: "Other"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+
+        original2: "Others..."
+        secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
+
+        icon: "more-horizontal"
+        on_release:
+            root.parent.parent.dismiss()
+            app.root.set_current("other")
+
+<CreatePopup>
+    lbl: lbl
+    id: yea
+    adaptive_height: True
+    padding: dp(20)
+    spacing: dp(10)
+    orientation: "vertical"
+
+    Widget:
+        size_hint_y: None
+        height: dp(10)
+
+
+    PBoxLayout:
+        orientation: "horizontal"
+
+        PLabel:
+            id: lbl
+            text: "New"
+            font_size: dp(20)
+            font_name: "LexendMedium"
+            pos_hint: {"center_x": .2, "center_y": .9}
+            adaptive_height: True
+
+
+        PIconButton2:
+            id: i_btn
+            icon: "account_group"  # "people_outline"
+            mode: "unstyled"
+            pos_hint: {"center_x": .9, "center_y": .9}
+            font_size: dp(20)
+
+            on_release:
+                root.switch()
+
+    Widget:
+        size_hint_y: None
+        height: dp(15)
+
+    PLabel:
+        id: lbl_1
+        original: "Enter in your recipient to start a new chat."
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+        text_size: self.width, None
+        halign: "center"
+        adaptive_height: True
+
+    PBoxLayout:
+        orientation: "vertical"
+        adaptive_height: True
+        spacing: dp(15)
+        pos_hint: {"center_x": .5, "center_y": .4}
+
+        PTextField:
+            id: recipient
+            text: ""
+            original: "Recipient"
+            hint_text: self.original if app.language == 'EN' else app.translate(self.original)
+
+            size_hint: .7, None
+            height: dp(40)
+            pos_hint: {"center_x": .5}
+
+            translate_x: 0
+            translate_y: 0
+            scale_x: 1
+            scale_y: 1
+            rotate: 0
+
+            canvas.before:
+                PushMatrix
+                Translate:
+                    x: self.translate_x or 0
+                    y: self.translate_y or 0
+
+                Rotate:
+                    origin: self.center
+                    angle: self.rotate or 0
+
+                Scale:
+                    origin: self.center
+                    x: self.scale_x or 1
+                    y: self.scale_y or 1
+            canvas.after:
+                PopMatrix
+
+
+        Widget:
+            size_hint_y: None
+            height: dp(25)
+
+        PBoxLayout:
+            adaptive_size: True
+            pos_hint: {"center_x": .5}
+            spacing: dp(10)
+
+            PButton:
+                id: create
+                original: "Create"
+                text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                on_release:
+                    root.custom_release(recipient.text)
+                    # app.create_chat(recipient.text)
+
+<UserInfoDialogContent>
+    id: popup2
+    orientation: "vertical"
+    adaptive_height: True
+    padding: dp(10)
+    spacing: dp(10)
+
+    PBoxLayout:
+        orientation: "vertical"
+        adaptive_height: True
+
+        FitImage:
+            source: root.image
+            radius: [dp(10),]
+            size_hint: None, None
+            size: dp(140), dp(140)
+            pos_hint: {"center_x": .5}
+
+        PLabel:
+            text: root.title
+            halign: "center"
+            font_name: "LexendMedium"
+            adaptive_height: True
+            font_size: sp(30)
+
+        PLabel:
+            text: root.about
+            halign: "center"
+            font_name: "LexendLight"
+            font_size: sp(16)
+            adaptive_height: True
+            text_size: self.width, None
+
+    PButton:
+        text: "Delete"
+        on_release:
+            app.delete_user(root.title)

@@ -1,0 +1,105 @@
+<Other>
+
+    PBoxLayout:
+        orientation: "vertical"
+        pos_hint: {"top": 1}
+
+        PToolbar:
+            original: "Other"
+            title: self.original if app.language == 'EN' else app.translate(self.original)
+
+            left_action_items: [["arrow-left", lambda x: root.manager.goto_previous_screen()]]
+
+        ScrollView:
+
+            PBoxLayout:
+                orientation: "vertical"
+                padding: dp(10)
+                spacing: dp(10)
+                adaptive_height: True
+
+                ListItem2:
+                    text: "Delete Account"
+                    secondary_text: "Delete the app and all traces"
+                    icon: "delete"
+                    on_release:
+                        root.delete_account()
+
+                ListItem2:
+                    text: "Export Data"
+                    secondary_text: "Export the data we have (nothing)"
+                    icon: "database_export"
+                    on_release:
+                        root.export_data()
+
+                ListItem2:
+                    text: "Transfer"
+                    secondary_text: "Transfer your account to your new device"
+                    icon: "file_swap"
+                    on_release:
+                        root.swap()
+
+                ListItem2:
+                    text: "Quarantine"
+                    secondary_text: "Lockdown the whole app"
+                    icon: "notifications_none"
+                    on_release:
+                        root.quarantine()
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(20)
+
+                PLabel:
+                    text: "Powered by [b]CodingLive[/b]"
+                    font_name: "LexendMedium"
+                    markup: True
+                    adaptive_height: True
+
+
+<AccountDeletion>
+    orientation: "vertical"
+    adaptive_height: True
+    padding: dp(10)
+    spacing: dp(10)
+
+    PLabel:
+        original: "HOLD UP"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+
+        halign: "center"
+        font_name: "LexendMedium"
+        adaptive_height: True
+        font_size: sp(30)
+
+    PLabel:
+        original: "Are you sure you want to delete your account? This action is irreversible."
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+
+        halign: "center"
+        font_name: "LexendLight"
+        font_size: sp(15)
+        adaptive_height: True
+        text_size: self.width, None
+
+    PBoxLayout:
+        adaptive_size: True
+        pos_hint: {"center_x": .5}
+        spacing: dp(10)
+
+        PButton:
+            id: otth
+            original: "Cancel"
+            text: self.original if app.language == 'EN' else app.translate(self.original)
+            on_release:
+                app.dismiss2()
+
+        PButton:
+            original: "Yep!"
+            text: self.original if app.language == 'EN' else app.translate(self.original)
+            mode: "outlined"
+            size_hint_x: None
+            width: otth.width
+            on_release:
+                app.dismiss2()
+                app.delete_account()

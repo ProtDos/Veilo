@@ -1,0 +1,289 @@
+#: import webbrowser webbrowser
+#: import get_color_from_hex kivy.utils.get_color_from_hex
+
+<ChatScreen>
+
+    PBoxLayout:
+        orientation: "vertical"
+
+        PToolbar_Chat:
+            title: root.title
+            left_action_items: [["arrow-left", lambda x: app.close_chat()]]
+            right_action_items: [["phone_lock", lambda x: app.nothing()]]
+            on_title_press: root.show_user_info()
+
+        ScrollView:
+            id: chat_rv
+
+            PBoxLayout:
+                id: box
+                padding: dp(10)
+                spacing: dp(15)
+                orientation: "vertical"
+                size_hint_y: None
+                height: self.minimum_size[1]
+                default_size_hint: .8, None
+                default_size: None, None
+
+        PBoxLayout:
+            md_bg_color: 245/255, 245/255, 245/255, 1
+            # size_hint_y: .11
+            size_hint: 1, None
+            padding: [dp(10), 0]
+            spacing: dp(10)
+
+            PBoxLayout:
+                size_hint: .7, .4
+                # height: dp(40)
+                pos_hint: {"center_x": .45, "center_y": .3}
+                canvas:
+                    Color:
+                        rgb: (238/255, 238/255, 238/255, 1)
+                    RoundedRectangle:
+                        size: self.size
+                        pos: self.pos
+                        radius: [23, 23, 23, 23]
+
+                PIconButton2:
+                    mode: "unstyled"
+                    icon: "emoji_emotions"
+
+                    size_hint: None, None
+                    font_size: "20sp"
+
+                    text_color: get_color_from_hex("#808080")
+
+                    pos_hint: {"center_x": .2, "center_y": .5}
+
+                    on_release:
+                        print("ye")
+
+                TextInput:
+                    id: field
+                    original: "Type something..."
+                    hint_text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    size_hint: 1, None
+                    pos_hint: {"center_x": -.1, "center_y": .5}
+                    font_size: "12sp"
+                    height: self.minimum_height
+                    multiline: False
+                    cursor_color: 1, 170/255, 23/255, 1
+                    cursor_width: "2sp"
+                    foreground_color: get_color_from_hex("#808080")  # "34218e"
+                    background_color: 0, 0, 0, 0
+                    # padding: 15
+                    font_name: "Lexend"
+
+                PIconButton2:
+                    icon: "attachment"
+
+                    mode: "unstyled"
+
+                    size_hint: None, None
+                    font_size: "20sp"
+
+                    text_color: get_color_from_hex("#808080")
+
+                    pos_hint: {"center_x": .75, "center_y": .5}
+
+                    on_release:
+                        app.file_chooser()
+
+
+
+            PIconButton2:
+                icon: "send_lock"
+
+                # mode: "unstyled"
+
+                size_hint: None, None
+                font_size: "20sp"
+
+                y: field.y
+
+                pos_hint: {"center_x": .9}
+
+                on_release:
+                    root.send(field.text.strip())
+                    # app.send_message(field.text.strip())
+
+
+
+    PIconButton:
+        icon: "chevrons-down"
+        font_size: sp(20)
+        mode: "outlined"
+        pos_hint: {"center_x": .9}
+        y: dp(55)+(self.width)
+        opacity: 1 if self.show else 0
+        disabled: False if self.show else True
+        on_release: root.scroll_to_bottom() 
+        show:
+            True if chat_rv.height < box.height and chat_rv.scroll_y > 0 \
+            else False
+
+
+<UserInfoDialogContent>
+    orientation: "vertical"
+    adaptive_height: True
+    padding: dp(10)
+    spacing: dp(10)
+
+    FitImage:
+        source: root.image
+        radius: [dp(10),]
+        size_hint: None, None
+        size: dp(140), dp(140)
+        pos_hint: {"center_x": .5}
+
+    PLabel:
+        text: root.title
+        halign: "center"
+        font_name: "LexendMedium"
+        adaptive_height: True
+        font_size: sp(30)
+
+    PLabel:
+        text: root.about
+        halign: "center"
+        font_name: "LexendLight"
+        font_size: sp(16)
+        adaptive_height: True
+        text_size: self.width, None
+
+<VerifyFail>
+    orientation: "vertical"
+    adaptive_height: True
+    padding: dp(10)
+    spacing: dp(10)
+
+    canvas:
+        Color:
+            rgba: 1, 0, 0, 1
+        Line:
+            rectangle: self.x, self.y, self.width, self.height
+            width: 1
+            cap: "round"
+
+    PLabel:
+        original: "Warning!"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+
+        halign: "center"
+        font_name: "LexendMedium"
+        adaptive_height: True
+        font_size: sp(30)
+
+    PLabel:
+        original: "This message:"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+
+        halign: "center"
+        font_name: "LexendLight"
+        font_size: sp(15)
+        adaptive_height: True
+        text_size: self.width, None
+
+    PLabel:
+        text: root.message
+        halign: "center"
+        font_name: "LexendLight"
+        font_size: sp(13)
+        adaptive_height: True
+        text_size: self.width, None
+        color: 0.5, 0.5, 0.5, 1
+
+    PLabel:
+        original: "couldn't be verified. Proceed with caution."
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+        halign: "center"
+        font_name: "LexendLight"
+        font_size: sp(15)
+        adaptive_height: True
+        text_size: self.width, None
+
+<LinkVerify>
+    otth: otth
+
+    orientation: "vertical"
+    adaptive_height: True
+    padding: dp(10)
+    spacing: dp(10)
+
+    PLabel:
+        original: "HOLD UP"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+
+        halign: "center"
+        font_name: "LexendMedium"
+        adaptive_height: True
+        font_size: sp(30)
+
+    PLabel:
+        original: "This link will take you to"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+
+        halign: "center"
+        font_name: "LexendLight"
+        font_size: sp(15)
+        adaptive_height: True
+        text_size: self.width, None
+
+    PLabel:
+        text: root.message
+        halign: "center"
+        font_name: "LexendLight"
+        font_size: sp(13)
+        adaptive_height: True
+        text_size: self.width, None
+        color: 0.5, 0.5, 0.5, 1
+
+    PLabel:
+        original: "Are you sure you want to go there?"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+        halign: "center"
+        font_name: "LexendLight"
+        font_size: sp(15)
+        adaptive_height: True
+        text_size: self.width, None
+
+    PBoxLayout:
+        adaptive_size: True
+        pos_hint: {"center_x": .5}
+        spacing: dp(10)
+
+        PButton:
+            id: otth
+            original: "Cancel"
+            text: self.original if app.language == 'EN' else app.translate(self.original)
+            on_release:
+                app.dismiss()
+
+        PButton:
+            original: "Yep!"
+            text: self.original if app.language == 'EN' else app.translate(self.original)
+            mode: "outlined"
+            size_hint_x: None
+            width: otth.width
+            on_release:
+                app.dismiss()
+                webbrowser.open(root.message)
+
+<Preview>
+    orientation: "vertical"
+    adaptive_height: True
+    padding: dp(10)
+    spacing: dp(10)
+
+    on_release:
+        app.download_file(root.source_)
+
+    FitImage:
+        source: root.source_
+        radius: [dp(10),]
+        size_hint: None, None
+        width: dp(root.size_[0])
+        height: dp(root.size_[1])
+        pos_hint: {"center_x": .5}
+

@@ -1,0 +1,449 @@
+#: import webbrowser webbrowser
+#: import get_color_from_hex kivy.utils.get_color_from_hex
+#: import App kivy.app.App
+
+<UserSettings>
+
+    PBoxLayout:
+        orientation: "vertical"
+        pos_hint: {"top": 1}
+
+        PToolbar:
+            title: "User Settings"
+            left_action_items: [["arrow-left", lambda x: root.manager.goto_previous_screen()]]
+
+        ScrollView:
+
+            PBoxLayout:
+                orientation: "vertical"
+                padding: dp(10)
+                spacing: dp(10)
+                adaptive_height: True
+
+                FitImage:
+                    id: profile_img
+                    source: root.avatar_path
+                    radius: [dp(10),]
+                    size_hint: None, None
+                    size: dp(140), dp(140)
+                    pos_hint: {"center_x": .5}
+                    on_touch_down:
+                        app.change_avatar(*args)
+
+                PLabel:
+                    text: root.unasme
+                    font_name: "LexendMedium"
+                    adaptive_height: True
+                    halign: "center"
+                    font_size: "18sp"
+
+                ListItem2:
+                    text: "Username"
+                    secondary_text: "Change your username"
+                    icon: "account_circle"
+                    on_release: root.change_username()
+
+                ListItem2:
+                    text: "Password"
+                    secondary_text: "Change your password"
+                    icon: "lock"
+                    on_release: root.change_password()
+
+                ListItem2:
+                    id: fa
+                    text: "2FA"
+                    secondary_text: "Disable 2FA for account" if app.has_2fa else "Enable 2FA for account"
+                    icon: "two_factor_authentication"
+                    on_release:
+                        # root.open_2fa()
+                        app.enable_2fa()
+
+                ListItem2:
+                    text: "Bio"
+                    secondary_text: "Change your about-me"
+                    icon: "sync"
+                    on_release: root.change_abt()
+
+                ListItem2:
+                    text: "Breaches"
+                    secondary_text: "Detect breaches and get notified"
+                    icon: "alert"
+                    on_release: root.breach()
+
+                ListItem2:
+                    text: "Help"
+                    secondary_text: "Contact support"
+                    icon: "help"
+                    on_release:
+                        webbrowser.open("https://veilo.protdos.com/help")
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(20)
+
+                PLabel:
+                    text: "Powered by [b]CodingLive[/b]"
+                    font_name: "LexendMedium"
+                    markup: True
+                    adaptive_height: True
+
+
+<AboutDialogContent>
+    adaptive_height: True
+    padding: dp(20)
+    spacing: dp(10)
+    orientation: "vertical"
+
+    PLabel:
+        text: "About"
+        font_size: dp(20)
+        font_name: "LexendMedium"
+        adaptive_height: True
+
+    PLabel:
+        text: "Velox is the world's first public chat app that uses quantum proof end-to-end encryption to ensure message & user safety."
+        text_size: self.width, None
+        halign: "center"
+        adaptive_height: True
+
+<PasswordChange>
+    id: yea
+    adaptive_height: True
+    padding: dp(20)
+    spacing: dp(10)
+    orientation: "vertical"
+
+    PLabel:
+        text: "Password Change"
+        font_size: dp(20)
+        font_name: "LexendMedium"
+        adaptive_height: True
+
+    PLabel:
+        text: "Enter your old and new password"
+        text_size: self.width, None
+        halign: "center"
+        adaptive_height: True
+
+    Widget:
+        size_hint_y: None
+        height: dp(25)
+
+    PBoxLayout:
+        orientation: "vertical"
+        adaptive_height: True
+        spacing: dp(15)
+        pos_hint: {"center_x": .5, "center_y": .4}
+
+        PTextField:
+            id: old
+            text: ""
+            password: True
+            hint_text: "Old Password"
+            size_hint: .7, None
+            height: dp(40)
+            pos_hint: {"center_x": .5}
+
+            translate_x: 0
+            translate_y: 0
+            scale_x: 1
+            scale_y: 1
+            rotate: 0
+
+            canvas.before:
+                PushMatrix
+                Translate:
+                    x: self.translate_x or 0
+                    y: self.translate_y or 0
+
+                Rotate:
+                    origin: self.center
+                    angle: self.rotate or 0
+
+                Scale:
+                    origin: self.center
+                    x: self.scale_x or 1
+                    y: self.scale_y or 1
+            canvas.after:
+                PopMatrix
+
+        PTextField:
+            id: new
+            text: ""
+            password: True
+            hint_text: "New Password"
+            size_hint: .7, None
+            height: dp(40)
+            pos_hint: {"center_x": .5}
+
+            translate_x: 0
+            translate_y: 0
+            scale_x: 1
+            scale_y: 1
+            rotate: 0
+
+            canvas.before:
+                PushMatrix
+                Translate:
+                    x: self.translate_x or 0
+                    y: self.translate_y or 0
+
+                Rotate:
+                    origin: self.center
+                    angle: self.rotate or 0
+
+                Scale:
+                    origin: self.center
+                    x: self.scale_x or 1
+                    y: self.scale_y or 1
+            canvas.after:
+                PopMatrix
+
+
+        Widget:
+            size_hint_y: None
+            height: dp(25)
+
+        PBoxLayout:
+            adaptive_size: True
+            pos_hint: {"center_x": .5}
+            spacing: dp(10)
+
+            PButton:
+                text: "Change"
+                on_release:
+                    app.change_password(old.text, new.text)
+
+<UsernameChange>
+    id: yea2
+    adaptive_height: True
+    padding: dp(20)
+    spacing: dp(10)
+    orientation: "vertical"
+
+    PLabel:
+        text: "Username Change"
+        font_size: dp(20)
+        font_name: "LexendMedium"
+        adaptive_height: True
+
+    PLabel:
+        text: "Choose a new username"
+        text_size: self.width, None
+        halign: "center"
+        adaptive_height: True
+
+    Widget:
+        size_hint_y: None
+        height: dp(25)
+
+    PBoxLayout:
+        orientation: "vertical"
+        adaptive_height: True
+        spacing: dp(15)
+        pos_hint: {"center_x": .5, "center_y": .4}
+
+        PTextField:
+            id: old
+            text: ""
+            hint_text: "Username"
+            size_hint: .7, None
+            height: dp(40)
+            pos_hint: {"center_x": .5}
+
+            translate_x: 0
+            translate_y: 0
+            scale_x: 1
+            scale_y: 1
+            rotate: 0
+
+            canvas.before:
+                PushMatrix
+                Translate:
+                    x: self.translate_x or 0
+                    y: self.translate_y or 0
+
+                Rotate:
+                    origin: self.center
+                    angle: self.rotate or 0
+
+                Scale:
+                    origin: self.center
+                    x: self.scale_x or 1
+                    y: self.scale_y or 1
+            canvas.after:
+                PopMatrix
+
+        Widget:
+            size_hint_y: None
+            height: dp(25)
+
+        PBoxLayout:
+            adaptive_size: True
+            pos_hint: {"center_x": .5}
+            spacing: dp(10)
+
+            PButton:
+                text: "Change"
+                on_release:
+                    app.change_username(old.text)
+
+<BreachDialog>
+    adaptive_height: True
+    padding: dp(20)
+    spacing: dp(10)
+    orientation: "vertical"
+
+    PLabel:
+        text: "Breach Detection"
+        font_size: dp(20)
+        font_name: "LexendMedium"
+        adaptive_height: True
+
+    PLabel:
+        text: "Enter your email/phone and detect breaches."
+        text_size: self.width, None
+        halign: "center"
+        adaptive_height: True
+
+    PLabel:
+        id: okay
+        text: "Learn more"
+        text_color: get_color_from_hex("#3C7290")
+        text_size: self.width * 0.6, None
+        halign: "center"
+        adaptive_height: True
+
+        on_touch_down:
+            root.a(*args)
+
+    Widget:
+        size_hint_y: None
+        height: dp(20)
+
+    PBoxLayout:
+        orientation: "vertical"
+        adaptive_height: True
+        spacing: dp(15)
+        pos_hint: {"center_x": .5, "center_y": .4}
+
+        PTextField:
+            id: email
+            text: ""
+            hint_text: "Email"
+            size_hint: .7, None
+            height: dp(40)
+            pos_hint: {"center_x": .5}
+
+            translate_x: 0
+            translate_y: 0
+            scale_x: 1
+            scale_y: 1
+            rotate: 0
+
+            canvas.before:
+                PushMatrix
+                Translate:
+                    x: self.translate_x or 0
+                    y: self.translate_y or 0
+
+                Rotate:
+                    origin: self.center
+                    angle: self.rotate or 0
+
+                Scale:
+                    origin: self.center
+                    x: self.scale_x or 1
+                    y: self.scale_y or 1
+            canvas.after:
+                PopMatrix
+
+        PTextField:
+            id: phone
+            text: ""
+            hint_text: "Phone Number"
+            size_hint: .7, None
+            height: dp(40)
+            pos_hint: {"center_x": .5}
+
+            translate_x: 0
+            translate_y: 0
+            scale_x: 1
+            scale_y: 1
+            rotate: 0
+
+            canvas.before:
+                PushMatrix
+                Translate:
+                    x: self.translate_x or 0
+                    y: self.translate_y or 0
+
+                Rotate:
+                    origin: self.center
+                    angle: self.rotate or 0
+
+                Scale:
+                    origin: self.center
+                    x: self.scale_x or 1
+                    y: self.scale_y or 1
+            canvas.after:
+                PopMatrix
+
+
+        Widget:
+            size_hint_y: None
+            height: dp(25)
+
+        PBoxLayout:
+            adaptive_size: True
+            pos_hint: {"center_x": .5}
+            spacing: dp(10)
+
+            PButton:
+                text: "Detect Breaches"
+                on_release:
+                    app.detect_breaches(email.text, phone.text)
+
+<TwoFA>
+    adaptive_height: True
+    padding: dp(20)
+    spacing: dp(10)
+    orientation: "vertical"
+
+    PLabel:
+        text: "2FA settings"
+        font_size: dp(20)
+        font_name: "LexendMedium"
+        adaptive_height: True
+
+    PLabel:
+        text: "Enable / disable 2fa for your account"
+        text_size: self.width, None
+        halign: "center"
+        adaptive_height: True
+
+    PLabel:
+        id: okay
+        text: "Learn more"
+        text_color: get_color_from_hex("#3C7290")
+        text_size: self.width * 0.6, None
+        halign: "center"
+        adaptive_height: True
+
+        on_touch_down:
+            root.a(*args)
+
+    Widget:
+        size_hint_y: None
+        height: dp(20)
+
+
+    PBoxLayout:
+        adaptive_size: True
+        pos_hint: {"center_x": .5}
+        spacing: dp(10)
+
+        PButton:
+            text: "Enable"
+            on_release:
+                root.enable_2fa()

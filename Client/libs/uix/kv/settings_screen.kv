@@ -1,0 +1,392 @@
+#: import webbrowser webbrowser
+#: import get_color_from_hex kivy.utils.get_color_from_hex
+
+<SettingsScreen>
+
+    PBoxLayout:
+        orientation: "vertical"
+        pos_hint: {"top": 1}
+
+        PToolbar:
+            original: "Settings"
+            title: self.original if app.language == 'EN' else app.translate(self.original)
+            left_action_items: [["arrow-left", lambda x: root.manager.goto_previous_screen()]]
+
+        ScrollView:
+
+            PBoxLayout:
+                orientation: "vertical"
+                padding: dp(10)
+                spacing: dp(10)
+                adaptive_height: True
+
+                ListItem:
+                    original: "Toggle theme"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    original2: "Switches theme between Dark and Light"
+                    secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
+
+                    icon: root.theme_icon
+                    on_release: root.change_theme()
+
+                ListItem2:
+                    original: "Color Picker"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    original2: "Choose your default colors"
+                    secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
+
+                    icon: "palette_swatch"
+                    on_release:
+                        app.root.set_current("theming")
+
+                ListItem2:
+                    original: "Change Language"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    original2: "Change your app language"
+                    secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
+
+                    icon: "translate"
+                    on_release:
+                        # app.switch_language()
+                        root.change_language()
+
+                ListItem2:
+                    original: "Notifications"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    original2: "Change notification settings"
+                    secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
+
+                    icon: "notifications_none"
+                    on_release:
+                        root.change_notify()
+
+                ListItem2:
+                    original: "Logins"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    original2: "Monitor and control logins"
+                    secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
+
+                    icon: "login"
+                    on_release:
+                        root.view_logins()
+
+                ListItem2:
+                    original: "Security"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    original2: "Change security settings"
+                    secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
+
+                    icon: "shield_lock"
+                    on_release:
+                        root.change_security()
+
+                ListItem2:
+                    original: "Connection"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    original2: "Use a VPN or configure TOR connections"
+                    secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
+
+                    icon: "vpn_lock"
+                    on_release:
+                        root.change_vpn()
+
+                ListItem2:
+                    original: "Bug Report"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    original2: "Found a bug or improvement?"
+                    secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
+
+                    icon: "bug_report"
+                    on_release:
+                        root.open_bugreport()
+
+                ListItem:
+                    original: "About"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    original2: "Learn more about Velox"
+                    secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
+
+                    icon: "alert-circle"
+                    on_release: root.open_about()
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(20)
+
+                PLabel:
+                    id: test
+                    original: "Powered by [b]CodingLive[/b]"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+                    font_name: "LexendMedium"
+                    markup: True
+                    adaptive_height: True
+
+
+<AboutDialogContent_Screen>
+    adaptive_height: True
+    padding: dp(20)
+    spacing: dp(10)
+    orientation: "vertical"
+
+    PLabel:
+        original: "About"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+
+        font_size: dp(20)
+        font_name: "LexendMedium"
+        adaptive_height: True
+
+    PLabel:
+        original: "Veilo is the world's first public chat app that uses quantum proof end-to-end encryption to ensure message & user safety."
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+
+        text_size: self.width, None
+        halign: "center"
+        adaptive_height: True
+
+
+<LanguageDialogContent>
+    adaptive_height: True
+    padding: dp(20)
+    spacing: dp(10)
+    orientation: "vertical"
+
+    PLabel:
+        original: "App Language"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+
+        font_size: dp(20)
+        font_name: "LexendMedium"
+        adaptive_height: True
+
+
+    PBoxLayout:
+        orientation: "vertical"
+        adaptive_height: True
+        spacing: dp(15)
+
+        ScrollView:
+            size_hint: 1, None
+            size: 500, 300
+            PBoxLayout:
+                orientation: "vertical"
+                padding: dp(10)
+                spacing: dp(10)
+
+                size_hint_y: None
+                height: self.minimum_height
+
+
+                ListItem2:
+                    id: device_lang
+                    text: "English"
+                    secondary_text: "(device's language)"
+                    icon: "checkbox_marked_circle" if root.is_marked(self.text) else "checkbox_blank_circle"
+
+                    size_hint_y: None
+
+                    on_release:
+                        app.done_change()
+                        app.switch_language(self.text)
+
+                ListItem2:
+                    id: en
+                    text: "English"
+                    secondary_text: "English"
+                    icon: "checkbox_marked_circle" if root.is_marked(self.secondary_text) else "checkbox_blank_circle"
+
+                    size_hint_y: None
+
+                    on_release:
+                        app.done_change()
+                        app.switch_language(self.secondary_text)
+
+                ListItem2:
+                    id: de
+                    text: "Deutsch"
+                    secondary_text: "German"
+                    icon: "checkbox_marked_circle" if root.is_marked(self.secondary_text) else "checkbox_blank_circle"
+
+                    size_hint_y: None
+
+                    on_release:
+                        app.done_change()
+                        app.switch_language(self.secondary_text)
+
+                ListItem2:
+                    id: es
+                    text: "Español"
+                    secondary_text: "Spanish"
+                    icon: "checkbox_marked_circle" if root.is_marked(self.secondary_text) else "checkbox_blank_circle"
+
+                    size_hint_y: None
+
+                    on_release:
+                        app.done_change()
+                        app.switch_language(self.secondary_text)
+
+                ListItem2:
+                    id: fr
+                    text: "Français"
+                    secondary_text: "French"
+                    icon: "checkbox_marked_circle" if root.is_marked(self.secondary_text) else "checkbox_blank_circle"
+
+                    size_hint_y: None
+
+                    on_release:
+                        app.done_change()
+                        app.switch_language(self.secondary_text)
+
+                ListItem2:
+                    id: pt
+                    text: "Português"
+                    secondary_text: "Portuguese"
+                    icon: "checkbox_marked_circle" if root.is_marked(self.secondary_text) else "checkbox_blank_circle"
+
+                    size_hint_y: None
+
+                    on_release:
+                        app.done_change()
+                        app.switch_language(self.secondary_text)
+
+                ListItem2:
+                    id: id
+                    text: "bahasa Indonesia"
+                    secondary_text: "Indonesian"
+                    icon: "checkbox_marked_circle" if root.is_marked(self.secondary_text) else "checkbox_blank_circle"
+
+                    size_hint_y: None
+
+                    on_release:
+                        app.done_change()
+                        app.switch_language(self.secondary_text)
+
+                ListItem2:
+                    id: sw
+                    text: "kiswahili"
+                    secondary_text: "Swahili"
+                    icon: "checkbox_marked_circle" if root.is_marked(self.secondary_text) else "checkbox_blank_circle"
+
+                    size_hint_y: None
+
+                    on_release:
+                        app.done_change()
+                        app.switch_language(self.secondary_text)
+
+                        
+
+    #Widget:
+    #    adaptive_height: True
+    #    size_hint_y: None
+    #    height: dp(50)
+
+<LoginDialogContent>
+    PBoxLayout:
+        id: okay
+        orientation: "horizontal"
+        adaptive_size: True
+        pos_hint: {"center_x": .5, "center_y": .5}
+        spacing: 20
+        padding: 20
+
+
+        PLabel:
+            adaptive_size: True
+            text: "test"
+
+        PSwitch:
+            adaptive_size: True
+            on_release:
+                root.okay()
+                self.slide()
+
+
+<BugReport>
+    id: yea
+    adaptive_height: True
+    padding: dp(20)
+    spacing: dp(10)
+    orientation: "vertical"
+
+    PLabel:
+        original: "Bug Report"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+
+        font_size: dp(20)
+        font_name: "LexendMedium"
+        adaptive_height: True
+
+    PLabel:
+        original: "Please report any bugs and/or improvements"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+
+        text_size: self.width, None
+        halign: "center"
+        adaptive_height: True
+
+    Widget:
+        size_hint_y: None
+        height: dp(25)
+
+    PBoxLayout:
+        orientation: "vertical"
+        adaptive_height: True
+        spacing: dp(15)
+        pos_hint: {"center_x": .5, "center_y": .4}
+
+        PTextFieldBig:
+            id: report
+            text: ""
+            hint_text: "Description"
+            size_hint: .7, None
+            height: dp(200)
+            pos_hint: {"center_x": .5}
+
+            translate_x: 0
+            translate_y: 0
+            scale_x: 1
+            scale_y: 1
+            rotate: 0
+
+            canvas.before:
+                PushMatrix
+                Translate:
+                    x: self.translate_x or 0
+                    y: self.translate_y or 0
+
+                Rotate:
+                    origin: self.center
+                    angle: self.rotate or 0
+
+                Scale:
+                    origin: self.center
+                    x: self.scale_x or 1
+                    y: self.scale_y or 1
+            canvas.after:
+                PopMatrix
+
+
+        Widget:
+            size_hint_y: None
+            height: dp(25)
+
+        PBoxLayout:
+            adaptive_size: True
+            pos_hint: {"center_x": .5}
+            spacing: dp(10)
+
+            PButton:
+                original: "Report"
+                text: self.original if app.language == 'EN' else app.translate(self.original)
+                on_release:
+                    app.report_bug(report.text)
+

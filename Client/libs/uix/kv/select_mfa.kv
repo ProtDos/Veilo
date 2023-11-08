@@ -1,0 +1,93 @@
+<SelectMFA>
+    MDBoxLayout:
+        orientation:'vertical'
+
+        PToolbar:
+            original: "Security"
+            title: self.original if app.language == 'EN' else app.translate(self.original)
+            right_action_items: [["skip_next", lambda x: root.manager.skip_choose_security()]]
+
+        PLabel:
+            original: "Choose security grade:"
+            text: self.original if app.language == 'EN' else app.translate(self.original)
+            font_name: "LexendMedium"
+            font_size: dp(15)
+            adaptive_height: True
+        
+        MDBoxLayout:
+            size_hint_y:0.4
+            padding:10
+            spacing:10
+
+            MDBoxLayout:
+                orientation:'vertical'
+
+                canvas.before:
+                    Color:
+                        rgba: 0.5, 0.5, 0.5, 0.5
+                    Line:
+                        rounded_rectangle: (self.x, self.y, self.width, self.height, 20, 20)
+                        width: 1
+
+
+                radius:20
+                md_bg_color: root.colorcolor
+                padding: 20
+
+
+                PIconButton2:
+                    icon: "checkbox_blank_circle"  # "checkbox_marked_circle
+                    mode: "unstyled"
+
+
+                PLabel:
+                    text: "test"
+
+
+                FitImage:
+
+                    source:"images/calendar.png"
+
+            MDBoxLayout:
+                orientation:'vertical'
+                radius:20
+                md_bg_color: root.colorcolor
+
+                padding:20
+
+                PLabel:
+                    text: "test"
+
+                FitImage:
+                    source:"images/food.png"
+
+        MDBoxLayout:
+            size_hint_y:0.4
+            padding:10
+            spacing:10
+
+            MDBoxLayout:
+                orientation:'vertical'
+                radius:20
+                md_bg_color: root.colorcolor
+                padding:20
+
+                PLabel:
+                    text: "test"
+
+                FitImage:
+                    source:"images/calendar.png"
+
+            MDBoxLayout:
+                orientation:'vertical'
+                radius:20
+                md_bg_color: root.colorcolor
+    
+                padding:20
+
+                PLabel:
+                    text: "test"
+    
+                FitImage:
+                    source:"images/food.png"
+

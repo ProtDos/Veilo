@@ -1,0 +1,184 @@
+#: import webbrowser webbrowser
+#: import get_color_from_hex kivy.utils.get_color_from_hex
+
+<ContactProfile>
+
+    PBoxLayout:
+        orientation: "vertical"
+        pos_hint: {"top": 1}
+
+        PToolbar:
+            id: md_menu
+            title: ""
+            left_action_items: [["arrow-left", lambda x: root.manager.goto_previous_screen()]]
+            right_action_items: [["dots_vertical", lambda x: root.open_menu()]]
+
+
+        ScrollView:
+            PBoxLayout:
+                orientation: "vertical"
+                padding: dp(10)
+                spacing: dp(10)
+                adaptive_height: True
+
+                FitImage:
+                    source: root.image
+                    radius: [dp(10),]
+                    size_hint: None, None
+                    size: dp(140), dp(140)
+                    pos_hint: {"center_x": .5}
+
+                PLabel:
+                    text: root.title
+                    halign: "center"
+                    font_name: "LexendMedium"
+                    adaptive_height: True
+                    font_size: sp(30)
+
+                PLabel:
+                    text: root.about
+                    halign: "center"
+                    font_name: "LexendLight"
+                    font_size: sp(16)
+                    adaptive_height: True
+                    text_size: self.width, None
+
+                ListItem2:
+                    original: "Verify Identity"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    original2: f"Verify the identity of {root.title} by scanning a qr code"
+                    secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
+
+                    icon: "account_lock"
+                    on_release:
+                        root.verify()
+
+                #ListItem2:
+                #    original: "Encryption"
+                #    text: self.original if app.language == 'EN' else app.translate(self.original)
+#
+                #    original2: "View Encryption Methods"
+                #    secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
+#
+                #    icon: "lock"
+                #    on_release:
+                #        root.change_notify()
+
+                ListItem2:
+                    id: all_p2p_label
+                    original: "Allow P2P"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    original2: "True"
+                    secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
+
+                    icon: "people_outline"
+                    on_release:
+                        root.change_p2p()
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(10)
+
+                ListItem2:
+                    id: block_screen
+                    original: "Block User"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    bg_color: get_color_from_hex("#CB0922")
+                    original2: "Stop user from messaging you"
+                    secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
+
+                    icon: "chat_remove"
+                    on_release:
+                        app.block_user()
+
+<IdentityCheck>
+    adaptive_height: True
+    padding: dp(20)
+    spacing: dp(10)
+    orientation: "vertical"
+
+
+    PToolbar:
+        original: "Verify"
+        title: self.original if app.language == 'EN' else app.translate(self.original)
+
+        left_action_items: [["arrow-left", lambda x: app.root.goto_previous_screen()]]
+        right_action_items: [["content_copy", lambda x: root.settings()]]
+
+    Widget:
+        size_hint_y: None
+        height: dp(10)
+
+    PBoxLayout:
+        adaptive_height: True
+        canvas:
+            Color:
+                rgba: 1, 0, 0, 1
+            Ellipse:
+                pos: self.center_x - min(self.width, self.height) / 2, self.center_y - min(self.width, self.height) / 2
+                size: min(self.width, self.height) * 1.2, min(self.width, self.height) * 1.2
+        Image:
+            source: root.image  # Replace this with the path to your image file
+            size_hint: None, None
+            size: min(self.width, self.height), min(self.width, self.height)
+            pos: self.center_x - min(self.width, self.height) / 2, self.center_y - min(self.width, self.height) / 2
+
+    Widget:
+        size_hint_y: None
+        height: dp(25)
+
+    PLabel:
+        original: "To verify that messages are \nend-to-end encrypted, scan this \ncode on their device. You can also \ncompare the signature above instead."
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+
+        adaptive_height: True
+
+        font_name: "Lexend"
+        halign: "center"
+        font_size: dp(15)
+
+
+<Settings>
+    adaptive_height: True
+    padding: dp(10)
+    spacing: dp(10)
+    orientation: "vertical"
+
+    canvas:
+        Color:
+            rgba: get_color_from_hex("#ffffff")
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [5,]
+
+    PBoxLayout:
+        orientation: "vertical"
+        padding: dp(10)
+        spacing: dp(10)
+
+        size_hint_y: None
+        height: self.minimum_height
+
+
+        ListItem2:
+            id: device_lang
+            text: "Remove"
+            secondary_text: "Remove user from contacts"
+            icon: "delete"
+
+            size_hint_y: None
+
+            on_release:
+                app.delete_user(root.title)
+
+        ListItem2:
+            id: en
+            text: "Test"
+            secondary_text: "Test"
+            icon: "checkbox_marked_circle"
+
+            size_hint_y: None

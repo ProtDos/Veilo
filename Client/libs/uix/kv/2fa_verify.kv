@@ -1,0 +1,281 @@
+#: import get_color_from_hex kivy.utils.get_color_from_hex
+
+<V2FA>
+    PButton:
+        mode: "custom"
+        text: "Back"
+        pos_hint: {"center_x": .15, "center_y": .95}
+        font_name: "MPoppins"
+        font_size: "13sp"
+        text_color: rgba(111, 111, 111, 255)
+        on_release:
+            app.root.set_current("auth", side="right")
+
+    PIconButton2:
+        icon: "lock"
+        size_hint: (None, None)
+        pos_hint: {"center_x": .5, "center_y": .8}
+
+    PLabel:
+        pos_hint: {"center_x": .5, "center_y": .7}
+        original: "Enter 4 digit 2FA code to continue"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+        font_name: "LexendRegular"
+        color: 0.5, 0.5, 0.5, 1
+
+    PBoxLayout:
+        adaptive_height: True
+        pos_hint: {"center_x": .5, "center_y": .6}
+        spacing: 4
+
+        padding: [15, 0, 0, 0]
+
+        halign: "center"
+        valign: "middle"
+
+        PBoxLayout:
+            spacing: 2
+
+            TextInput:
+                id: v1
+                disabled: False
+                multiline: False
+                input_type: "number"
+                input_filter: "int"
+                background_color: 0, 0, 0, 0
+
+                halign: "center"  # Center the text horizontally
+                valign: "middle"
+                padding_y: [12, 0]
+
+                font_name: "LexendMedium"
+                font_size: dp(20)
+
+                size_hint: None, None
+                width: 50
+                height: 50
+
+                canvas.before:
+                    Color:
+                        rgba: 0.7, 0.7, 0.7, 1
+                    Line:
+                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15, 15)
+                        width: 1
+
+                on_text:
+                    root.v1(self.text)
+
+            TextInput:
+                id: v2
+                disabled: True
+                multiline: False
+                input_type: "number"
+                input_filter: "int"
+                background_color: 0, 0, 0, 0
+
+                halign: "center"  # Center the text horizontally
+                valign: "middle"
+                padding_y: [12, 0]
+
+                font_name: "LexendMedium"
+                font_size: dp(20)
+
+                size_hint: None, None
+                width: 50
+                height: 50
+
+                canvas.before:
+                    Color:
+                        rgba: 0.7, 0.7, 0.7, 1
+                    Line:
+                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15, 15)
+                        width: 1
+
+                on_text:
+                    root.v2(self.text)
+
+            TextInput:
+                id: v3
+                disabled: True
+                multiline: False
+                input_type: "number"
+                input_filter: "int"
+                background_color: 0, 0, 0, 0
+
+                halign: "center"  # Center the text horizontally
+                valign: "middle"
+                padding_y: [12, 0]
+
+                font_name: "LexendMedium"
+                font_size: dp(20)
+
+                size_hint: None, None
+                width: 50
+                height: 50
+
+                canvas.before:
+                    Color:
+                        rgba: 0.7, 0.7, 0.7, 1
+                    Line:
+                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15, 15)
+                        width: 1
+
+                on_text:
+                    root.v3(self.text)
+
+        PBoxLayout:
+            spacing: 2
+
+            TextInput:
+                id: v4
+                disabled: True
+                multiline: False
+                input_type: "number"
+                input_filter: "int"
+                background_color: 0, 0, 0, 0
+
+                halign: "center"  # Center the text horizontally
+                valign: "middle"
+                padding_y: [12, 0]
+
+                font_name: "LexendMedium"
+                font_size: dp(20)
+
+                size_hint: None, None
+                width: 50
+                height: 50
+
+                canvas.before:
+                    Color:
+                        rgba: 0.7, 0.7, 0.7, 1
+                    Line:
+                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15, 15)
+                        width: 1
+
+                on_text:
+                    root.v4(self.text)
+
+            TextInput:
+                id: v5
+                disabled: True
+                multiline: False
+                input_type: "number"
+                input_filter: "int"
+                background_color: 0, 0, 0, 0
+
+                halign: "center"  # Center the text horizontally
+                valign: "middle"
+                padding_y: [12, 0]
+
+                font_name: "LexendMedium"
+                font_size: dp(20)
+
+                size_hint: None, None
+                width: 50
+                height: 50
+
+                canvas.before:
+                    Color:
+                        rgba: 0.7, 0.7, 0.7, 1
+                    Line:
+                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15, 15)
+                        width: 1
+
+                on_text:
+                    root.v5(self.text)
+
+            TextInput:
+                id: v6
+                disabled: True
+                multiline: False
+                input_type: "number"
+                input_filter: "int"
+                background_color: 0, 0, 0, 0
+
+                halign: "center"  # Center the text horizontally
+                valign: "middle"
+                padding_y: [12, 0]
+
+                font_name: "LexendMedium"
+                font_size: dp(20)
+
+                size_hint: None, None
+                width: 50
+                height: 50
+
+                canvas.before:
+                    Color:
+                        rgba: 0.7, 0.7, 0.7, 1
+                    Line:
+                        rounded_rectangle: (self.x, self.y, self.width, self.height, 15, 15)
+                        width: 1
+
+                on_text:
+                    root.v6(self.text)
+
+
+    PButton:
+        id: verify_button
+        disabled: True
+        original: "Verify"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+        pos_hint: {"center_x": .5, "center_y": .45}
+        font_name: "LexendMedium"
+        font_size: dp(20)
+        size_hint_x: .7
+        size_hint_y: .07
+
+        on_release:
+            root.verify_pin()
+
+    PLabel:
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex("#D2D2D2")
+
+        original: "[ref=myref]Lost?[/ref]"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+        markup: True
+        pos_hint: {"center_x": .5, "center_y": .37}
+        font_name: "Lexend"
+        font_size: dp(12)
+
+        on_ref_press:
+            root.open_sad()
+
+
+
+<LostDialog>
+    adaptive_height: True
+    padding: dp(20)
+    spacing: dp(10)
+    orientation: "vertical"
+
+    PLabel:
+        text: "Lost 2FA"
+        font_size: dp(20)
+        font_name: "LexendMedium"
+        adaptive_height: True
+
+    PLabel:
+        original: "Sadly, we can't restore your 2FA in at any way. Please create a new account to continue chatting. We are very sorry."
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+        text_size: self.width, None
+        halign: "center"
+        adaptive_height: True
+
+    Widget:
+        size_hint_y: None
+        height: dp(25)
+
+    PBoxLayout:
+        adaptive_size: True
+        pos_hint: {"center_x": .5}
+        spacing: dp(10)
+
+        PButton:
+            original: "Return"
+            text: self.original if app.language == 'EN' else app.translate(self.original)
+
+            on_release:
+                app.root.set_current("auth")

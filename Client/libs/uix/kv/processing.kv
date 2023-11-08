@@ -1,0 +1,35 @@
+#: import webbrowser webbrowser
+#: import get_color_from_hex kivy.utils.get_color_from_hex
+
+<Processing>
+    canvas:
+        Color:
+            rgba: get_color_from_hex("#FFFFFF")
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    PBoxLayout:
+        orientation: "vertical"
+        size_hint: (None, None)
+        size: (250, 250)
+        pos_hint: {'center_x': 0.5, 'center_y': 0.65}
+
+        Image:
+            source: "images/stand_by_2.png"
+            size: (250, 250)
+            pos_hint: {"center_x": .5, "center_y": .65}
+
+
+    PLabel:
+        id: animate_text
+        text: "Processing"
+        font_name: "LexendMedium"
+        font_size: dp(24)
+        pos_hint: {"center_x": .5, "center_y": .4}
+    PLabel:
+        text: "Please wait."
+        font_name: "LexendMedium"
+        font_size: dp(16)
+        text_color: get_color_from_hex("#B2B2B2")
+        pos_hint: {"center_x": .5, "center_y": .35}
+

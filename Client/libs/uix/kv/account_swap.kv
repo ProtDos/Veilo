@@ -1,0 +1,83 @@
+#: import webbrowser webbrowser
+#: import get_color_from_hex kivy.utils.get_color_from_hex
+
+<Swap>
+    PBoxLayout:
+        orientation: "vertical"
+        pos_hint: {"top": 1}
+
+        PToolbar:
+            # title: "Data"
+            left_action_items: [["arrow-left", lambda x: root.manager.goto_previous_screen()]]
+
+        ScrollView:
+            PBoxLayout:
+                adaptive_height: True
+                padding: dp(40)
+                spacing: dp(10)
+                orientation: "vertical"
+
+                PIcon2:
+                    icon: "file_swap"
+                    pos_hint: {"center_x": .5}
+                    size_hint: None, None
+                    font_size: dp(65)
+
+                    canvas.before:
+                        Color:
+                            rgba: get_color_from_hex("#684bbf")
+                        Ellipse:
+                            size: self.size
+                            pos: self.pos
+
+                PLabel:
+                    original: "Transfer Account"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    font_size: dp(20)
+                    font_name: "LexendMedium"
+                    adaptive_height: True
+
+                PLabel:
+                    original: "1. Download Velox on your new Android device"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    text_size: self.width, None
+                    adaptive_height: True
+
+                PLabel:
+                    original: "2. Tap on 'Restore account'"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    text_size: self.width, None
+                    adaptive_height: True
+
+                PLabel:
+                    original: "3. Follow the shown steps"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    text_size: self.width, None
+                    adaptive_height: True
+
+                Widget:
+                    size_hint_y: None
+                    height: dp(60)
+
+                PButton:
+                    original: "Continue"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    size_hint: 1, None
+                    pos_hint: {"center_x": .5}
+
+                    on_release:
+                        root.cont()
+
+                PLabel:
+                    original: "During the transfer no third party \ncan gain access to any of your data"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    # text_size: self.width, None
+                    font_size: dp(11)
+                    # font_name: "LexendMedium"
+                    adaptive_height: True

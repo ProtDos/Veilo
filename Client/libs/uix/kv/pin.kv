@@ -1,0 +1,174 @@
+#: import get_color_from_hex kivy.utils.get_color_from_hex
+
+<Pin>
+    PIconButton2:
+        icon: "lock"
+        size_hint: (None, None)
+        pos_hint: {"center_x": .5, "center_y": .8}
+
+    PLabel:
+        pos_hint: {"center_x": .5, "center_y": .7}
+        original: "Enter 4 digit code to access the app"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+
+        font_name: "LexendRegular"
+        color: 0.5, 0.5, 0.5, 1
+
+    PBoxLayout:
+        adaptive_height: True
+        pos_hint: {"center_x": .5, "center_y": .6}
+        spacing: 10
+
+        padding: [50, 0, 0, 0]
+
+        halign: "center"
+        valign: "middle"
+
+        TextInput:
+            id: v1
+            disabled: False
+            multiline: False
+            input_type: "number"
+            input_filter: "int"
+            background_color: 0, 0, 0, 0
+
+            halign: "center"  # Center the text horizontally
+            valign: "middle"
+            padding_y: [12, 0]
+
+            font_name: "LexendMedium"
+            font_size: dp(20)
+
+            size_hint: None, None
+            width: 50
+            height: 50
+
+            canvas.before:
+                Color:
+                    rgba: 0.7, 0.7, 0.7, 1
+                Line:
+                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15, 15)
+                    width: 1
+
+            on_text:
+                root.v1(self.text)
+
+        TextInput:
+            id: v2
+            disabled: True
+            multiline: False
+            input_type: "number"
+            input_filter: "int"
+            background_color: 0, 0, 0, 0
+
+            halign: "center"  # Center the text horizontally
+            valign: "middle"
+            padding_y: [12, 0]
+
+            font_name: "LexendMedium"
+            font_size: dp(20)
+
+            size_hint: None, None
+            width: 50
+            height: 50
+
+            canvas.before:
+                Color:
+                    rgba: 0.7, 0.7, 0.7, 1
+                Line:
+                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15, 15)
+                    width: 1
+
+            on_text:
+                root.v2(self.text)
+
+        TextInput:
+            id: v3
+            disabled: True
+            multiline: False
+            input_type: "number"
+            input_filter: "int"
+            background_color: 0, 0, 0, 0
+
+            halign: "center"  # Center the text horizontally
+            valign: "middle"
+            padding_y: [12, 0]
+
+            font_name: "LexendMedium"
+            font_size: dp(20)
+
+            size_hint: None, None
+            width: 50
+            height: 50
+
+            canvas.before:
+                Color:
+                    rgba: 0.7, 0.7, 0.7, 1
+                Line:
+                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15, 15)
+                    width: 1
+
+            on_text:
+                root.v3(self.text)
+
+        TextInput:
+            id: v4
+            disabled: True
+            multiline: False
+            input_type: "number"
+            input_filter: "int"
+            background_color: 0, 0, 0, 0
+
+            halign: "center"  # Center the text horizontally
+            valign: "middle"
+            padding_y: [12, 0]
+
+            font_name: "LexendMedium"
+            font_size: dp(20)
+
+            size_hint: None, None
+            width: 50
+            height: 50
+
+            canvas.before:
+                Color:
+                    rgba: 0.7, 0.7, 0.7, 1
+                Line:
+                    rounded_rectangle: (self.x, self.y, self.width, self.height, 15, 15)
+                    width: 1
+
+            on_text:
+                root.v4(self.text)
+
+
+    PButton:
+        id: verify_button
+        disabled: True
+        original: "Verify"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+        pos_hint: {"center_x": .5, "center_y": .45}
+        font_name: "LexendMedium"
+        font_size: dp(20)
+        size_hint_x: .7
+        size_hint_y: .07
+
+        on_release:
+            root.verify_pin()
+
+    PLabel:
+        canvas.before:
+            Color:
+                rgba: get_color_from_hex("#D2D2D2")
+
+        original: "[ref=myref]Forgot?[/ref]"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+        markup: True
+        pos_hint: {"center_x": .5, "center_y": .37}
+        font_name: "Lexend"
+        font_size: dp(12)
+
+        on_ref_press:
+            root.open_sad()
+
+
+

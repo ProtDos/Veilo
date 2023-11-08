@@ -1,0 +1,269 @@
+#: import get_color_from_hex kivy.utils.get_color_from_hex
+
+<MainColors>
+    radius: [5]
+    elevation: 2
+    md_bg_color: 1, 1, 1, 1
+    background_normal: ''
+    size_hint: None, None
+    size: "50dp", "50dp"
+    on_release:
+        # root.main_color = self.md_bg_color
+        app.update_main(self.md_bg_color)
+        print(str(self.md_bg_color))
+
+<SecondaryColors>
+    radius: [5]
+    elevation: 2
+    md_bg_color: 1, 1, 1, 1
+    background_normal: ''
+    size_hint: None, None
+    size: "50dp", "50dp"
+    on_release:
+        # root.secondary_color = self.md_bg_color
+        app.update_sec(self.md_bg_color)
+        print(str(self.md_bg_color))
+
+<Theming>
+    PBoxLayout:
+        orientation: "vertical"
+        pos_hint: {"top": 1}
+
+        PToolbar:
+            original: "Color Picker"
+            title: self.original if app.language == 'EN' else app.translate(self.original)
+
+            left_action_items: [["arrow-left", lambda x: root.manager.goto_previous_screen()]]
+            right_action_items: [["colorize", lambda x: root.open_picker()]]
+
+        GridLayout:
+            rows: 2
+            columns: 1
+            height: self.minimum_height
+            width: self.minimum_width
+            spacing: 0
+
+            MDFloatLayout:
+                # md_bg_color: 1, 1, 1, 1
+                MDRelativeLayout:
+                    size_hint: None, None
+                    # height: 110
+                    width: 320
+                    pos_hint: {"center_x": .5, "top": .95}
+                    Label:
+                        text: "Main Colors"
+                        text_size: self.width, self.height
+                        valign: "top"
+                        padding_x: "8dp"
+                        color: rgba(24, 25, 30)
+                        font_size: "30dp"
+                        font_name: "BPoppins"
+
+                    ScrollView:
+                        do_scroll_x: True
+                        do_scroll_y: False
+                        # pos_hint: {"left": 1, "bottom": 1}
+                        pos_hint: {"top": .55}
+
+                        scroll_type: ['content']
+                        smooth_scroll_end: 10
+                        bar_color: rgba(255, 255, 255, 0)
+                        bar_inactive_color: rgba(255, 255, 255, 0)
+
+                        GridLayout:
+                            rows: 1
+
+                            size_hint_y: None
+                            height: self.minimum_height
+                            size_hint_x: None
+                            width: self.minimum_width
+
+                            # width: 300
+
+                            padding: [10, 0, 0, 10]
+                            spacing: "10dp"
+
+                            MainColors:
+                                id: pickk2
+                                md_bg_color: root.picker_color
+
+                            MainColors:
+                                id: main_color1
+                                md_bg_color: root.theme_cls.primary_color
+
+                            MainColors:
+                                id: main_color2
+                                md_bg_color: root.theme_cls.primary_light
+
+                            MainColors:
+                                id: main_color3
+                                md_bg_color: root.theme_cls.primary_dark
+
+                            MainColors:
+                                id: main_color4
+                                md_bg_color: get_color_from_hex("#0d1b2a")
+
+                            MainColors:
+                                id: main_color5
+                                md_bg_color: get_color_from_hex("#1b263b")
+
+                            MainColors:
+                                id: main_color6
+                                md_bg_color: get_color_from_hex("#415a77")
+
+                            MainColors:
+                                id: main_color7
+                                md_bg_color: get_color_from_hex("#778da9")
+
+                            MainColors:
+                                id: main_color8
+                                md_bg_color: get_color_from_hex("#e0e1dd")
+
+
+                MDRelativeLayout:
+                    size_hint: None, None
+                    # height: 110
+                    width: 320
+                    pos_hint: {"center_x": .5, "top": .55}
+                    Label:
+                        text: "Second Colors"
+                        text_size: self.width, self.height
+                        valign: "top"
+                        padding_x: "8dp"
+                        color: rgba(24, 25, 30)
+                        font_size: "28dp"
+                        font_name: "BPoppins"
+
+                    ScrollView:
+                        do_scroll_x: True
+                        do_scroll_y: False
+                        # pos_hint: {"left": 1, "bottom": 1}
+                        pos_hint: {"top": .55}
+
+                        scroll_type: ['content']
+                        smooth_scroll_end: 10
+                        bar_color: rgba(255, 255, 255, 0)
+                        bar_inactive_color: rgba(255, 255, 255, 0)
+
+                        MDGridLayout:
+                            rows: 1
+
+                            size_hint_y: None
+                            height: self.minimum_height
+                            size_hint_x: None
+                            width: self.minimum_width
+
+                            pos_hint: {"left": 1, "bottom": 1}
+                            padding: [10, 0, 0, 10]
+                            spacing: "10dp"
+
+                            SecondaryColors:
+                                id: pickk
+                                md_bg_color: root.picker_color
+
+                            SecondaryColors:
+                                id: main_color_2_1
+                                md_bg_color: root.theme_cls.primary_color
+
+                            SecondaryColors:
+                                id: main_color_2_2
+                                md_bg_color: root.theme_cls.primary_light
+
+                            SecondaryColors:
+                                id: main_color_2_3
+                                md_bg_color: root.theme_cls.primary_dark
+
+                            SecondaryColors:
+                                id: main_color_2_4
+                                md_bg_color: get_color_from_hex("#0d1b2a")
+
+                            SecondaryColors:
+                                id: main_color_2_5
+                                md_bg_color: get_color_from_hex("#1b263b")
+
+                            SecondaryColors:
+                                id: main_color_2_6
+                                md_bg_color: get_color_from_hex("#415a77")
+
+                            SecondaryColors:
+                                id: main_color_2_7
+                                md_bg_color: get_color_from_hex("#778da9")
+
+                            SecondaryColors:
+                                id: main_color_2_8
+                                md_bg_color: get_color_from_hex("#e0e1dd")
+
+
+
+
+            MDFloatLayout:
+                ScrollView:
+                    id: chat_rv
+
+                    PBoxLayout:
+                        id: box
+                        padding: dp(10)
+                        spacing: dp(15)
+                        orientation: "vertical"
+                        size_hint_y: None
+                        height: self.minimum_size[1]
+                        default_size_hint: .8, None
+                        default_size: None, None
+
+        PButton:
+            text: "Set Theme"
+            font_name: "BPoppins"
+            font_size: "15sp"
+            size_hint: None, None
+
+            height: 50
+            # width: self.texture_size[0] + dp(30)
+            pos_hint: {"center_x": .5, "center_y": .1}
+            # background_color: 1, 1, 1, 1
+
+            on_release:
+                print("ttest")
+                root.set()
+
+
+
+            canvas.before:
+                Color:
+                    rgb: rgba(24, 25, 30)
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.x, self.y
+                    radius: [10]
+        Widget:
+            size_hint_y: None
+            height: dp(10)
+
+<PickerDialog>
+    size_hint_y: None
+    adaptive_height: True
+    height: 170
+
+    id: aaa
+
+    canvas:
+        Color:
+            rgba: root.background_color
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [dp(7), dp(7), dp(7), dp(7)]
+
+    FloatLayout:
+        orientation: "horizontal"
+
+        CustomColorWheel:
+            id: colory
+            size_hint: None, None
+            size: 150, 150
+            pos_hint: {"center_x": .5, "center_y": .5}
+            # pos_hint: {"left": .5}
+            # x: aaa.width / 2
+            on_press:
+                root.update_picker()
+                app.update_picker(self.color)
+

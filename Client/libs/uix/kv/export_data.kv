@@ -1,0 +1,119 @@
+#: import webbrowser webbrowser
+#: import get_color_from_hex kivy.utils.get_color_from_hex
+
+<Export>
+    PBoxLayout:
+        orientation: "vertical"
+        pos_hint: {"top": 1}
+
+        PToolbar:
+            original: "Data"
+            title: self.original if app.language == 'EN' else app.translate(self.original)
+            left_action_items: [["arrow-left", lambda x: root.manager.goto_previous_screen()]]
+
+        ScrollView:
+            PBoxLayout:
+                adaptive_height: True
+                padding: dp(20)
+                spacing: dp(10)
+                orientation: "vertical"
+
+                PIcon2:
+                    icon: "account_circle"
+                    pos_hint: {"center_x": .5}
+                    size_hint: None, None
+                    font_size: dp(65)
+
+                    canvas.before:
+                        Color:
+                            rgba: get_color_from_hex("#684bbf")
+                        Ellipse:
+                            size: self.size
+                            pos: self.pos
+
+                PLabel:
+                    original: "Your account data"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+                    font_size: dp(20)
+                    font_name: "LexendMedium"
+                    adaptive_height: True
+
+                PLabel:
+                    original: "Export a report of your account data\nThis report does not include any messages"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    text_size: self.width, None
+                    halign: "center"
+                    adaptive_height: True
+
+                PLabel:
+                    id: okay
+                    original: "Learn more"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    text_color: get_color_from_hex("#3C7290")
+                    text_size: self.width * 0.6, None
+                    halign: "center"
+                    adaptive_height: True
+
+                    on_touch_down:
+                        root.label_press(*args)
+
+
+                PBoxLayout:
+                    orientation: "vertical"
+                    adaptive_height: True
+                    spacing: dp(15)
+                    pos_hint: {"center_x": .5, "center_y": .4}
+
+                    ListItem2:
+                        id: txt
+                        original: "Export as TXT"
+                        text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                        secondary_text:
+                        original2: "Easy-to-read text file"
+                        secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
+
+                        icon: "checkbox_marked_circle"
+
+                        size_hint_y: None
+
+                        on_release:
+                            root.select(self.text)
+
+                    ListItem2:
+                        id: json
+                        original: "Export as JSON"
+                        text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                        original2: "Machine-readable file"
+                        secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
+
+                        icon: "checkbox_blank_circle"
+
+                        size_hint_y: None
+
+                        on_release:
+                            root.select(self.text)
+
+
+                    PButton:
+                        original: "Export"
+                        text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                        size_hint: 0.75, None
+                        pos_hint: {"center_x": .5}
+                        # size: self.width, self.height
+
+                        on_release:
+                            root.export()
+
+                PLabel:
+                    original: "Your report is generated only at the time of export and \nis only saved locally."
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    # text_size: self.width, None
+                    font_size: dp(11)
+                    # font_name: "LexendMedium"
+                    adaptive_height: True

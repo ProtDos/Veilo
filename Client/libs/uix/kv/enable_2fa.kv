@@ -1,0 +1,48 @@
+#: import webbrowser webbrowser
+#: import get_color_from_hex kivy.utils.get_color_from_hex
+
+<E2FA>
+    PLabel:
+        original: "Scan this qr code"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+        font_size: dp(20)
+        font_name: "LexendMedium"
+        # text_color: get_color_from_hex("#B2B2B2")
+        pos_hint: {"center_x": .5, "center_y": .9}
+
+    PBoxLayout:
+        orientation: "vertical"
+        size_hint: (None, None)
+        size: (250, 250)
+        pos_hint: {'center_x': 0.5, 'center_y': 0.6}
+
+        Image:
+            source: "2fa_code.png"
+            size: (250, 250)
+            pos_hint: {"center_x": .5, "center_y": .6}
+
+
+    PButton:
+        original: "Proceed"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+        pos_hint: {"center_x": .5, "center_y": .2}
+        font_name: "LexendMedium"
+        font_size: dp(20)
+        size_hint_x: .7
+        size_hint_y: .07
+
+        on_release:
+            root.done()
+
+    PButton:
+        original: "Return"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+        pos_hint: {"center_x": .5, "center_y": .1}
+        font_name: "LexendMedium"
+        font_size: dp(20)
+        size_hint_x: .7
+        size_hint_y: .07
+
+        on_release:
+            app.set_current("home")
+
