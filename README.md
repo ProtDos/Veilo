@@ -8,10 +8,10 @@
 <br />
 <div align="center">
   <a href="https://github.com/ProtDos/Veilo">
-    <img src="https://github.com/ProtDos/Veilo/assets/69071809/f65e14e9-164e-423e-9cc5-40d91cb9e17" alt="Logo" width="80" height="80">
+    <img src="https://github.com/ProtDos/Veilo/assets/69071809/ffc7b679-f834-4e1d-a036-c80e9e9cf7f8" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">ScammerPayback</h3>
+  <h3 align="center">Veilo</h3>
 
   <p align="center">
     Revolutionize your chats with our quantum-secure app, ensuring the highest levels of privacy and security.
