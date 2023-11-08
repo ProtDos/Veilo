@@ -96,6 +96,12 @@ _Will be updated_
   <img src="https://github.com/ProtDos/Veilo/assets/69071809/32af12b2-e823-4887-8c8e-b920d10f9a9e">
 </div>
 
+---
+
+## Features
+Here is a list of all the features that my Chat App has:
+- Encrypted Messaging
+
 <!-- GETTING STARTED -->
 ## Getting Started
 
@@ -160,13 +166,6 @@ To use this repo, simply type
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Add Main-Site
-- [x] Add other links
-- [ ] Make it look more real
-- [ ] Get more user information
-- [ ] Multi-language Support
-    - [ ] German
-    - [ ] Other
 - [x] Post Quantum
   - [ ] Encryption
   - [ ] Authentication
@@ -180,6 +179,12 @@ To use this repo, simply type
 - [ ] maybe BlockChain technology
 - [ ] storage management & backups
 - [ ] online version -> Don't download App
+- [ ] Calling
+  - [ ] Audio
+  - [ ] Video
+- [ ] Support for more languages
+  - [ ] & detect them automatically
+  
 
 See the [open issues](https://github.com/Veilo/issues) for a full list of proposed features (and known issues).
 
