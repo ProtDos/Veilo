@@ -185,6 +185,7 @@ Click the links to learn more about the given Topic.
   - [ ] Signal
   - [ ] Telegram
 - [ ] maybe BlockChain technology
+- [ ] Group Chats
 - [ ] storage management & backups
 - [ ] online version -> Don't download App
 - [ ] Calling
