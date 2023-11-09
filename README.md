@@ -259,11 +259,11 @@ Project Link: https://github.com/ProtDos/ScammerPayback
 [React.js]: https://img.shields.io/badge/python-3670A0?logo=python&logoColor=ffdd54&style=for-the-badge
 [React-url]: https://reactjs.org/
 
-[Vue.js]: https://img.shields.io/badge/flask-flask?style=for-the-badge&logo=python&logoColor=ffdd54
+[Vue.js]: https://img.shields.io/badge/flask-3670a0?style=for-the-badge&logo=python&logoColor=ffdd54
 [Vue-url]: https://vuejs.org/
 
-[Angular.io]: https://img.shields.io/badge/kivy-kivy?style=for-the-badge&logo=python&logoColor=ffdd54
+[Angular.io]: https://img.shields.io/badge/kivy-3670a0?style=for-the-badge&logo=python&logoColor=ffdd54
 [Angular-url]: https://angular.io/
 
-[Svelte.dev]: https://img.shields.io/badge/buildozer-buildozer?style=for-the-badge&logo=python&logoColor=ffdd54
+[Svelte.dev]: https://img.shields.io/badge/buildozer-3670a0?style=for-the-badge&logo=python&logoColor=ffdd54
 [Svelte-url]: https://svelte.dev/
