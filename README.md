@@ -73,21 +73,20 @@ Revolutionize your chats with our quantum-secure app, ensuring the highest level
 
 Here is a list of any major frameworks/libraries used to bootstrap your project
 
-_Will be updated_
 * [![React][React.js]][React-url]
 * [![Vue][Vue.js]][Vue-url]
 * [![Angular][Angular.io]][Angular-url]
 * [![Svelte][Svelte.dev]][Svelte-url]
+* [![Java][Java.l]][Java_L]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 ### Demo
 
-<div align="center">
-  <img src="https://github.com/ProtDos/Veilo/assets/69071809/92792b31-55fc-48ea-8a62-6a397fcc237a">
-  <div><p></p></div>
-  <img src="https://github.com/ProtDos/Veilo/assets/69071809/32af12b2-e823-4887-8c8e-b920d10f9a9e">
+<div style="text-align: center;" align="center">
+  <img src="https://github.com/ProtDos/Veilo/assets/69071809/92792b31-55fc-48ea-8a62-6a397fcc237a" style="display: inline-block; margin-left: auto; margin-right: auto;">
+  <img src="https://github.com/ProtDos/Veilo/assets/69071809/32af12b2-e823-4887-8c8e-b920d10f9a9e"style="display: inline-block; margin-left: auto; margin-right: auto;">
 </div>
 
 ---
@@ -257,13 +256,16 @@ Project Link: https://github.com/ProtDos/ScammerPayback
 [product-screenshot]: images/screenshot.png
 
 [React.js]: https://img.shields.io/badge/python-3670A0?logo=python&logoColor=ffdd54&style=for-the-badge
-[React-url]: https://reactjs.org/
+[React-url]: https://python.org/
 
 [Vue.js]: https://img.shields.io/badge/flask-3670a0?style=for-the-badge&logo=python&logoColor=ffdd54
-[Vue-url]: https://vuejs.org/
+[Vue-url]: https://python.org/
 
 [Angular.io]: https://img.shields.io/badge/kivy-3670a0?style=for-the-badge&logo=python&logoColor=ffdd54
-[Angular-url]: https://angular.io/
+[Angular-url]: https://python.org/
 
 [Svelte.dev]: https://img.shields.io/badge/buildozer-3670a0?style=for-the-badge&logo=python&logoColor=ffdd54
-[Svelte-url]: https://svelte.dev/
+[Svelte-url]: https://python.org/
+
+[Java.l]: https://img.shields.io/badge/java-3670A0?logo=openjdk&logoColor=ffdd54&style=for-the-badge
+[Java_L]: https://example.com
