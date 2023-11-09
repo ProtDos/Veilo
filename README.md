@@ -183,6 +183,7 @@ Click the links to learn more about the given Topic.
   - [ ] SMS
   - [ ] WhatsApp
   - [ ] Signal
+  - [ ] Telegram
 - [ ] maybe BlockChain technology
 - [ ] storage management & backups
 - [ ] online version -> Don't download App
