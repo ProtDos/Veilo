@@ -64,10 +64,10 @@ Revolutionize your chats with our quantum-secure app, ensuring the highest level
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Warnings
+## Warnings ‼️‼️‼️
 > This project is not finished and should definetly not be used at this points. Some mentioned features are not implemented yet and the version my be unstable.
 
-
+---
 
 ### Built With
 
@@ -94,6 +94,12 @@ Here is a list of any major frameworks/libraries used to bootstrap your project
 ## Features
 Here is a list of all the features that my Chat App has:
 - Encrypted Messaging
+- Authenticated Messaging
+- Keys generated locally
+- Data Encryption
+- more coming soon...
+
+---
 
 <!-- GETTING STARTED -->
 ## Getting Started
