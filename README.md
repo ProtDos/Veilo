@@ -104,7 +104,7 @@ Here is a list of all the features that my Chat App has:
 <!-- GETTING STARTED -->
 ## Getting Started
 
-To get started, [download](https://github.com/ProtDos/ProtDos/archive/refs/heads/main.zip) the project, unzip it and run it using
+To get started, [download](https://github.com/ProtDos/Veilo/archive/refs/heads/main.zip) the project, unzip it and run it using
 `python3 main.py`
 
 ## Exporting
@@ -178,7 +178,7 @@ Click the links to learn more about the given Topic.
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Post Quantum
+- [ ] Post Quantum
   - [ ] Encryption
   - [ ] Authentication
 - [ ] Sealed Messaging
@@ -189,6 +189,7 @@ Click the links to learn more about the given Topic.
   - [ ] WhatsApp
   - [ ] Signal
   - [ ] Telegram
+- [X] Loading Screen
 - [ ] maybe BlockChain technology
 - [ ] Group Chats
 - [ ] storage management & backups
@@ -238,7 +239,7 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 CodingLive - [@codinglive](https://discord.com/users/786495827827752990) - [@xoding](https://t.me/xoding) - rootcode@duck.com
 
-Project Link: https://github.com/ProtDos/ScammerPayback
+Project Link: https://github.com/ProtDos/Veilo
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
