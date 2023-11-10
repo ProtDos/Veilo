@@ -4,9 +4,10 @@ import sqlite3
 import threading
 
 import pyotp
-from flask import Flask, request, jsonify, session, send_file, safe_join
+from flask import Flask, request, jsonify, session, send_file
 import bcrypt
 from password_strength import PasswordPolicy
+from werkzeug.security import safe_join
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = str(os.urandom(50))
