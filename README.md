@@ -64,7 +64,8 @@ Revolutionize your chats with our quantum-secure app, ensuring the highest level
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Warnings ‼️‼️‼️
+## Warning
+> **Warning**
 > This project is not finished and should definetly not be used at this points. Some mentioned features are not implemented yet and the version my be unstable.
 
 ---
