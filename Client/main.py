@@ -1131,6 +1131,20 @@ class PurpApp(App):
                         sealed_sender = eval(message["identity"])
                         enc_message = eval(message["message"])
 
+                        # TODO: Don't use eval(). Try this:
+
+                        """
+                        input_string = 'b"something_in_bytes"'
+
+                        # Remove the leading 'b' and the double quotes around the bytes content
+                        bytes_content = input_string[2:-1]
+
+                        # Convert the string to bytes using encode
+                        output_bytes = bytes_content.encode('utf-8')
+
+                        print(output_bytes)
+                        """
+
 
                         print("-" * 20)
                         print(sealed_sender)
