@@ -4,7 +4,7 @@ import sqlite3
 import threading
 
 import pyotp
-from flask import Flask, request, jsonify, session, send_file
+from flask import Flask, request, jsonify, session, send_file, safe_join
 import bcrypt
 from password_strength import PasswordPolicy
 
@@ -628,8 +628,17 @@ def receive_messages():
 
 @app.route("/user/public", methods=["POST"])
 def get_public():
-    idd = request.json.get('id', None)
+    try:
+        idd = int(request.json.get('id', None))
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid ID", "code": 10011}), 400
 
+    base_directory = 'Avatars/'
+    file_path = os.path.join(base_directory, f'{idd}.txt')
+
+    if not file_path.startswith(base_directory):
+        return jsonify({"error": "Invalid file path", "code": 10011}), 400
+    
     file_path = f'Publics/{idd}.txt'
 
     return send_file(file_path, as_attachment=True)
@@ -651,14 +660,27 @@ def user_exists():
 
 @app.route("/user/avatar", methods=["POST"])
 def get_avatar():
-    idd = request.json.get('id', None)
+    try:
+        idd = int(request.json.get('id', None))
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invlaid ID", "code": 10011})
+    # TODO: Change Error codes / add to codes.txt for new codes
 
-    file_path = f'Avatars/{idd}.png'
+    base_directory = 'Avatars/'
+    file_path = os.path.join(base_directory, f'{idd}.png')
+
+    if not file_path.startswith(base_directory):
+        return jsonify({"error": "Invalid file path", "code": 10011}), 400
+
+    # file_path = f'Avatars/{idd}.png'
+    file_path = safe_join("Avatars", f"{idd}.png")
 
     try:
         return send_file(file_path, as_attachment=True)
     except FileNotFoundError:
         return send_file("Avatars/Default/default.png", as_attachment=True)
+    except Exception:
+        return jsonify({"error": "File not found"})
 
 
 @app.route("/user/username", methods=["POST"])
