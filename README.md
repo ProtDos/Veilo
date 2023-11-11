@@ -66,9 +66,16 @@ Revolutionize your chats with our quantum-secure app, ensuring the highest level
 
 ## Warning
 > **Warning**
-> This project is not finished and should definetly not be used at this points. Some mentioned features are not implemented yet and the version my be unstable.
+> This project is not finished and should definetly not be used at this points. Some mentioned features are not implemented yet and the version may be unstable. This App currently only has RSA as encryption, no post quantum algorithms are implemented yet.
 
 ---
+
+## Play Store
+Link: https://play.google.com/store/apps/details?id=org.privchat.veilo
+
+<a href='https://play.google.com/store/apps/details?id=org.privchat.veilo'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height='80px'/></a>
+
+
 
 ### Built With
 
