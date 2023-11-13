@@ -72,10 +72,11 @@ Revolutionize your chats with our quantum-secure app, ensuring the highest level
 
 ## Play Store
 Link: https://play.google.com/store/apps/details?id=org.privchat.veilo
+Note: This project isn't listed on the App Store yet*
 
 <a href='https://play.google.com/store/apps/details?id=org.privchat.veilo'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height='80px'/></a>
 
-
+*this is because of the high costs.
 
 ### Built With
 
