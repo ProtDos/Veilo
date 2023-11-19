@@ -211,6 +211,7 @@ Click the links to learn more about the given Topic.
 - [ ] Use Argon2id for Password-Hashing
   - [ ] ... or completely don't use authentication via server
 - [ ] PIN-Code for app
+- [ ] contact search
   
 
 See the [open issues](https://github.com/Veilo/issues) for a full list of proposed features (and known issues).
