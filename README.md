@@ -99,6 +99,8 @@ Here is a list of any major frameworks/libraries used to bootstrap your project
 </div>
 
 ---
+## Context
+This was done in the context of a german competition.
 
 ## Features
 Here is a list of all the features that my Chat App has:
