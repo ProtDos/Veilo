@@ -214,6 +214,7 @@ Click the links to learn more about the given Topic.
   - [ ] ... or completely don't use authentication via server
 - [ ] PIN-Code for app
 - [ ] contact search
+- [ ] Implement Image / File sending
   
 
 See the [open issues](https://github.com/Veilo/issues) for a full list of proposed features (and known issues).
