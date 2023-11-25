@@ -193,7 +193,7 @@ Click the links to learn more about the given Topic.
   - [ ] Encryption
   - [ ] Authentication
 - [ ] Sealed Messaging
-  - [ ]  Sealed Sender
+  - [ ] Sealed Sender
   - [ ] Sealed Receiver
 - [ ] Cross Platform
   - [ ] SMS
@@ -213,7 +213,7 @@ Click the links to learn more about the given Topic.
 - [ ] Use Argon2id for Password-Hashing
   - [ ] ... or completely don't use authentication via server
 - [ ] PIN-Code for app
-- [ ] contact search
+- [X] contact search
 - [ ] Implement Image / File sending
   
 
