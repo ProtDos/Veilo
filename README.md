@@ -19,7 +19,7 @@
     <a href="https://github.com/ProtDos/Veilo"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/ProtDos/Veilo">View Demo</a>
+    <a href="https://www.figma.com/file/riznxVrGXa1qv7zJ6zmXrT/Untitled?type=design&node-id=0:1&mode=design&t=LFuWTY9TnOLtCaNf-1">View Demo</a>
     ·
     <a href="https://github.com/ProtDos/Veilo/issues">Report Bug</a>
     ·
