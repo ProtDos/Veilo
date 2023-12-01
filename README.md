@@ -215,6 +215,8 @@ Click the links to learn more about the given Topic.
 - [ ] PIN-Code for app
 - [X] contact search
 - [ ] Implement Image / File sending
+- [ ] Settings Menu
+- [ ] "Pull-down" - Update
   
 
 See the [open issues](https://github.com/Veilo/issues) for a full list of proposed features (and known issues).
