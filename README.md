@@ -219,6 +219,7 @@ Click the links to learn more about the given Topic.
   - [X] Image Sending
 - [ ] Settings Menu
 - [ ] "Pull-down" - Update
+- [ ] Audio Messages
   
 
 See the [open issues](https://github.com/Veilo/issues) for a full list of proposed features (and known issues).
