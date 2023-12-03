@@ -96,7 +96,9 @@ Here is a list of any major frameworks/libraries used to bootstrap your project
 <div style="text-align: center;" align="center">
   <img src="https://github.com/ProtDos/Veilo/assets/69071809/92792b31-55fc-48ea-8a62-6a397fcc237a" style="display: inline-block; margin-left: auto; margin-right: auto;">
   <img src="https://github.com/ProtDos/Veilo/assets/69071809/32af12b2-e823-4887-8c8e-b920d10f9a9e"style="display: inline-block; margin-left: auto; margin-right: auto;">
+  <p>Click <a href="https://www.figma.com/file/riznxVrGXa1qv7zJ6zmXrT/Untitled?type=design&node-id=0:1&mode=design&t=LFuWTY9TnOLtCaNf-1">here</a> for a gallery view of every screen!</p>
 </div>
+
 
 ---
 ## Context
