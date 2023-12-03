@@ -214,7 +214,9 @@ Click the links to learn more about the given Topic.
   - [ ] ... or completely don't use authentication via server
 - [ ] PIN-Code for app
 - [X] contact search
-- [ ] Implement Image / File sending
+- [ ] Implement
+  - [ ] File Sending
+  - [X] Image Sending
 - [ ] Settings Menu
 - [ ] "Pull-down" - Update
   
