@@ -189,13 +189,14 @@ Click the links to learn more about the given Topic.
 
 
 <!-- ROADMAP -->
-## Roadmap
+## Roadmap / TODO
 
+### Main
 - [ ] Post Quantum
   - [ ] Encryption
   - [ ] Authentication
 - [ ] Sealed Messaging
-  - [ ] Sealed Sender
+  - [X] Sealed Sender
   - [ ] Sealed Receiver
 - [ ] Cross Platform
   - [ ] SMS
@@ -203,25 +204,41 @@ Click the links to learn more about the given Topic.
   - [ ] Signal
   - [ ] Telegram
 - [X] Loading Screen
-- [ ] maybe BlockChain technology
-- [ ] Group Chats
+- [X] Group Chats  ( being worked on )
 - [ ] storage management & backups
-- [ ] online version -> Don't download App
 - [ ] Calling
   - [ ] Audio
   - [ ] Video
-- [ ] Support for more languages
-  - [ ] & detect them automatically
-- [ ] Use Argon2id for Password-Hashing
-  - [ ] ... or completely don't use authentication via server
+- [X] Support for more languages
+  - [X] & detect them automatically
 - [ ] PIN-Code for app
 - [X] contact search
 - [ ] Implement
   - [ ] File Sending
   - [X] Image Sending
-- [ ] Settings Menu
+- [X] Settings Menu
 - [ ] "Pull-down" - Update
-- [ ] Audio Messages
+- [ ] Sending Audio Messages
+- [ ] Better Text for startup
+- [ ] Fix Color Picker
+- [ ] Messages for Waiting Screen
+  - [X] Processing...
+  - [ ] Logging in...
+  - [ ] Loading...
+  - [ ] Creating Account...
+    - [ ] Generating keys
+    - [ ] Setting everything up
+
+### Smaller / Bugs
+- [ ] Center "eye" in auth
+
+### Server
+- [ ] Use Argon2id for Password-Hashing
+  - [ ] ... or completely don't use authentication via server
+
+### Other
+- [ ] online version -> Don't download App
+- [ ] maybe BlockChain technology
   
 
 See the [open issues](https://github.com/Veilo/issues) for a full list of proposed features (and known issues).
