@@ -228,10 +228,11 @@ Click the links to learn more about the given Topic.
   - [X] Creating Account...
     - [X] Generating keys
     - [X] Setting everything up
-- [ ] Abort 2FA Setup
+- [X] Abort 2FA Setup
+- [ ] Error handeling
 
 ### Smaller / Bugs
-- [ ] Center "eye" in auth
+- [X] Center "eye" in auth
 
 ### Server
 - [ ] Use Argon2id for Password-Hashing
