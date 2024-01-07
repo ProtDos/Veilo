@@ -217,17 +217,18 @@ Click the links to learn more about the given Topic.
   - [ ] File Sending
   - [X] Image Sending
 - [X] Settings Menu
-- [ ] "Pull-down" - Update
+- [X] "Pull-down" - Update
 - [ ] Sending Audio Messages
 - [ ] Better Text for startup
 - [ ] Fix Color Picker
-- [ ] Messages for Waiting Screen
+- [X] Messages for Waiting Screen
   - [X] Processing...
-  - [ ] Logging in...
-  - [ ] Loading...
-  - [ ] Creating Account...
-    - [ ] Generating keys
-    - [ ] Setting everything up
+  - [X] Logging in...
+  - [X] Loading...
+  - [X] Creating Account...
+    - [X] Generating keys
+    - [X] Setting everything up
+- [ ] Abort 2FA Setup
 
 ### Smaller / Bugs
 - [ ] Center "eye" in auth
