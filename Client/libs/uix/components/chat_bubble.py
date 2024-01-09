@@ -1,34 +1,30 @@
 import os
 import random
-
+import kivy.core.audio
 from kivy.clock import Clock
 from kivy.core.window import Window
-from kivy.graphics import Color, RoundedRectangle
 from kivy.lang import Builder
 from kivy.metrics import dp
-from kivy.properties import BooleanProperty, ListProperty, NumericProperty
+from kivy.properties import BooleanProperty, ColorProperty, StringProperty, ListProperty, NumericProperty
+from kivy.uix.behaviors import ButtonBehavior
+from kivy.uix.boxlayout import BoxLayout
 
 from components.label import PLabel
 from components.boxlayout import PBoxLayout
 from components.dialog import PDialog
-# from components.listitem import ListItem2, AttachmentChat
-
-from kivy.properties import BooleanProperty, ColorProperty, StringProperty
-from kivy.uix.behaviors import ButtonBehavior
 from core.theming import ThemableBehavior
-from kivy.uix.boxlayout import BoxLayout
+
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
 from kivy.uix.widget import Widget
 from kivy.utils import get_color_from_hex
-
 from PIL import Image
+from kivy.graphics import Color, RoundedRectangle
 
 
 def resize_image(original_width, original_height, target_width, target_height):
     aspect_ratio = original_width / original_height
 
-    # Calculate the new dimensions while preserving aspect ratio
     if aspect_ratio > 1:
         new_width = target_width
         new_height = int(target_width / aspect_ratio)
@@ -151,16 +147,15 @@ Builder.load_string(
 <Attachment>
     orientation: "horizontal"
     pos_hint: {"right": 1}
-    padding: [dp(10), dp(8)]
-    spacing: dp(10)
-      
+    padding: [dp(5), dp(4)]
+    spacing: dp(20)
+          
     size_hint: None, None
     size_hint_x: .5
-    
-    on_release:
-        root.open_f()
-    
+    height: dp(60)
         
+    on_release:
+        root.open_f()   
     
     AttachmentChat:
         bg_color: root.primary if root.send_by_user else root.secondary
@@ -170,6 +165,8 @@ Builder.load_string(
         text_color_sec: get_color_from_hex("#808080")
         secondary_text: root.file_size
         source_: root.source_
+        
+        send_by_user: root.send_by_user
 
 <AudioMessage>
     id: rooot
@@ -193,11 +190,202 @@ Builder.load_string(
             radius:
                 [dp(16), dp(5), dp(16), dp(16)] if self.send_by_user \
                 else [dp(5), dp(16), dp(16), dp(16)]
-          
-
+        
         Color:
-            rgba: 
+            rgba:
                 get_color_from_hex("#FFFFFF")
+        
+        RoundedRectangle:
+            size: [3, self.sizes[0]]
+            pos: [self.x + dp(60 + 0), self.center_y - root.sizes[0] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[1]]
+            pos: [self.x + dp(60 + 5), self.center_y - root.sizes[1] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[2]]
+            pos: [self.x + dp(60 + 10), self.center_y - root.sizes[2] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[3]]
+            pos: [self.x + dp(60 + 15), self.center_y - root.sizes[3] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[4]]
+            pos: [self.x + dp(60 + 20), self.center_y - root.sizes[4] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[5]]
+            pos: [self.x + dp(60 + 25), self.center_y - root.sizes[5] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[6]]
+            pos: [self.x + dp(60 + 30), self.center_y - root.sizes[6] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[7]]
+            pos: [self.x + dp(60 + 35), self.center_y - root.sizes[7] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[8]]
+            pos: [self.x + dp(60 + 40), self.center_y - root.sizes[8] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[9]]
+            pos: [self.x + dp(60 + 45), self.center_y - root.sizes[9] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[10]]
+            pos: [self.x + dp(60 + 50), self.center_y - root.sizes[10] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[11]]
+            pos: [self.x + dp(60 + 55), self.center_y - root.sizes[11] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[12]]
+            pos: [self.x + dp(60 + 60), self.center_y - root.sizes[12] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[13]]
+            pos: [self.x + dp(60 + 65), self.center_y - root.sizes[13] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[14]]
+            pos: [self.x + dp(60 + 70), self.center_y - root.sizes[14] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[15]]
+            pos: [self.x + dp(60 + 75), self.center_y - root.sizes[15] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[16]]
+            pos: [self.x + dp(60 + 80), self.center_y - root.sizes[16] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[17]]
+            pos: [self.x + dp(60 + 85), self.center_y - root.sizes[17] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[18]]
+            pos: [self.x + dp(60 + 90), self.center_y - root.sizes[18] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[19]]
+            pos: [self.x + dp(60 + 95), self.center_y - root.sizes[19] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[20]]
+            pos: [self.x + dp(60 + 100), self.center_y - root.sizes[20] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[21]]
+            pos: [self.x + dp(60 + 105), self.center_y - root.sizes[21] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[22]]
+            pos: [self.x + dp(60 + 110), self.center_y - root.sizes[22] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[23]]
+            pos: [self.x + dp(60 + 115), self.center_y - root.sizes[23] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[24]]
+            pos: [self.x + dp(60 + 120), self.center_y - root.sizes[24] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[25]]
+            pos: [self.x + dp(60 + 125), self.center_y - root.sizes[25] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[26]]
+            pos: [self.x + dp(60 + 130), self.center_y - root.sizes[26] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[27]]
+            pos: [self.x + dp(60 + 135), self.center_y - root.sizes[27] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[28]]
+            pos: [self.x + dp(60 + 140), self.center_y - root.sizes[28] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[29]]
+            pos: [self.x + dp(60 + 145), self.center_y - root.sizes[29] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[30]]
+            pos: [self.x + dp(60 + 150), self.center_y - root.sizes[30] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[31]]
+            pos: [self.x + dp(60 + 155), self.center_y - root.sizes[31] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[32]]
+            pos: [self.x + dp(60 + 160), self.center_y - root.sizes[32] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[33]]
+            pos: [self.x + dp(60 + 165), self.center_y - root.sizes[33] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[34]]
+            pos: [self.x + dp(60 + 170), self.center_y - root.sizes[34] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[35]]
+            pos: [self.x + dp(60 + 175), self.center_y - root.sizes[35] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[36]]
+            pos: [self.x + dp(60 + 180), self.center_y - root.sizes[36] / 2]
+            radius: [2]
+        
+        RoundedRectangle:
+            size: [3, self.sizes[37]]
+            pos: [self.x + dp(60 + 185), self.center_y - root.sizes[37] / 2]
+            radius: [2]
+
+
     
     PBoxLayout:
         adaptive_height: True
@@ -210,17 +398,16 @@ Builder.load_string(
             y: rooot.y
             
             on_release:
+                print(root.sizes)
                 root.play_clicked()
+
 
 <ImageMessage>
     id: rooot
     orientation: "horizontal"
     padding: [dp(10), dp(8)]
     spacing: dp(10)
-    
-    pos_hint: {"right": 1}
-    
-    
+          
     size_hint: None, None
     width: dp(root.file_size[0])    
     height: dp(root.file_size[1])
@@ -236,16 +423,6 @@ Builder.load_string(
                 [dp(16), dp(5), dp(16), dp(16)] if self.send_by_user \
                 else [dp(5), dp(16), dp(16), dp(16)]    
         
-    # canvas:
-    #     Color:
-    #         rgba:
-    #             root.primary if self.send_by_user else root.secondary
-    #     RoundedRectangle:
-    #         size: self.size
-    #         pos: root.right_ if root.send_by_user else [dp(10), self.y]
-    #         radius:
-    #             [dp(16), dp(5), dp(16), dp(16)] if self.send_by_user \
-    #             else [dp(5), dp(16), dp(16), dp(16)]
     
     on_release:
         app.open_file(root.source)
@@ -404,6 +581,8 @@ class Attachment(ButtonBehavior, ThemableBehavior, PBoxLayout):
         print("Yup")
         self.base = os.path.basename(self.filename)
 
+        self.spacing = dp(0)
+
         self.primary = self.theme_cls.primary_dark
         self.secondary = self.theme_cls.primary_color
 
@@ -417,7 +596,10 @@ class AudioMessage(ButtonBehavior, ThemableBehavior, BoxLayout):
     primary = ColorProperty()
     secondary = ColorProperty()
 
-    sizes = [random.randint(2, 20) for _ in range(38)]
+    filename_data = StringProperty()
+
+    sizes = ListProperty([random.randint(2, 20) for _ in range(38)])
+
     # siz = []
     # sizes = ListProperty()
 
@@ -431,61 +613,45 @@ class AudioMessage(ButtonBehavior, ThemableBehavior, BoxLayout):
         # print("SIZ:", self.siz)
         self.sizes = [random.randint(2, 20) for _ in range(38)]
 
+        print(self.sizes)
+        print(self.filename_data)
+
+        self.sound = kivy.core.audio.SoundLoader.load(self.filename_data)
+
         self.primary = self.theme_cls.primary_dark
         self.secondary = self.theme_cls.primary_color
 
     def play_clicked(self):
         if self.ids.btn.icon == "play_2":
             self.ids.btn.icon = "pause"
+            self.sound.bind(on_stop=self.sound_finished)
+            self.sound.play()
         else:
+            self.sound_pos = self.sound.get_pos()
+            print(self.sound_pos)
             self.ids.btn.icon = "play_2"
+            self.sound.stop()
+
+    def sound_finished(self, *args):
+        print("Finished")
+        self.ids.btn.icon = "play_2"
+        self.sound.stop()
+
 
     def set_thing(self, dt):
-        self.canvas.add(Color(rgba=get_color_from_hex("#FFFFFF")))
-
-        cnt = 0
-
-        for i in range(38):
-            self.canvas.add(
-                RoundedRectangle(size=[3, self.sizes[i]], pos=[self.x + dp(60 + cnt), (self.y + dp(29)) - self.sizes[i] / 2],
-                                 radius=[2]))
-            cnt += 5
-
-
-class LineWidget(Widget):
-    send_by_user = BooleanProperty()
-
-    text = StringProperty()
-
-    secondary_text = StringProperty("")
-
-    icon = StringProperty("clock")  # check_circle
-
-    primary = ColorProperty()
-    secondary = ColorProperty()
-
-    is_image = BooleanProperty(False)
-
-    def __init__(self, **kwargs):
-        super(LineWidget, self).__init__(**kwargs)
-
-        with self.canvas:
-            Color(0, 0, 0)
-
-            num_lines = 38
-            line_spacing = self.height / (num_lines - 20)
-
-            line_width = 5
-
-            line_radius = 3
-
-            for i in range(num_lines):
-                line_height = random.randint(2, 20)
-
-                y = (self.center_x - line_width / 2) - line_height / 2
-                x = (i + 1) * line_spacing
-
-                RoundedRectangle(pos=(x, y), size=(line_width, line_height), radius=[line_radius])
+        pass
+        # with self.canvas.after:
+        #     Color(rgba=get_color_from_hex("#FFFFFF"))
+        # cnt = 0
+        # print(self.sizes)
+        # for i in range(38):
+        #     with self.canvas.after:
+        #         RoundedRectangle(size=[3, self.sizes[i]],
+        #                          pos=[self.x + dp(60 + cnt), (self.y + dp(29)) - self.sizes[i] / 2],
+        #                          radius=[2])
+        #     print(f"RoundedRectangle:\n    size: [3, self.sizes[{i}]]\n    pos: [self.x + dp(60 + {cnt}), self.center_y - root.sizes[{i}] / 2]\n    radius: [2]\n")
+        #     cnt += 5
+        #     # print("Added")
 
 
 class ImageMessage(ButtonBehavior, ThemableBehavior, BoxLayout):
@@ -515,7 +681,56 @@ class ImageMessage(ButtonBehavior, ThemableBehavior, BoxLayout):
         width, height = self.file_size
         faktor = .7
         target_width, target_height = Window.size
-        new_width, new_height = resize_image(original_width=width, original_height=height, target_width=target_width * faktor, target_height=target_height * faktor)
+        new_width, new_height = resize_image(original_width=width, original_height=height,
+                                             target_width=target_width * faktor, target_height=target_height * faktor)
+        self.file_size = new_width, new_height
+
+        if self.file_size[0] > 245:
+            self.file_size[0] = 245
+            self.file_size[1] = 245 / self.file_size[0] * self.file_size[1]
+
+        print((width, height), self.file_size)
+
+
+class ImageMessage_Core(ButtonBehavior, ThemableBehavior, BoxLayout):
+    send_by_user = BooleanProperty()
+
+    file_size = ListProperty()
+
+    texture = ListProperty()
+
+    primary = ColorProperty()
+    secondary = ColorProperty()
+
+    right_ = ListProperty()
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        print(self.texture)
+
+        Clock.schedule_once(self.set_color, 0)
+        Clock.schedule_once(self.update_image_size, 0)
+
+        Clock.schedule_once(self.set_texture, 1)
+
+    def set_texture(self, _):
+        print(self.texture)
+        self.ids.aaasd.texture = self.texture[0]
+        self.ids.aaasd.reload()
+
+    def set_color(self, dt):
+        self.primary = self.theme_cls.primary_dark
+        self.secondary = self.theme_cls.primary_color
+
+    def update_image_size(self, dt):
+        self.right_ = Window.size[1] - dp(8), self.y
+
+        width, height = self.file_size
+        faktor = .7
+        target_width, target_height = Window.size
+        new_width, new_height = resize_image(original_width=width, original_height=height,
+                                             target_width=target_width * faktor, target_height=target_height * faktor)
         self.file_size = new_width, new_height
 
         if self.file_size[0] > 245:

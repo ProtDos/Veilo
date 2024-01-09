@@ -43,12 +43,12 @@ class AuthScreen(PScreen):
         self.ids.password.bind(text=self.on_text)
 
         a = config.is_startup()
-        print(a)
 
         if a == "True" or a is True:
             Clock.schedule_once(self.show_form, 5)
         else:
             Clock.schedule_once(self.show_form, 3)
+
 
     def on_text(self, instance, value):
         if value:
@@ -77,13 +77,11 @@ class AuthScreen(PScreen):
         self.ids.btn_2.disabled = False
 
         a = config.is_startup()
-        print(a)
+
+        self.ids.btn.y = self.ids.password.y - 2
 
         if a == "True" or a is True:
-            print("a")
             PDialog(content=AboutDialogContent2()).open()
-
-        self.ids.btn.y = self.ids.password.y
 
     def sign_in(self):
         self.manager.set_current("home")

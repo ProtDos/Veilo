@@ -1,8 +1,9 @@
+#:import hex kivy.utils.get_color_from_hex
+
 <HomeScreen>
 
     PBoxLayout:
         orientation: "vertical"
-
 
         PBoxLayout:
             padding: [dp(25), dp(30), dp(5), dp(0)]
@@ -17,10 +18,53 @@
                 text_size: self.width, None
 
             PIconButton:
+                icon: "search"
+                mode: "unstyled"
+                font_size: sp(30)
+                on_release:
+                    app.show_searchbar()
+
+            PIconButton:
                 icon: "more-vertical"
                 mode: "unstyled"
                 font_size: sp(30)
-                on_release: root.show_menu()
+                on_release:
+                    root.show_menu()
+
+        PBoxLayout:
+            orientation: "vertical"
+
+            id: search_bar_menu
+            size_hint_y: 0 if root.search_bar else None
+            padding: [0,] if root.search_bar else [dp(25), dp(5), dp(5), dp(5)]
+            adaptive_height: True
+            height: 0 if root.search_bar else field.height - field.height / 2
+
+            # PLabel:
+            #     id: first2
+            #     opacity: 0 if root.search_bar else 1
+            #     original: "Here will be the SearchBar"
+            #     text: self.original if app.language == 'EN' else app.translate(self.original)
+            #     font_size: sp(0) if root.search_bar else sp(14)
+            #     font_name: "LexendMedium"
+            #     adaptive_height: True
+            #     text_size: (None, None) if root.search_bar else (self.width, None)
+
+            TextInput:
+                id: field
+                opacity: 0 if root.search_bar else 1
+
+                original: "Search..."
+                hint_text: self.original if app.language == 'EN' else app.translate(self.original)
+                size_hint: 1, None
+                font_size: sp(0) if root.search_bar else "12sp"
+                height: self.minimum_height
+                multiline: False
+                cursor_color: 1, 170/255, 23/255, 1
+                cursor_width: "2sp"
+                foreground_color: get_color_from_hex("#808080")
+                background_color: 0, 0, 0, 0
+                font_name: "Lexend"
 
         PBoxLayout:
             id: labelcase
@@ -28,11 +72,9 @@
             padding: [0,] if root.text_hidden == "0" else [dp(25), dp(5), dp(5), dp(10)]
             adaptive_height: True
 
-
-
             PLabel:
                 id: first
-                opacity: 0
+                opacity: 0 if root.text_hidden == "0" else 1
                 original: "Create a chat first"
                 text: self.original if app.language == 'EN' else app.translate(self.original)
                 font_size: sp(0) if root.text_hidden == "0" else sp(14)
@@ -59,6 +101,8 @@
             do_scroll_y: True
             do_scroll_x: False
             on_scroll_y: app.check_pull_refresh(self, grid)
+
+            on_touch_up: app.check_pull_refresh_down(*args)
 
             RecycleBoxLayout:
                 id: grid
@@ -138,8 +182,9 @@
             app.root.set_current("other")
 
 <CreatePopup>
-    lbl: lbl
+    lbl_1: lbl_1
     id: yea
+    big_label: big_label
     adaptive_height: True
     padding: dp(20)
     spacing: dp(10)
@@ -147,30 +192,32 @@
 
     Widget:
         size_hint_y: None
-        height: dp(10)
+        height: dp(25)
 
 
     PBoxLayout:
-        orientation: "horizontal"
+        orientation: "vertical"
 
-        PLabel:
-            id: lbl
-            text: "New"
-            font_size: dp(20)
-            font_name: "LexendMedium"
-            pos_hint: {"center_x": .2, "center_y": .9}
+        PBoxLayout:
+            padding: [dp(20), dp(35), dp(5), dp(0)]
             adaptive_height: True
 
+            PLabel:
+                id: big_label
+                original: "Chat"
+                text: self.original if app.language == 'EN' else app.translate(self.original)
+                font_size: sp(30)
+                font_name: "LexendMedium"
+                adaptive_height: True
+                text_size: self.width, None
 
-        PIconButton2:
-            id: i_btn
-            icon: "account_group"  # "people_outline"
-            mode: "unstyled"
-            pos_hint: {"center_x": .9, "center_y": .9}
-            font_size: dp(20)
-
-            on_release:
-                root.switch()
+            PIconButton2:
+                id: i_btn
+                icon: "account_group"
+                mode: "unstyled"
+                font_size: sp(20)
+                on_release:
+                    root.switch()
 
     Widget:
         size_hint_y: None
@@ -183,6 +230,10 @@
         text_size: self.width, None
         halign: "center"
         adaptive_height: True
+
+    Widget:
+        size_hint_y: None
+        height: dp(10)
 
     PBoxLayout:
         orientation: "vertical"
@@ -226,7 +277,7 @@
 
         Widget:
             size_hint_y: None
-            height: dp(25)
+            height: dp(10)
 
         PBoxLayout:
             adaptive_size: True

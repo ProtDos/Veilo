@@ -1,25 +1,22 @@
+import os.path
 import re
+import uuid
+import wavio
+import numpy as np
+import sounddevice as sd
 from functools import partial
 
-from kivy.animation import Animation
+from kivy.app import App
 from kivy.clock import Clock
-from kivy.metrics import dp
-from kivy.properties import DictProperty, ListProperty, StringProperty, BooleanProperty
+from kivy.animation import Animation
+from kivy.uix.behaviors import ButtonBehavior
+from kivy.properties import DictProperty, ListProperty, StringProperty
 
-from components.boxlayout import PBoxLayout
 from components.dialog import PDialog
 from components.screen import PScreen
-from components.toast import toast
-from components.label import PLabel
-
-from kivy.app import App
 from core.encryption import encrypt, decrypt
-import uuid
-
-from kivy.uix.behaviors import ButtonBehavior
-from kivy.uix.label import Label
-
-from components.chat_bubble import ChatBubble2
+from components.boxlayout import PBoxLayout
+from components.chat_bubble import AudioMessage, ChatBubble2
 
 
 def extract_links(text):
@@ -80,6 +77,78 @@ class ChatScreen(PScreen):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.ids.field.bind(text=self.on_text)
+
+        self.recorded_data = []  # To store the recorded audio data
+
+        self.is_running = False
+
+    def on_text(self, instance, value):
+        if value:
+            self.ids.send_mic_btn.icon = "send_lock"
+
+            # self.ids.send_mic_btn.on_touch_down = None
+            # self.ids.send_mic_btn.on_touch_up = None
+
+            self.ids.send_mic_btn.bind(on_release=self.send)
+            self.ids.send_mic_btn.bind(on_touch_down=self.nothing)
+            self.ids.send_mic_btn.bind(on_touch_up=self.nothing)
+
+            # self.ids.send_mic_btn.on_release = self.send(self.ids.field.text.strip())
+            # self.ids.send_mic_btn.on_release = partial(self.send, self.ids.field.text.strip())
+
+        else:
+            self.ids.send_mic_btn.icon = "microphone"
+
+            # self.ids.send_mic_btn.on_touch_down = self.stop_recording
+            # self.ids.send_mic_btn.on_touch_up = self.stop_recording
+#
+            # self.ids.send_mic_btn.on_release = None
+
+            self.ids.send_mic_btn.bind(on_release=self.nothing)
+            self.ids.send_mic_btn.bind(on_touch_down=self.start_recording)
+            self.ids.send_mic_btn.bind(on_touch_up=self.stop_recording)
+
+    def nothing(self, *args):
+        pass
+
+    def start_recording(self, instance, touch):
+        if self.ids.send_mic_btn.icon == "microphone":
+            if self.ids.send_mic_btn.collide_point(*touch.pos):
+                if not self.is_running:
+                    print("Started")
+                    self.recorded_data = []
+                    self.recording_stream = sd.InputStream(channels=2, callback=self.audio_callback)
+                    self.recording_stream.start()
+                    self.is_running = True
+
+    def stop_recording(self, instance, touch):
+        if self.ids.send_mic_btn.icon == "microphone":
+            if self.ids.send_mic_btn.collide_point(*touch.pos):
+                if self.recording_stream:
+                    print(self.is_running)
+                    if self.is_running:
+                        print("Stopped.")
+                        self.is_running = False
+                        self.recording_stream.stop()
+                        self.recording_stream.close()
+                        self.save_audio_to_file()
+
+    def audio_callback(self, indata, frames, time, status):
+        if status:
+            print(status, flush=True)
+        self.recorded_data.append(indata.copy())
+
+    def save_audio_to_file(self):
+        if self.recorded_data:
+            audio_data = np.concatenate(self.recorded_data, axis=0)
+            if not os.path.isdir("temp_audio"):
+                os.mkdir("temp_audio")
+            filename = os.path.join("temp_audio", f"{str(uuid.uuid4())}.wav")
+            wavio.write(filename, audio_data, 44100, sampwidth=3)
+
+            self.ids.box.add_widget(AudioMessage(send_by_user=True, filename_data=filename))
+
 
     def open_preview(self, path, size):
         self.p = PDialog(
@@ -103,7 +172,9 @@ class ChatScreen(PScreen):
     def answer(self, text, *args):
         self.add_message('do you really think so?', 'left', '#332211')
 
-    def send(self, text):
+    def send(self, *args):
+        text = self.ids.field.text.strip()
+        print(text)
         if not text:
             return
 

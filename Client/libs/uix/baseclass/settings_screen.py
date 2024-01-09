@@ -2,6 +2,7 @@ import json
 
 import requests
 from kivy.animation import Animation
+from kivy.app import App
 from kivy.clock import Clock
 from kivy.metrics import dp
 from kivy.properties import StringProperty, ListProperty, ColorProperty, BooleanProperty
@@ -12,6 +13,7 @@ from components.screen import PScreen
 from kivy.uix.floatlayout import FloatLayout
 from utils.configparser import config
 from kivy.utils import platform
+from extras.help_utils import get_android_system_language
 
 
 class FuckSnus:
@@ -79,6 +81,17 @@ class SettingsScreen(PScreen):
     def open_bugreport(self):
         PDialog(content=BugReport()).open()
 
+    def change_message_visibility(self):
+        if App.get_running_app().show_message_content:
+            config.hide_messages_content()
+            self.ids.mess_vis.secondary_text = "False"
+            self.ids.mess_vis.icon = "eye_off"
+        else:
+            config.show_messages_content()
+            self.ids.mess_vis.secondary_text = "True"
+            self.ids.mess_vis.icon = "eye"
+
+
 
 class AboutDialogContent_Screen(PBoxLayout):
     pass
@@ -94,7 +107,7 @@ class LanguageDialogContent(PBoxLayout):
             'fr': 'French',
         }
 
-        a = language_mapping.get(self.get_device_language(), "English")
+        a = language_mapping.get(get_android_system_language(), "English")
         self.ids.device_lang.text = a
 
         if a == "en":
@@ -102,32 +115,15 @@ class LanguageDialogContent(PBoxLayout):
             self.ids.en.height = "0dp"
 
     def set_language(self, lang):
-        print("-----------")
-        print(lang)
         lang_to_id = config.lang_to_code(lang)
-        print(lang_to_id)
         if config.get_language() == lang_to_id:
-            print("nah")
             return
         config.set_language(lang_to_id)
-        print("-----------")
 
-    def get_device_language(self):
-        if platform == 'android':
-            from jnius import autoclass
-            context = autoclass('org.kivy.android.PythonActivity').mActivity
-            resources = context.getResources()
-            configuration = resources.getConfiguration()
-            locale = configuration.locale
-            return locale.getLanguage()
-        else:
-            return 'en'
 
     def is_marked(self, text):
         idd = config.lang_to_code(text)
-        print(idd, config.get_language())
         if config.get_language() == idd:
-            print("yey")
             return True
         return False
 

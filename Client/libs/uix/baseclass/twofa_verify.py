@@ -1,25 +1,19 @@
-from kivy.clock import Clock
 from kivy.core.window import Window
-from kivy.properties import StringProperty
-
+from kivy.app import App
 from components.boxlayout import PBoxLayout
 from components.dialog import PDialog
 from components.screen import PScreen
-from components.boxlayout import Card
-from kivymd.uix.card import MDCard
-from utils.configparser import config
-
-from kivy.app import App
 
 
 def find_item_before(lst, target_item):
     for i in range(1, len(lst)):
         if lst[i] == target_item:
             return lst[i - 1]
-    return None  # Item not found or target_item is the first item
+    return None
 
 
 class V2FA(PScreen):
+    sad_dia = None
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -40,23 +34,16 @@ class V2FA(PScreen):
         self.l = [self.ids.v1, self.ids.v2, self.ids.v3, self.ids.v4, self.ids.v5, self.ids.v6]
 
         self.ids.v1.focus = True
+        self.ids.verify_button.disabled = True
 
     def check_backslash(self, _, key, *__):
-        print(key)
         if key == 8:
             try:
-                print(self.current.text)
-                print(self.current.focus)
-                print(self.current.disabled)
-
                 self.current.text = ""
                 self.current.disabled = False
                 self.current.focus = True
 
-                print(self.current)
-
                 i = find_item_before(self.l, self.current)
-                print(i)
                 self.current = i
 
                 self.ids.verify_button.disabled = True
@@ -65,7 +52,6 @@ class V2FA(PScreen):
                 pass
         elif key == 271:
             if self.final is not None and len(self.final) == 6:
-                print("valid enter")
                 self.verify_pin()
 
     def v1(self, num):
@@ -120,7 +106,6 @@ class V2FA(PScreen):
         self.ids.v6.disabled = True
 
         self.final = str(self.v1_num) + str(self.v2_num) + str(self.v3_num) + str(self.v4_num) + str(self.v5_num) + str(self.v6_num)
-        print(self.final)
 
         self.ids.verify_button.disabled = False
 
@@ -133,8 +118,12 @@ class V2FA(PScreen):
         App.get_running_app().verify_2fa(pin)
 
     def open_sad(self):
-        PDialog(content=LostDialog()).open()
+        self.sad_dia = PDialog(content=LostDialog())
+        self.sad_dia.open()
 
 
 class LostDialog(PBoxLayout):
-    pass
+    @staticmethod
+    def close_dia():
+        App.get_running_app().root.get_screen("2fa_verify").sad_dia.dismiss(force=True)
+        App.get_running_app().root.set_current("auth")

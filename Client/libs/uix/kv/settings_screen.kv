@@ -87,6 +87,18 @@
                         root.change_security()
 
                 ListItem2:
+                    id: mess_vis
+                    original: "Show message content in notifications?"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    original2: str(app.show_message_content)
+                    secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
+
+                    icon: "eye_off"
+                    on_release:
+                        root.change_message_visibility()
+
+                ListItem2:
                     original: "Connection"
                     text: self.original if app.language == 'EN' else app.translate(self.original)
 
@@ -112,7 +124,7 @@
                     original: "About"
                     text: self.original if app.language == 'EN' else app.translate(self.original)
 
-                    original2: "Learn more about Velox"
+                    original2: "Learn more about Veilo"
                     secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
 
                     icon: "alert-circle"

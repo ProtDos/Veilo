@@ -50,7 +50,8 @@ class UserSettings(PScreen):
         self.d2.open()
 
     def change_abt(self):
-        pass
+        self.d3 = PDialog(content=BioChange())
+        self.d3.open()
 
     def breach(self):
         self.b = PDialog(content=BreachDialog())
@@ -62,6 +63,11 @@ class UserSettings(PScreen):
 
 class AboutDialogContent(PBoxLayout):
     pass
+
+
+class BioChange(PBoxLayout):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
 
 
 class PasswordChange(PBoxLayout):

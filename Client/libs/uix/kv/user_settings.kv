@@ -288,6 +288,81 @@
                 on_release:
                     app.change_username(old.text)
 
+<BioChange>
+    id: bio_c
+    adaptive_height: True
+    padding: dp(20)
+    spacing: dp(10)
+    orientation: "vertical"
+
+    PLabel:
+        text: "Bio Change"
+        font_size: dp(20)
+        font_name: "LexendMedium"
+        adaptive_height: True
+
+    PLabel:
+        text: "Set a new inspiring bio about yourself:"
+        text_size: self.width, None
+        halign: "center"
+        adaptive_height: True
+
+    Widget:
+        size_hint_y: None
+        height: dp(25)
+
+    PBoxLayout:
+        orientation: "vertical"
+        adaptive_height: True
+        spacing: dp(15)
+        pos_hint: {"center_x": .5, "center_y": .4}
+
+        PTextField:
+            id: new
+            text: ""
+            hint_text: "Your bio:"
+            size_hint: .7, None
+            height: dp(40)
+            pos_hint: {"center_x": .5}
+
+            translate_x: 0
+            translate_y: 0
+            scale_x: 1
+            scale_y: 1
+            rotate: 0
+
+            canvas.before:
+                PushMatrix
+                Translate:
+                    x: self.translate_x or 0
+                    y: self.translate_y or 0
+
+                Rotate:
+                    origin: self.center
+                    angle: self.rotate or 0
+
+                Scale:
+                    origin: self.center
+                    x: self.scale_x or 1
+                    y: self.scale_y or 1
+            canvas.after:
+                PopMatrix
+
+
+        Widget:
+            size_hint_y: None
+            height: dp(25)
+
+        PBoxLayout:
+            adaptive_size: True
+            pos_hint: {"center_x": .5}
+            spacing: dp(10)
+
+            PButton:
+                text: "Set"
+                on_release:
+                    app.change_bio(new.text)
+
 <BreachDialog>
     adaptive_height: True
     padding: dp(20)

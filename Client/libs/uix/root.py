@@ -18,6 +18,13 @@ class Root(ScreenManager):
         self.go_home = False
         self.go_chat = False
 
+        screen = self.screens_data["processing"]
+        Builder.load_file(screen["kv"])
+        exec(screen["import"])
+        screen_object = eval(screen["object"])
+        screen_object.name = "processing"
+        self.add_widget(screen_object)
+
     def set_current(self, screen_name, side="left", quick=False):
         if not self.has_screen(screen_name):
             screen = self.screens_data[screen_name]

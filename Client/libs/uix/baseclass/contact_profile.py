@@ -43,7 +43,8 @@ class ContactProfile(PScreen):
 
     def open_menu(self):
         print(self.ids.md_menu.pos)
-        PDialog(content=Settings()).open()
+        self.popup2 = PDialog(content=Settings(title=self.title))
+        self.popup2.open()
 
 
 class IdentityCheck(PBoxLayout):
@@ -51,4 +52,4 @@ class IdentityCheck(PBoxLayout):
 
 
 class Settings(PBoxLayout):
-    pass
+    title = StringProperty()

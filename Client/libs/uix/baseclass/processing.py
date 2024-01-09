@@ -16,6 +16,8 @@ from kivy.utils import get_color_from_hex as gch
 
 
 class Processing(PScreen):
+    animate_text = StringProperty("Processing")
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         Window.clearcolor = gch("#ffffff")
@@ -23,9 +25,9 @@ class Processing(PScreen):
 
     def update(self, dt):
         try:
-            self.ids.animate_text.text += "." if not "..." in self.ids.animate_text.text else self.clear()
+            self.animate_text += "." if not "..." in self.animate_text else self.clear()
         except:
             pass
 
     def clear(self):
-        self.ids.animate_text.text = "Processing"
+        self.animate_text = "Processing"

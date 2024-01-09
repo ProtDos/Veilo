@@ -93,20 +93,29 @@
 
 
             PIconButton2:
-                icon: "send_lock"
+                id: send_mic_btn
+
+                # icon: "send_lock"
+                icon: "microphone"
 
                 # mode: "unstyled"
 
                 size_hint: None, None
                 font_size: "20sp"
 
-                y: field.y
+                # y: field.y - field.height / 2 / 2
 
-                pos_hint: {"center_x": .9}
+                pos_hint: {"center_x": .9, "center_y": .3}
 
-                on_release:
-                    root.send(field.text.strip())
-                    # app.send_message(field.text.strip())
+                on_touch_down:
+                    root.start_recording(args[0], args[1])
+
+                on_touch_up:
+                    root.stop_recording(args[0], args[1])
+
+                # on_release:
+                #     root.send()
+                #     # app.send_message(field.text.strip())
 
 
 

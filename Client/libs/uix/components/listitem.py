@@ -11,6 +11,7 @@ from components.boxlayout import PBoxLayout
 from core.theming import ThemableBehavior
 
 from baseclass.home_screen import HomeScreen
+from kivy.utils import get_color_from_hex
 
 Builder.load_string(
     """
@@ -60,16 +61,22 @@ Builder.load_string(
 
 <AttachmentChat>
     spacing: dp(15)
-    padding: dp(8)
+    padding: [dp(5), dp(8)]
     adaptive_height: True
+    
+    pos: self.pos if root.send_by_user else [dp(10) + dp(10), self.y] 
 
     canvas.before:
         Color:
-            rgba: root.bg_color
+            rgba: 
+                root.bg_color if self.send_by_user else root.bg_color
         RoundedRectangle:
-            radius: [dp(18),]
+            radius: 
+                [dp(16), dp(5), dp(16), dp(16)] if self.send_by_user \
+                else [dp(5), dp(16), dp(16), dp(16)]
             size: self.size
             pos: self.pos
+
             
     on_release:
         app.download_file(root.source_)
@@ -77,6 +84,8 @@ Builder.load_string(
     PBoxLayout:
         adaptive_size: True
         pos_hint: {"center_y": .5}
+        
+        padding: [dp(10), dp(3), dp(3), dp(3)]
 
         PIcon2:
             icon: root.icon
@@ -154,6 +163,7 @@ Builder.load_string(
 
 
 <-ChatListItem>
+    time_lbl: time_lbl
     padding: [dp(10), dp(15)]
     spacing: dp(10)
     adaptive_height: True
@@ -216,13 +226,14 @@ Builder.load_string(
         pos_hint: {"center_y": .5}
 
         PLabel:
+            id: time_lbl
             text: root.time
             font_name: 'LexendThin'
             adaptive_size: True
 
         Widget:
             size_hint: None, None
-            size: dp(10), dp(10)
+            size: dp(15), dp(15)
 
             canvas.before:
                 Color:
@@ -231,8 +242,75 @@ Builder.load_string(
                         else (0, 0, 0, 0)
                 Ellipse:
                     size: self.size
-                    pos: self.pos
+                    pos: self.x + time_lbl.width - dp(12), self.y - dp(8)
 
+
+<-GroupListItem>
+    padding: [dp(10), dp(15)]
+    spacing: dp(5)
+    adaptive_height: True
+    
+    on_press:
+        app.select(*args)
+        
+    canvas.before:
+        Color:
+            rgba: [0, 0, 0, 0]
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    
+    
+    canvas.before:
+        Color:
+            rgba: root.bg_color
+        RoundedRectangle:
+            radius: [dp(18),]
+            size: self.size
+            pos: self.pos
+    
+        
+    PBoxLayout:   
+        adaptive_size: True            
+        pos_hint: {"center_y": .5}
+                
+        FitImage:
+            id: da_img
+            source: "assets/images/dummy.png"
+            size_hint: None, None
+            size: dp(50), dp(50)
+            radius: [dp(100),]
+        
+        PIconButtonGroup:
+            opacity: 1 if root.checked else 0
+            icon: "check_circle"
+            mode: "unstyled"
+            font_size: sp(25)
+            pos_hint: {"x": -1, "y": +0.2}
+
+    PBoxLayout:
+        orientation: 'vertical'
+        spacing: dp(3)
+        adaptive_height: True
+        pos_hint: {"center_y": .5}
+        
+        padding: [dp(10), 0, 0, 0]
+
+        PLabel:
+            text: root.text
+            adaptive_height: True
+            shorten: True
+            shorten_from: 'right'
+            text_size: self.width, None
+
+        PLabel:
+            text: root.secondary_text
+            font_name: 'LexendLight'
+            text_color: 0.5, 0.5, 0.5, 0.5
+            adaptive_height: True
+            shorten: True
+            shorten_from: 'right'
+            text_size: self.width, None
     """
 )
 
@@ -279,8 +357,10 @@ class AttachmentChat(ButtonBehavior, ThemableBehavior, PBoxLayout):
 
     icon = StringProperty()
 
-    text_color = ColorProperty()
-    text_color_sec = ColorProperty()
+    text_color = ColorProperty(get_color_from_hex("#D9DADF"))
+    text_color_sec = ColorProperty(get_color_from_hex("#D9DADF"))
+
+    send_by_user = BooleanProperty()
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -334,3 +414,17 @@ class ChatListItem(ListItem):
     unread_messages = BooleanProperty()
 
 
+class GroupListItem(ListItem):
+    image = StringProperty()
+
+    name = StringProperty()
+
+    time = StringProperty()
+
+    unread_messages = BooleanProperty()
+
+    bg_color = ColorProperty([0, 0, 0, 0])
+
+    real_bg_color = ColorProperty([0, 0, 0, 0])
+
+    checked = BooleanProperty()

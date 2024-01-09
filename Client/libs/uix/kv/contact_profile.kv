@@ -155,6 +155,15 @@
             pos: self.pos
             radius: [5,]
 
+    PLabel:
+        original: "User Settings"
+        text: self.original if app.language == 'EN' else app.translate(self.original)
+
+        font_size: dp(20)
+        font_name: "LexendMedium"
+        adaptive_height: True
+
+
     PBoxLayout:
         orientation: "vertical"
         padding: dp(10)

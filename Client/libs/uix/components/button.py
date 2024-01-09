@@ -145,6 +145,24 @@ Builder.load_string(
         Line:
             ellipse: (self.x, self.y, self.width, self.height)
             width: dp(1)
+
+<PIconButtonGroup>
+    size_hint: None, None
+    size: dp(2), dp(2)
+
+    canvas.before:
+        Color:
+            rgba: self.bg_color
+        Ellipse:
+            size: self.size
+            pos: self.pos
+
+    canvas.after:
+        Color:
+            rgba: 0.5, 0.5, 0.5, 0.5
+        Line:
+            ellipse: (self.x, self.y, self.width, self.height)
+            width: dp(1)
 """
 )
 
@@ -217,6 +235,26 @@ class PIconButton(BaseButton, PIcon):
 
 
 class PIconButton2(BaseButton, PIcon2):
+    def on_mode(self, instance, value):
+        if value == "contained":
+            self.canvas.after.clear()
+            self.bg_color = self.theme_cls.primary_color
+            self.bg_normal = self.theme_cls.primary_color
+            self.bg_down = self.theme_cls.primary_dark
+            self.text_color = (1, 1, 1, 1)
+        elif value == "outlined":
+            self.bg_down = self.theme_cls.bg_dark
+            self.bg_normal = self.theme_cls.bg_normal
+            self.bg_color = self.theme_cls.bg_normal
+        elif value == "unstyled":
+            self.bg_down = self.theme_cls.bg_dark
+            Clock.schedule_once(lambda x: self.canvas.after.clear())
+        else:
+            self.bg_color = self.bg_normal
+            Clock.schedule_once(lambda x: self.canvas.after.clear())
+
+
+class PIconButtonGroup(BaseButton, PIcon2):
     def on_mode(self, instance, value):
         if value == "contained":
             self.canvas.after.clear()
