@@ -1,5 +1,6 @@
 from kivy.config import ConfigParser
 from kivy.properties import ColorProperty
+from kivy.app import App
 
 
 class Config:
@@ -17,6 +18,7 @@ class Config:
 
         self.config.adddefaultsection("other")
         self.config.setdefault("other", "startup", "False")
+        self.config.setdefault("other", "show_message_content", "False")
 
         self.config.adddefaultsection("coloring")
         self.config.setdefault("coloring", "main", "684bbf")
@@ -31,7 +33,6 @@ class Config:
         return self.config.get("coloring", "secondary")
 
     def set_colors(self, main, secondary):
-        from kivy.app import App
 
         theme_cls = App.get_running_app().theme_cls
 
@@ -83,6 +84,21 @@ class Config:
         }
         code = language_mapping.get(lang, "en")
         return code
+
+    def message_opt(self):
+        a = self.config.get("other", "show_message_content")
+        print(eval(a))
+        return eval(a)
+
+    def show_messages_content(self):
+        App.get_running_app().show_message_content = True
+        self.config.set("other", "show_message_content", "True")
+        self.config.write()
+
+    def hide_messages_content(self):
+        App.get_running_app().show_message_content = False
+        self.config.set("other", "show_message_content", "False")
+        self.config.write()
 
 
 config = Config()
