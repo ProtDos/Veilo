@@ -19,6 +19,8 @@ Neither options send        - 10014
 Invalid phone format        - 10015
 Invalid email format        - 10016
 Incomplete data             - 10017
+Invalid ID                  - 10018
+Invalid file path           - 10019
 
 
 # Success Codes
