@@ -88,5 +88,10 @@
         "import": "from baseclass.theming import Theming",
         "object": "Theming()",
         "kv": "libs/uix/kv/theming.kv"
+    },
+    "group_members": {
+        "import": "from baseclass.group_members import GroupMembers",
+        "object": "GroupMembers()",
+        "kv": "libs/uix/kv/group_members.kv"
     }
 }
