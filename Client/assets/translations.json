@@ -56,7 +56,12 @@
             "Account details": "Kontodetails",
             "Create": "Erstellen",
             "Recipient": "Empf\u00e4nger",
-            "Enter in your recipient to start a new chat.": "Geben Sie Ihren Empf\u00e4nger ein, um einen neuen Chat zu starten."
+            "Enter in your recipient to start a new chat.": "Geben Sie Ihren Empf\u00e4nger ein, um einen neuen Chat zu starten.",
+            "Search...": "Suchen...",
+            "Learn more about Veilo": "Erfahren Sie mehr \u00fcber Veilo",
+            "Show message content in notifications?": "Nachrichteninhalt in Benachrichtigungen anzeigen?",
+            "True": "WAHR",
+            "False": "FALSCH"
         },
         "es": {
             "Sign In": "Iniciar sesi\u00f3n",
@@ -92,7 +97,11 @@
             "Others...": "Otros...",
             "App preferences": "Preferencias de la aplicaci\u00f3n",
             "Account": "Cuenta",
-            "Account details": "Detalles de la cuenta"
+            "Account details": "Detalles de la cuenta",
+            "Search...": "Buscar...",
+            "Learn more about Veilo": "M\u00e1s informaci\u00f3n sobre Veilo",
+            "Show message content in notifications?": "\u00bfMostrar el contenido del mensaje en las notificaciones?",
+            "False": "FALSO"
         },
         "fr": {
             "Sign In": "S'identifier",
