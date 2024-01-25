@@ -133,10 +133,12 @@ pip3 install --user --upgrade Cython==0.29.33 virtualenv
 export PATH=$PATH:~/.local/bin/
 
 # move the file to the current directory
-cd Veilo
+cd Veilo/Client
 buildozer android debug
 ```
-The result will be withing the bin/ directory. Note: This is only for android.
+The result will be within the bin/ directory. 
+> Note:
+> This is only for android.
 
 ### Prerequisites
 
@@ -147,7 +149,7 @@ To run the app locally, execute these command. If you want to export it, visit t
   ```
 * requirements
   ```sh
-  pip install -r requrements.txt
+  pip install -r requirements.txt
   ```
 
 ### Installation
@@ -156,7 +158,7 @@ _Below is an example of how you can instruct your audience on installing and set
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/ProtDos/ProtDos.git
+   git clone https://github.com/ProtDos/Veilo.git
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -167,7 +169,7 @@ _Below is an example of how you can instruct your audience on installing and set
 
 To use this repo, simply type 
 ```sh
-   cd Veilo/
+   cd Veilo/Client
    python3 main.py
    ```
 
@@ -176,6 +178,7 @@ To use this repo, simply type
 
 ## Security and Privacy
 Click the links to learn more about the given Topic.
+If you want to learn more about support for different versions, visit [SECURITY.md](https://github.com/ProtDos/Veilo/SECURITY.md).
 - **Meta-Data** :  [Meta-Data](https://github.com/ProtDos/Veilo/blob/main/Documentation/METADATA.md)
 - **Encryption** : ⚪
 - **Authentication** : ⚪
