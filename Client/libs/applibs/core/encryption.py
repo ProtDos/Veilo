@@ -4,9 +4,11 @@ from cryptography.fernet import Fernet
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from kivy.app import App
 
 
 def encrypt(message, key):
+    message = message
     password_provided = key
     password = password_provided.encode()
     salt = b'salt_'
@@ -25,6 +27,7 @@ def encrypt(message, key):
 
 
 def decrypt(message, key):
+    message = message
     try:
         key = key.encode()
         salt = b'salt_'

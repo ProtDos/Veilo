@@ -41,18 +41,12 @@ class Config:
 
         self.config.write()
 
-        print(main, secondary)
-
         theme_cls.update(main, secondary)
-
-        # theme_cls.primary_color = main
-        # theme_cls.primary_light = secondary
 
     def get_theme_style(self):
         return self.config.get("theme", "theme_style")
 
     def is_startup(self):
-        # return True
         a = self.config.get("other", "startup")
         self.config.set("other", "startup", "False")
         self.config.write()
@@ -63,7 +57,6 @@ class Config:
         self.config.write()
 
     def set_language(self, lang):
-        print("Setting to:", lang)
         self.config.set("language", "default", lang)
         self.config.write()
 
@@ -87,7 +80,6 @@ class Config:
 
     def message_opt(self):
         a = self.config.get("other", "show_message_content")
-        print(eval(a))
         return eval(a)
 
     def show_messages_content(self):

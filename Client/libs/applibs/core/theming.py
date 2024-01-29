@@ -5,12 +5,10 @@ from kivy.event import EventDispatcher
 from kivy.properties import ColorProperty, OptionProperty
 from kivy.utils import get_color_from_hex as gch
 
-
-# TODO: Better secondary color: #6B6F72
-
-
 from core import font_definitions
 from utils.configparser import config
+
+# INFO: better color: #6B6F72
 
 
 class ThemeManager(EventDispatcher):
@@ -30,13 +28,13 @@ class ThemeManager(EventDispatcher):
 
     theme_style = OptionProperty("Light", options=["Light", "Dark"])
 
-    def on_theme_style(self, instance, value):
-        Window.clearcolor = gch("FAFAFA" if value == "Light" else "121212")
+    def on_theme_style(self, _, value):
+        Window.clearcolor = gch("ffffff" if value == "Light" else "121212")  # FAFAFA
         if value == "Light":
             self.text_color = "000000"
             self.bg_light = "ffffff"
             self.bg_dark = "c7c7c7"
-            self.bg_normal = "FAFAFA"
+            self.bg_normal = "ffffff"  # FAFAFA
         else:
             self.text_color = "FFFFFF"
             self.bg_light = "383838"

@@ -14,7 +14,7 @@ def set_color(barcolor, icons_color="white"):
     activity = autoclass("org.kivy.android.PythonActivity").mActivity
     View = autoclass("android.view.View")
 
-    def statusbar(*args):
+    def statusbar(*_):
         color = Color.parseColor(get_hex_from_color(barcolor)[:7])
         window = activity.getWindow()
 
