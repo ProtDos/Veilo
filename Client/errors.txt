@@ -1,0 +1,2 @@
+java.lang.RuntimeException: Unable to create service org.kivy.plugins.messaging.KivyFirebaseMessagingBackgroundService: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.String android.content.Context.getPackageName()' on a null object reference
+Caused by: java.lang.NullPointerException: Attempt to invoke virtual method 'java.lang.String android.content.Context.getPackageName()' on a null object reference
