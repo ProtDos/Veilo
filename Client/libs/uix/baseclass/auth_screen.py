@@ -1,22 +1,20 @@
 from kivy.animation import Animation
+from kivy.app import App
 from kivy.clock import Clock
-from kivy.core.window import Window
 from kivy.properties import ColorProperty
-
 from components.screen import PScreen
 from components.toast import toast
-
+from kivy.utils import rgba, get_color_from_hex, platform
 from utils.configparser import config
-
 from components.boxlayout import PBoxLayout
 from components.dialog import PDialog
-
-
 from password_strength import PasswordPolicy
+
+if platform == "android":
+    from android.permissions import request_permissions, Permission
 
 
 def calculate_password_strength(password):
-    # Define the password policy with desired constraints
     policy = PasswordPolicy.from_names(
         length=8,  # Minimum password length
         uppercase=1,  # Require at least one uppercase letter
@@ -27,9 +25,6 @@ def calculate_password_strength(password):
 
     # Check password against the defined policy and get the score
     password_strength = policy.password(password)
-
-    print(password_strength.strength())
-
     return password_strength.strength() * 100
 
 
@@ -44,26 +39,29 @@ class AuthScreen(PScreen):
 
         a = config.is_startup()
 
-        if a == "True" or a is True:
-            Clock.schedule_once(self.show_form, 5)
+        if platform == "android":
+            Clock.schedule_once(self.show_form, 0)
         else:
-            Clock.schedule_once(self.show_form, 3)
+            if a == "True" or a is True:
+                Clock.schedule_once(self.show_form, 5)
+            else:
+                Clock.schedule_once(self.show_form, 3)
 
 
-    def on_text(self, instance, value):
+    def on_text(self, _, value):
         if value:
             x = calculate_password_strength(value)
-            print(x)
             if x <= 20:
                 self.ids.password.foreground_color = [255, 0, 0, 0.9]
             elif x <= 70:
-                self.ids.password.foreground_color = [255, 215, 0, 0.85]
+                self.ids.password.foreground_color = get_color_from_hex("#ffd700d9")
             else:
                 self.ids.password.foreground_color = [0, 255, 0, 0.9]
 
-    def show_form(self, *args):
+    def show_form(self, *_):
+        if platform == "android":
+            request_permissions([Permission.POST_NOTIFICATIONS])
 
-        # self.ids.intro.remove_widget(self.ids.intro_btn)
         Animation(bg_color=self.theme_cls.bg_normal, d=0.4).start(self)
 
         Animation(
@@ -86,6 +84,7 @@ class AuthScreen(PScreen):
     def sign_in(self):
         self.manager.set_current("home")
         toast("Signed In successfully!")
+
 
     def sign_up(self):
         self.ids.uname.shake()

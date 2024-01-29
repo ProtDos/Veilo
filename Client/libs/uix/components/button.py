@@ -1,16 +1,13 @@
 from kivy.animation import Animation
 from kivy.clock import Clock
 from kivy.lang import Builder
-from kivy.properties import ColorProperty, OptionProperty, StringProperty, ListProperty
+from kivy.properties import ColorProperty, OptionProperty, StringProperty
 from kivy.uix.behaviors import ButtonBehavior
-
-
 from components.label import PIcon, PIcon2, PLabel
 from core.theming import ThemableBehavior
-from kivy.utils import get_color_from_hex
 
 Builder.load_string(
-"""
+    """
 #: import get_color_from_hex kivy.utils.get_color_from_hex
 
 <PButton>
@@ -188,7 +185,7 @@ class BaseButton(ButtonBehavior, ThemableBehavior):
     def on_mode(self, *args):
         raise NotImplementedError()
 
-    def on_state(self, instance, value):
+    def on_state(self, _, value):
         anim = Animation(
             bg_color=self.bg_down if value == "down" else self.bg_normal,
             d=0.2,
@@ -279,10 +276,8 @@ class PSwitch(PButton):
     status = StringProperty("on")
 
     def slide(self):
+        print(self.status)
         if self.status == "on":
             self.status = "off"
         else:
             self.status = "on"
-
-        print(self.ids.my_el.pos)
-

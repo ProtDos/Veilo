@@ -1,14 +1,10 @@
-from kivy.animation import Animation
 from kivy.app import App
 from kivy.clock import Clock
-from kivy.metrics import dp
-from kivy.properties import DictProperty, ListProperty, StringProperty
-
+from kivy.properties import StringProperty
 from components.boxlayout import PBoxLayout
 from components.dialog import PDialog
 from components.screen import PScreen
 from components.toast import toast
-# from kivymd.uix.menu import MDDropdownMenu
 
 
 class ContactProfile(PScreen):
@@ -30,7 +26,6 @@ class ContactProfile(PScreen):
             self.ids.block_screen.disabled = False
 
     def verify(self):
-        print(self.title)
         self.manager.set_current("verify_identity")
         verify_identity = self.manager.get_screen("verify_identity")
         verify_identity.name_of_contact = str(self.title)
@@ -42,7 +37,6 @@ class ContactProfile(PScreen):
         pass
 
     def open_menu(self):
-        print(self.ids.md_menu.pos)
         self.popup2 = PDialog(content=Settings(title=self.title))
         self.popup2.open()
 

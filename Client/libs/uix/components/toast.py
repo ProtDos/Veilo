@@ -81,7 +81,6 @@ class Toast(BaseDialog):
 
 
 if platform != "android":
-
     def toast(text):
         Toast().toast(text)
 

@@ -28,7 +28,6 @@ class Startup(PScreen):
         Clock.schedule_once(self.show_form, 5)
 
     def show_form(self, dt):
-        # self.ids.intro.remove_widget(self.ids.intro_btn)
         Animation(bg_color=gch("FFFFFF"), d=0.4).start(self)
 
         Animation(
@@ -45,7 +44,6 @@ class Startup(PScreen):
         self.bg_color = gch("FFFFFF")
 
     def current_slide(self, index):
-        print(index)
         for i in range(3):
             if index == i:
                 self.ids[f"slide{index}"].text_color = rgba(253, 140, 95, 255)
@@ -62,8 +60,6 @@ class Startup(PScreen):
         self.ids.carousel.index = 2
 
     def get_started(self):
-        # Animation(bg_color=self.theme_cls.bg_normal, d=0.4).start(self)
-
         self.ids.slide0.disabled = True
         self.ids.slide1.disabled = True
         self.ids.slide2.disabled = True

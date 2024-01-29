@@ -1,9 +1,7 @@
 from __future__ import annotations
-
 from components.screen import PScreen
 from components.dialog import PDialog
 from components.boxlayout import PBoxLayout
-
 from kivy.clock import Clock
 from kivy.properties import AliasProperty, ColorProperty, ListProperty, BoundedNumericProperty, NumericProperty, \
     VariableListProperty, StringProperty
@@ -13,7 +11,6 @@ from kivymd.uix.behaviors import RectangularElevationBehavior
 from kivymd.uix.floatlayout import MDFloatLayout
 from kivy.uix.colorpicker import ColorWheel
 from utils.configparser import config
-
 from components.chat_bubble import ChatBubble2
 
 
@@ -21,7 +18,6 @@ def rgba_to_hex(rgba_tuple):
     r, g, b, a = rgba_tuple
     f = 255
     al = int(r * f), int(g * f), int(b * f), int(a * f)
-    print(al)
     return '{:02x}{:02x}{:02x}'.format(*al)
 
 
@@ -64,7 +60,10 @@ class Theming(PScreen):
         self.main_color = self.theme_cls.primary_color
         self.secondary_color = self.theme_cls.primary_light
 
-        Clock.schedule_once(self.a, 1)
+        self.ids.box.add_widget(
+            ChatBubble2(text="This is an example", send_by_user=True, icon="clock", pos_hint={"right": 1}))
+        self.ids.box.add_widget(
+            ChatBubble2(text="Yeah", send_by_user=False, icon="clock"))
 
     def open_picker(self):
         PDialog(
@@ -72,43 +71,17 @@ class Theming(PScreen):
             )
         ).open()
 
-    def a(self, dt):
-        self.ids.box.add_widget(ChatBubble2(text="This is an example", send_by_user=True, pos_hint={"right": 1}, icon="clock"))
-        self.ids.box.add_widget(
-            ChatBubble2(text="Yeah", send_by_user=False, icon="clock"))
-        # self.chat_logs.append(
-        #     {"text": "This is a test message", "send_by_user": True, "pos_hint": {"right": 1}, "icon": "clock"}
-        # )
-        # self.chat_logs.append(
-        #     {"text": "Test back", "send_by_user": False,
-        #      "icon": "check_circle"}
-        # )
-
     def update_main(self):
-        self.ids.box.clear_widgets()
-        self.ids.box.add_widget(
-            ChatBubble2(text="This is an example", send_by_user=True, pos_hint={"right": 1}, icon="clock", primary=self.main_color))
-        self.ids.box.add_widget(
-            ChatBubble2(text="Yeah", send_by_user=False, icon="clock", secondary=self.secondary_color))
-
-        # self.chat_logs.append(
-        #     {"text": "This is a test message", "send_by_user": True, "pos_hint": {"right": 1}, "icon": "clock", "primary": self.main_color}
-        # )
-        # self.chat_logs.append(
-        #     {"text": "Test back", "send_by_user": False,
-        #      "icon": "check_circle", "secondary": self.secondary_color}
-        # )
+        for child in self.ids.box.children:
+            child.primary = self.main_color
+            child.secondary = self.secondary_color
 
     def update_sec(self):
-        self.ids.box.clear_widgets()
-        self.ids.box.add_widget(
-            ChatBubble2(text="This is an example", send_by_user=True, pos_hint={"right": 1}, icon="clock",
-                        primary=self.main_color))
-        self.ids.box.add_widget(
-            ChatBubble2(text="Yeah", send_by_user=False, icon="clock", secondary=self.secondary_color))
+        for child in self.ids.box.children:
+            child.primary = self.main_color
+            child.secondary = self.secondary_color
 
     def set(self):
-        print(self.main_color, self.secondary_color)
         main = rgba_to_hex(self.main_color)
         secondary = rgba_to_hex(self.secondary_color)
         config.set_colors(main, secondary)

@@ -13,7 +13,6 @@ from kivy.app import App
 
 
 def calculate_password_strength(password):
-    # Define the password policy with desired constraints
     policy = PasswordPolicy.from_names(
         length=8,  # Minimum password length
         uppercase=1,  # Require at least one uppercase letter
@@ -75,7 +74,7 @@ class PasswordChange(PBoxLayout):
         super().__init__(**kwargs)
         self.ids.new.bind(text=self.on_text)
 
-    def on_text(self, instance, value):
+    def on_text(self, _, value):
         if value:
             x = calculate_password_strength(value)
             print(x)
@@ -96,10 +95,7 @@ class BreachDialog(PBoxLayout):
     def submit(self, email, phone):
         if email == "" and phone == "":
             return
-        print(email, phone)
 
     def a(self, *args):
         if self.ids.okay.collide_point(*args[1].pos):
             webbrowser.open("https://veilo.protdos.com/breaches_help")
-
-

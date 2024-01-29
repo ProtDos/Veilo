@@ -1,7 +1,6 @@
 from kivy.lang import Builder
-from kivy.properties import NumericProperty, StringProperty, ColorProperty
+from kivy.properties import StringProperty
 from kivy.uix.boxlayout import BoxLayout
-
 from components.adaptive_widget import AdaptiveWidget
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.gridlayout import GridLayout
@@ -67,7 +66,7 @@ class Card(BoxLayout):
             self.label = widget
         super(Card, self).add_widget(widget, index=index, canvas=canvas)
 
-    def on_label(self, instance, value):
+    def on_label(self, _, value):
         self.label = value
 
     def on_touch_down(self, touch):
@@ -78,6 +77,7 @@ class Card(BoxLayout):
 
 class PBoxLayout(AdaptiveWidget, BoxLayout):
     pass
+
 
 class PGridLayout(AdaptiveWidget, GridLayout):
     pass

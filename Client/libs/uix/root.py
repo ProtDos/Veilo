@@ -51,15 +51,12 @@ class Root(ScreenManager):
             pass
 
     def _goto_previous_screen(self, _, key, *__):
-        # print(key)
         if key == 27:
             self.goto_previous_screen()
             return True
         return False
 
     def goto_previous_screen(self):
-        print(self.previous_screen)
-        print(self.go_home)
         if self.go_home:
             self.set_current("home", side="right")
             return

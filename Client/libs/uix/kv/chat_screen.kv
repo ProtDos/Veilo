@@ -1,6 +1,13 @@
 #: import webbrowser webbrowser
 #: import get_color_from_hex kivy.utils.get_color_from_hex
 
+# TODO:
+# Add Profile Image
+# Center the text
+# Smaller Top-Bar
+
+# More modern message sending
+
 <ChatScreen>
 
     PBoxLayout:
@@ -8,8 +15,10 @@
 
         PToolbar_Chat:
             title: root.title
+            halign: "center"
+            image: root.image
             left_action_items: [["arrow-left", lambda x: app.close_chat()]]
-            right_action_items: [["phone_lock", lambda x: app.nothing()]]
+            # right_action_items: [["phone_lock", lambda x: app.nothing()]]
             on_title_press: root.show_user_info()
 
         ScrollView:
@@ -27,22 +36,26 @@
 
         PBoxLayout:
             md_bg_color: 245/255, 245/255, 245/255, 1
-            # size_hint_y: .11
-            size_hint: 1, None
-            padding: [dp(10), 0]
+            size_hint: 1, .15
+            padding: [dp(10), dp(0), dp(10), dp(15)]
             spacing: dp(10)
 
             PBoxLayout:
-                size_hint: .7, .4
-                # height: dp(40)
+                size_hint: .7, None
+                height: dp(40)
                 pos_hint: {"center_x": .45, "center_y": .3}
                 canvas:
                     Color:
-                        rgb: (238/255, 238/255, 238/255, 1)
+                        rgba: get_color_from_hex("#F3F3F3")
                     RoundedRectangle:
                         size: self.size
                         pos: self.pos
-                        radius: [23, 23, 23, 23]
+                        radius: [dp(25),]
+                    Color:
+                        rgba: get_color_from_hex("#E5E5E3")
+                    Line:
+                        width: 1
+                        rounded_rectangle: self.x, self.y, self.width, self.height, dp(25)
 
                 PIconButton2:
                     mode: "unstyled"
@@ -51,7 +64,7 @@
                     size_hint: None, None
                     font_size: "20sp"
 
-                    text_color: get_color_from_hex("#808080")
+                    text_color: get_color_from_hex("#68635D")
 
                     pos_hint: {"center_x": .2, "center_y": .5}
 
@@ -60,14 +73,15 @@
 
                 TextInput:
                     id: field
-                    original: "Type something..."
+                    original: "Veilo Message"
                     hint_text: self.original if app.language == 'EN' else app.translate(self.original)
 
-                    size_hint: 1, None
+                    size_hint: 1, .7
                     pos_hint: {"center_x": -.1, "center_y": .5}
                     font_size: "12sp"
                     height: self.minimum_height
                     multiline: False
+                    valign: "center"
                     cursor_color: 1, 170/255, 23/255, 1
                     cursor_width: "2sp"
                     foreground_color: get_color_from_hex("#808080")  # "34218e"
@@ -83,7 +97,7 @@
                     size_hint: None, None
                     font_size: "20sp"
 
-                    text_color: get_color_from_hex("#808080")
+                    text_color: get_color_from_hex("#68635D")
 
                     pos_hint: {"center_x": .75, "center_y": .5}
 
@@ -94,29 +108,14 @@
 
             PIconButton2:
                 id: send_mic_btn
-
-                # icon: "send_lock"
                 icon: "microphone"
-
-                # mode: "unstyled"
-
                 size_hint: None, None
                 font_size: "20sp"
-
-                # y: field.y - field.height / 2 / 2
-
                 pos_hint: {"center_x": .9, "center_y": .3}
-
                 on_touch_down:
                     root.start_recording(args[0], args[1])
-
                 on_touch_up:
                     root.stop_recording(args[0], args[1])
-
-                # on_release:
-                #     root.send()
-                #     # app.send_message(field.text.strip())
-
 
 
     PIconButton:
@@ -129,8 +128,7 @@
         disabled: False if self.show else True
         on_release: root.scroll_to_bottom() 
         show:
-            True if chat_rv.height < box.height and chat_rv.scroll_y > 0 \
-            else False
+            True if chat_rv.height < (box.height * 0.75) and chat_rv.scroll_y > 0 else False
 
 
 <UserInfoDialogContent>

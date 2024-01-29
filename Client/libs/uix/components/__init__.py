@@ -22,6 +22,7 @@ r("FitImage", module="libs.uix.components.image")
 
 r("ChatListItem", module="libs.uix.components.listitem")
 r("ListItem", module="libs.uix.components.listitem")
+r("ListItemSwitch", module="libs.uix.components.listitem")
 
 r("ChatBubble", module="libs.uix.components.chat_bubble")
 r("ChatBubble2", module="libs.uix.components.chat_bubble")

@@ -73,7 +73,8 @@
 
                     icon: "login"
                     on_release:
-                        root.view_logins()
+                        root.change_security()
+                        # root.view_logins()
 
                 ListItem2:
                     original: "Security"
@@ -188,7 +189,7 @@
 
         ScrollView:
             size_hint: 1, None
-            size: 500, 300
+            size: dp(200), 300
             PBoxLayout:
                 orientation: "vertical"
                 padding: dp(10)

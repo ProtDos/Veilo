@@ -3,7 +3,6 @@ from kivy.lang import Builder
 from kivy.metrics import dp
 from kivy.properties import ListProperty, ObjectProperty
 from kivy.uix.modalview import ModalView
-
 from core.theming import ThemableBehavior
 
 Builder.load_string(
@@ -39,7 +38,7 @@ class BaseDialog(ModalView):
 class PDialog(ThemableBehavior, BaseDialog):
     content = ObjectProperty()
 
-    def on_content(self, instance, value):
+    def on_content(self, _, __):
         Clock.schedule_once(self.add_content_cls)
 
     def add_content_cls(self, i):

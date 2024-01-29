@@ -86,7 +86,7 @@ class PToolbar(BoxLayout, ThemableBehavior):
         super().__init__(**kwargs)
         self.register_event_type("on_title_press")
 
-    def on_left_action_items(self, instance, value):
+    def on_left_action_items(self, _, value):
         self.update_action_bar(self.ids["left_actions"], value)
 
     def on_right_action_items(self, instance, value):
@@ -140,11 +140,10 @@ class PToolbar_Chat(BoxLayout, ThemableBehavior):
         super().__init__(**kwargs)
         self.register_event_type("on_title_press")
 
-    def on_left_action_items(self, instance, value):
+    def on_left_action_items(self, _, value):
         self.update_action_bar(self.ids["left_actions"], value)
 
-    def on_right_action_items(self, instance, value):
-        print(self.ids["right_actions"], value)
+    def on_right_action_items(self, _, value):
         self.update_action_bar2(self.ids["right_actions"], value)
 
     def update_action_bar(self, action_bar, action_bar_items):

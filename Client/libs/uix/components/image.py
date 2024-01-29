@@ -55,14 +55,14 @@ class Container(Widget):
         self.source = source
         self.bind(size=self.adjust_size, pos=self.adjust_size)
 
-    def on_source(self, instance, value):
+    def on_source(self, _, value):
         if isinstance(value, str):
             self.image.source = value
         else:
             self.image.texture = value
         self.adjust_size()
 
-    def adjust_size(self, *args):
+    def adjust_size(self, *_):
         if not self.parent or not self.image.texture:
             return
 

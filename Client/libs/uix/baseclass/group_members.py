@@ -1,19 +1,9 @@
 import os
-import threading
-import time
 import json
-from kivy.animation import Animation
-from kivy.clock import Clock
-from kivy.metrics import sp
-from kivy.uix.button import Button
-from components.boxlayout import PBoxLayout
-from components.dialog import PDialog
-from components.label import PLabel
 from kivy.app import App
 from components.toast import toast
 from components.screen import PScreen
-from kivy.properties import ListProperty, NumericProperty, StringProperty, BooleanProperty
-
+from kivy.properties import ListProperty, BooleanProperty
 from core.encryption import encrypt, decrypt
 
 
@@ -73,7 +63,6 @@ class GroupMembers(PScreen):
     def continue_group(self):
         checked_items = [item for item in self.member_list if item.get("checked", False)]
         if checked_items:
-            print("Yeah.")
             for item in checked_items:
                 print(item)
             toast("Creating groups isn't supported yet.")
@@ -82,7 +71,6 @@ class GroupMembers(PScreen):
 
     def check_click(self, instance):
 
-        print(instance)
         position_dict = []
 
         layout_manager = self.ids.grid
@@ -90,36 +78,14 @@ class GroupMembers(PScreen):
         for index, child in enumerate(layout_manager.children):
             position_dict.append({"index": index, "pos": child.pos})
 
-        print("-" * 30)
-        print(position_dict)
-
-        # print("-"*30)
-        # print(touch.pos)
-        # print(self.ids.aaaa.height)
-        # print(self.ids.aaaa.y)
-        # print(instance)
-        # print(instance.height)
-        # print(instance.y)
-        # print(instance.pos)
-        # print("-" * 30)
-
-        print(instance.pos)
-        print(self.member_list)
-
         for item in position_dict:
             if item["pos"] == instance.pos:
 
                 data_item = self.member_list[::-1][int(item['index'])]
-
-                print("Item clicked at index:", item["index"])
-                print(f"Item clicked: {data_item}")
 
                 if data_item["checked"]:
                     data_item["checked"] = False
                 else:
                     data_item["checked"] = True
 
-        print(self.member_list)
-
-        print("-" * 30)
         self.ids.aaaa.refresh_from_data()

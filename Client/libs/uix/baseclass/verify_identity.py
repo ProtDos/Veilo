@@ -55,16 +55,12 @@ class Verify(PScreen):
             so2.connect(conn)
             so2.send(f"GET_PUBLIC:{resp}".encode())
             resp2 = so2.recv(1024).decode()
-            print("TWO: ", resp)
             if resp2 != "error":
                 self.public_contact = resp2
-
-        print("PUBLIC_CONTATC: ", self.public_contact)
 
         if self.public_own is not None and self.public_contact is not None:
             self.hashed_own = hash_obj(str(self.public_own))
             self.hashed_contact = hash_obj(str(self.public_contact))
-            print("yey")
         else:
             toast("Error occurred")
             self.manager.set_current("auth")

@@ -1,16 +1,9 @@
-import json
-import timeit
-
 from kivy.animation import Animation
-from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.properties import BooleanProperty, ColorProperty, StringProperty
 from kivy.uix.behaviors import ButtonBehavior
-
 from components.boxlayout import PBoxLayout
 from core.theming import ThemableBehavior
-
-from baseclass.home_screen import HomeScreen
 from kivy.utils import get_color_from_hex
 
 Builder.load_string(
@@ -137,6 +130,51 @@ Builder.load_string(
         PIcon2:
             icon: root.icon
             adaptive_size: True
+            font_size: sp(30)
+
+    PBoxLayout:
+        orientation: 'vertical'
+        spacing: dp(7)
+        adaptive_height: True
+        pos_hint: {"center_y": .5}
+
+        PLabel:
+            text: root.text
+            adaptive_height: True
+            shorten: True
+            shorten_from: 'right'
+            text_size: self.width, None
+
+        PLabel:
+            text: root.secondary_text
+            font_name: 'LexendLight'
+            text_color: 0.5, 0.5, 0.5, 0.5
+            adaptive_height: True
+            shorten: True
+            shorten_from: 'right'
+            text_size: self.width, None
+
+
+<ListItemSwitch>
+    spacing: dp(15)
+    padding: dp(10)
+    adaptive_height: True
+
+    canvas.before:
+        Color:
+            rgba: root.bg_color
+        RoundedRectangle:
+            radius: [dp(18),]
+            size: self.size
+            pos: self.pos
+    
+    PBoxLayout:
+        adaptive_size: True
+        pos_hint: {"center_y": .5, "center_x": .9}
+        
+        padding: [0, 0, 0, dp(20)]
+
+        PSwitch:
             font_size: sp(30)
 
     PBoxLayout:
@@ -333,10 +371,10 @@ class ListItem(ButtonBehavior, ThemableBehavior, PBoxLayout):
         self.long_press_time = 1  # Time threshold for long press in seconds
         self.long_press_event = None
 
-    def _update_bg_color(self, *args):
+    def _update_bg_color(self, *_):
         self.bg_color = self.theme_cls.bg_normal
 
-    def on_state(self, instance, value):
+    def on_state(self, _, value):
         Animation(
             bg_color=self.theme_cls.bg_dark
             if value == "down"
@@ -388,13 +426,44 @@ class ListItem2(ButtonBehavior, ThemableBehavior, PBoxLayout):
         self.bg_color = self.theme_cls.bg_normal
         self.theme_cls.bind(theme_style=self._update_bg_color)
 
-        self.long_press_time = 1  # Time threshold for long press in seconds
+        self.long_press_time = 1
         self.long_press_event = None
 
-    def _update_bg_color(self, *args):
+    def _update_bg_color(self, *_):
         self.bg_color = self.theme_cls.bg_normal
 
-    def on_state(self, instance, value):
+    def on_state(self, _, value):
+        Animation(
+            bg_color=self.theme_cls.bg_dark
+            if value == "down"
+            else self.theme_cls.bg_normal,
+            d=0.1,
+            t="in_out_cubic",
+        ).start(self)
+
+
+class ListItemSwitch(ButtonBehavior, ThemableBehavior, PBoxLayout):
+
+    bg_color = ColorProperty([0, 0, 0, 0])
+
+    text = StringProperty()
+
+    secondary_text = StringProperty()
+
+    icon = StringProperty()
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.bg_color = self.theme_cls.bg_normal
+        self.theme_cls.bind(theme_style=self._update_bg_color)
+
+        self.long_press_time = 1
+        self.long_press_event = None
+
+    def _update_bg_color(self, *_):
+        self.bg_color = self.theme_cls.bg_normal
+
+    def on_state(self, _, value):
         Animation(
             bg_color=self.theme_cls.bg_dark
             if value == "down"

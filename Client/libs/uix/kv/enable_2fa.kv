@@ -10,15 +10,26 @@
         # text_color: get_color_from_hex("#B2B2B2")
         pos_hint: {"center_x": .5, "center_y": .9}
 
+    PIconButton2:
+        id: i_btn
+        icon: "content_copy"
+        mode: "unstyled"
+        font_size: sp(20)
+
+        pos_hint: {"center_x": .9, "center_y": .9}
+
+        on_release:
+            root.copy_code()
+
     PBoxLayout:
         orientation: "vertical"
         size_hint: (None, None)
-        size: (250, 250)
+        size: (450, 450)
         pos_hint: {'center_x': 0.5, 'center_y': 0.6}
 
         Image:
             source: "2fa_code.png"
-            size: (250, 250)
+            size: (450, 450)
             pos_hint: {"center_x": .5, "center_y": .6}
 
 

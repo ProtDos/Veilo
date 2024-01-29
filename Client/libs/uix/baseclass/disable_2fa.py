@@ -1,12 +1,4 @@
-from kivy.clock import Clock
-from kivy.properties import StringProperty
-
-from components.boxlayout import PBoxLayout
-from components.dialog import PDialog
 from components.screen import PScreen
-from components.boxlayout import Card
-from kivymd.uix.card import MDCard
-from utils.configparser import config
 
 from kivy.app import App
 
@@ -65,7 +57,6 @@ class D2FA(PScreen):
         self.ids.v6.disabled = True
 
         self.final = str(self.v1_num) + str(self.v2_num) + str(self.v3_num) + str(self.v4_num) + str(self.v5_num) + str(self.v6_num)
-        print(self.final)
 
         self.ids.verify_button.disabled = False
 

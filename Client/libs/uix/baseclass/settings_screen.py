@@ -1,18 +1,13 @@
 import json
-
 import requests
-from kivy.animation import Animation
 from kivy.app import App
 from kivy.clock import Clock
-from kivy.metrics import dp
-from kivy.properties import StringProperty, ListProperty, ColorProperty, BooleanProperty
+from kivy.properties import StringProperty
 
 from components.boxlayout import PBoxLayout
 from components.dialog import PDialog
 from components.screen import PScreen
-from kivy.uix.floatlayout import FloatLayout
 from utils.configparser import config
-from kivy.utils import platform
 from extras.help_utils import get_android_system_language
 
 
@@ -130,7 +125,7 @@ class LanguageDialogContent(PBoxLayout):
 
 class LoginDialogContent(PBoxLayout):
     def okay(self):
-        print("asdf")
+        pass
 
 
 class BugReport(PBoxLayout):

@@ -8,18 +8,10 @@ from kivy.metrics import dp
 from kivy.properties import BooleanProperty, ColorProperty, StringProperty, ListProperty, NumericProperty
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.boxlayout import BoxLayout
-
 from components.label import PLabel
 from components.boxlayout import PBoxLayout
 from components.dialog import PDialog
 from core.theming import ThemableBehavior
-
-from kivy.uix.floatlayout import FloatLayout
-from kivy.uix.image import Image
-from kivy.uix.widget import Widget
-from kivy.utils import get_color_from_hex
-from PIL import Image
-from kivy.graphics import Color, RoundedRectangle
 
 
 def resize_image(original_width, original_height, target_width, target_height):
@@ -33,6 +25,33 @@ def resize_image(original_width, original_height, target_width, target_height):
         new_width = int(target_height * aspect_ratio)
 
     return [new_width, new_height]
+
+
+def get_resized_dimensions(original_width, original_height, max_width=350, max_height=350):
+    """
+    Calculate the new dimensions to resize an image while maintaining aspect ratio.
+
+    Parameters:
+        - original_width (int): The original width of the image.
+        - original_height (int): The original height of the image.
+        - max_width (int): The maximum width for the resized image.
+        - max_height (int): The maximum height for the resized image.
+
+    Returns:
+        - new_width (int): The new width after resizing.
+        - new_height (int): The new height after resizing.
+    """
+    if original_width > max_width or original_height > max_height:
+        ratio_width = max_width / original_width
+        ratio_height = max_height / original_height
+        resize_ratio = min(ratio_width, ratio_height)
+        new_width = int(original_width * resize_ratio)
+        new_height = int(original_height * resize_ratio)
+    else:
+        new_width = original_width
+        new_height = original_height
+
+    return new_width, new_height
 
 
 Builder.load_string(
@@ -71,7 +90,6 @@ Builder.load_string(
     
     size_hint: None, None
     size_hint_x: root.width_set
-    # width: dp(50)
     
     canvas.before:
         Color:
@@ -82,8 +100,7 @@ Builder.load_string(
             pos: self.pos
             radius:
                 [dp(16), dp(5), dp(16), dp(16)] if self.send_by_user \
-                else [dp(5), dp(16), dp(16), dp(16)]
-                
+                else [dp(5), dp(16), dp(16), dp(16)]           
 
     PBoxLayout:
         orientation: 'vertical'
@@ -111,13 +128,14 @@ Builder.load_string(
         
         PLabel:
             text: "NOW"
-            size_hint: None, None
+            height: 50
+            size_hint: (1, None)
             font_name: 'LexendLight'
             text_color: get_color_from_hex("#D9DADF")
             
             adaptive_height: True
             
-            text_size: self.width, None
+            text_size: (None, None)
             font_size: dp(10)
             padding: [dp(8), dp(2)]
         
@@ -513,7 +531,7 @@ class ChatBubble(PLabel):
 
         Clock.schedule_once(self.set_color, 0)
 
-    def set_color(self, dt):
+    def set_color(self, _):
         self.primary = self.theme_cls.primary_dark
         self.secondary = self.theme_cls.primary_color
 
@@ -525,7 +543,7 @@ class ChatBubble2(ButtonBehavior, ThemableBehavior, PBoxLayout):
 
     secondary_text = StringProperty("")
 
-    icon = StringProperty("clock")  # check_circle
+    icon = StringProperty("clock")
     width_set = NumericProperty()
 
     primary = ColorProperty()
@@ -540,10 +558,7 @@ class ChatBubble2(ButtonBehavior, ThemableBehavior, PBoxLayout):
 
         Clock.schedule_once(self.set_color, 0)
 
-    def set_color(self, dt):
-        # self.icon_color = get_color_from_hex("#fc050d")
-
-        print(self.ids.txt.texture_size)
+    def set_color(self, _):
         thresholds = [3, 7, 10, 13, 16, 19]
         widths = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8]
 
@@ -577,8 +592,7 @@ class Attachment(ButtonBehavior, ThemableBehavior, PBoxLayout):
 
         Clock.schedule_once(self.set_color, 0)
 
-    def set_color(self, dt):
-        print("Yup")
+    def set_color(self, _):
         self.base = os.path.basename(self.filename)
 
         self.spacing = dp(0)
@@ -600,21 +614,14 @@ class AudioMessage(ButtonBehavior, ThemableBehavior, BoxLayout):
 
     sizes = ListProperty([random.randint(2, 20) for _ in range(38)])
 
-    # siz = []
-    # sizes = ListProperty()
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
         Clock.schedule_once(self.set_color, 0)
         Clock.schedule_once(self.set_thing, 0)
 
-    def set_color(self, dt):
-        # print("SIZ:", self.siz)
+    def set_color(self, _):
         self.sizes = [random.randint(2, 20) for _ in range(38)]
-
-        print(self.sizes)
-        print(self.filename_data)
 
         self.sound = kivy.core.audio.SoundLoader.load(self.filename_data)
 
@@ -628,12 +635,10 @@ class AudioMessage(ButtonBehavior, ThemableBehavior, BoxLayout):
             self.sound.play()
         else:
             self.sound_pos = self.sound.get_pos()
-            print(self.sound_pos)
             self.ids.btn.icon = "play_2"
             self.sound.stop()
 
-    def sound_finished(self, *args):
-        print("Finished")
+    def sound_finished(self, *_):
         self.ids.btn.icon = "play_2"
         self.sound.stop()
 
@@ -671,25 +676,16 @@ class ImageMessage(ButtonBehavior, ThemableBehavior, BoxLayout):
         Clock.schedule_once(self.set_color, 0)
         Clock.schedule_once(self.update_image_size, 0)
 
-    def set_color(self, dt):
+    def set_color(self, _):
         self.primary = self.theme_cls.primary_dark
         self.secondary = self.theme_cls.primary_color
 
-    def update_image_size(self, dt):
+    def update_image_size(self, _):
         self.right_ = Window.size[1] - dp(8), self.y
 
         width, height = self.file_size
-        faktor = .7
-        target_width, target_height = Window.size
-        new_width, new_height = resize_image(original_width=width, original_height=height,
-                                             target_width=target_width * faktor, target_height=target_height * faktor)
+        new_width, new_height = get_resized_dimensions(original_width=width, original_height=height)
         self.file_size = new_width, new_height
-
-        if self.file_size[0] > 245:
-            self.file_size[0] = 245
-            self.file_size[1] = 245 / self.file_size[0] * self.file_size[1]
-
-        print((width, height), self.file_size)
 
 
 class ImageMessage_Core(ButtonBehavior, ThemableBehavior, BoxLayout):
@@ -719,25 +715,16 @@ class ImageMessage_Core(ButtonBehavior, ThemableBehavior, BoxLayout):
         self.ids.aaasd.texture = self.texture[0]
         self.ids.aaasd.reload()
 
-    def set_color(self, dt):
+    def set_color(self, _):
         self.primary = self.theme_cls.primary_dark
         self.secondary = self.theme_cls.primary_color
 
-    def update_image_size(self, dt):
+    def update_image_size(self, _):
         self.right_ = Window.size[1] - dp(8), self.y
 
         width, height = self.file_size
-        faktor = .7
-        target_width, target_height = Window.size
-        new_width, new_height = resize_image(original_width=width, original_height=height,
-                                             target_width=target_width * faktor, target_height=target_height * faktor)
+        new_width, new_height = get_resized_dimensions(original_width=width, original_height=height)
         self.file_size = new_width, new_height
-
-        if self.file_size[0] > 245:
-            self.file_size[0] = 245
-            self.file_size[1] = 245 / self.file_size[0] * self.file_size[1]
-
-        print((width, height), self.file_size)
 
 
 class DownloadVerify(PBoxLayout):

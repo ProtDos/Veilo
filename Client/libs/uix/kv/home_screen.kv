@@ -22,7 +22,7 @@
                 mode: "unstyled"
                 font_size: sp(30)
                 on_release:
-                    app.show_searchbar()
+                    app.show_searchbar2()
 
             PIconButton:
                 icon: "more-vertical"
@@ -133,11 +133,9 @@
                 PushMatrix
                 Rotate:
                     angle: root.angle
-                    # axis: 0, 0, 1
                     origin: create.center
             canvas.after:
                 PopMatrix
-
 
 <MenuDialogContent>
     orientation: "vertical"

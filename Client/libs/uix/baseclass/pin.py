@@ -1,11 +1,4 @@
-from kivy.clock import Clock
-from kivy.properties import StringProperty
-
-from components.boxlayout import PBoxLayout
-from components.dialog import PDialog
 from components.screen import PScreen
-from components.boxlayout import Card
-from utils.configparser import config
 
 
 class Pin(PScreen):
@@ -47,15 +40,10 @@ class Pin(PScreen):
 
         self.final = str(self.v1_num) + str(self.v2_num) + str(self.v3_num) + str(self.v4_num)
 
-        print(self.final)
-
         self.ids.verify_button.disabled = False
 
     def verify_pin(self):
-        pin = self.final
         self.ids.verify_button.disabled = True
 
     def open_sad(self):
-        # TODO: Open popup for account recovery (Not possible)
         pass
-

@@ -2,27 +2,24 @@ import json
 import os
 import threading
 import time
+import traceback
 
 import rsa
 from kivy.animation import Animation
 from kivy.clock import Clock
-from kivy.metrics import sp
 from kivy.properties import ListProperty, NumericProperty, StringProperty, BooleanProperty
-from kivy.uix.button import Button
 from components.boxlayout import PBoxLayout
 from components.dialog import PDialog
 from components.screen import PScreen
-from components.label import PLabel
 from kivy.app import App
 from components.toast import toast
-
-
 from core.encryption import encrypt, decrypt
 
 
 class HomeScreen(PScreen):
 
     chats = ListProperty()
+    original = ListProperty()
 
     popup = None
     popup2 = None
@@ -37,14 +34,13 @@ class HomeScreen(PScreen):
 
         Clock.schedule_once(self.load_all, 0)
 
-        self.original = None
-
         self.ids.field.bind(text=self.on_text)
+        self.current_animation = None
 
-    def on_text(self, instance, value):
+    def on_text(self, _, value):
         if value:
             for item in self.original:
-                if value not in item["text"]:
+                if value.lower() not in item["text"].lower():
                     try:
                         self.chats.remove(item)
                     except:
@@ -55,21 +51,12 @@ class HomeScreen(PScreen):
         else:
             self.chats = self.original
 
-    def show_original(self, *args):
-        print("-"*20)
-        print(self.chats)
-        print(self.original)
+    def show_original(self, *_):
         self.chats = [i for i in self.original]
-
-
         with open(os.path.join(os.path.join(os.path.dirname(os.path.abspath(App.get_running_app().my_file_path)), 'assets/users.json')), 'r') as f:
             self.data = json.load(f)
 
-        print(self.data)
-
-        print("-" * 20)
-
-    def load_all(self, *args):
+    def load_all(self, *_):
         ps = App.get_running_app().unhashed_password
 
         with open(os.path.join(os.path.join(os.path.dirname(os.path.abspath(App.get_running_app().my_file_path)), 'assets/users.json')), 'r') as f:
@@ -88,9 +75,10 @@ class HomeScreen(PScreen):
                         "image": self.data[i]["image"],
                         "name": i,
                         "unread_messages": self.data[i]["unread_messages"],
+                        "about": decrypt(self.data[i]["about"], ps),
+                        "public": self.data[i]["public"]
                     }
                     self.chats.append(user_data)
-            print(self.chats)
             if len(self.chats) == 0:
                 self.ids.first.opacity = 1
                 self.text_hidden = "1"
@@ -98,13 +86,8 @@ class HomeScreen(PScreen):
             self.ids.first.opacity = 1
             self.text_hidden = "1"
 
-        self.original = tuple(self.chats)
-
-        print("-"*30)
-        print("Original:", self.original)
-        print("Chats:", self.chats)
-        print("Data:", self.data)
-        print("-" * 30)
+        for item in self.chats:
+            self.original.append(item)
 
 
     def goto_chat_screen(self, user3):
@@ -123,14 +106,9 @@ class HomeScreen(PScreen):
                 App.get_running_app().buffer_messages.remove(item)
 
             ps = App.get_running_app().unhashed_password
-            print("-"*50)
-            print(ps)
-            print(user3)
             with open(os.path.join(os.path.join(os.path.dirname(os.path.abspath(App.get_running_app().my_file_path)),
                                                 'assets/users.json'))) as f:
                 self.data = json.load(f)
-            print(self.data)
-            print("-" * 50)
             for item in self.data:
                 if decrypt(item, ps) == user3:
                     user = {
@@ -139,18 +117,24 @@ class HomeScreen(PScreen):
                     }
                     break
 
+            try:
+                _ = user
+            except:
+                return toast("Error!")
+
             self.manager.set_current("chat")
+            App.get_running_app().root.set_current("chat")
             chat_screen = self.manager.get_screen("chat")
             chat_screen.user = user
+            chat_screen.image = user["image"]
             chat_screen.chat_logs = []
             chat_screen.title = user["name"]
-            # chat_screen.receive(user["message"])
-        except UnboundLocalError:
-            toast("Error")
         except Exception as e:
             print(e)
+            print(traceback.format_exc())
 
-    def show_menu(self, *args):
+
+    def show_menu(self, *_):
         PDialog(content=MenuDialogContent()).open()
 
     def create(self):
@@ -158,25 +142,6 @@ class HomeScreen(PScreen):
         self.popup.open()
 
     def user_settings(self, name):
-        #  with open("assets/users.json") as f:
-        #      data = json.load(f)
-        #  try:
-        #      self.ids.popup2.dismiss(force=True)
-        #  except:
-        #      pass
-        #  for item in data:
-        #      if item == name:
-        #          print(item)
-        #          print(data[item])
-        #          self.popup2 = PDialog(
-        #              content=UserInfoDialogContent(
-        #                  title=item,
-        #                  image=data[item]["image"],
-        #                  about=data[item]["about"],
-        #              )
-        #          )
-        #          self.popup2.open()
-        #          return
         with open(os.path.join(os.path.join(os.path.dirname(os.path.abspath(App.get_running_app().my_file_path)), 'assets/users.json'))) as f:
             data = json.load(f)
         ps = App.get_running_app().unhashed_password
@@ -192,13 +157,16 @@ class HomeScreen(PScreen):
                 self.manager.get_screen("contact_profile").about = decrypt(data[item]["about"], ps)
 
     def ann(self):
-        threading.Thread(target=self.animate_plus).start()
+        self.current_animation = Animation(angle=180, duration=0.15)
+        self.current_animation.bind(on_complete=self.stop_it)
+        self.current_animation.start(self)
 
-    def animate_plus(self):
-        print("Here")
-        for i in range(20):
-            self.angle += 9
-            time.sleep(.01)
+    def stop_it(self, anim, widget):
+        anim.cancel(widget)
+        anim.stop(widget)
+        Animation.stop_all(widget)
+        self.current_animation = None
+        widget.angle = 0
 
 
 class MenuDialogContent(PBoxLayout):
@@ -211,7 +179,7 @@ class CreatePopup(PBoxLayout):
 
         self.ids.recipient.bind(text=self.on_text)
 
-    def on_text(self, *args):
+    def on_text(self, *_):
         self.ids.recipient.foreground_color = [0.5, 0.5, 0.5, 0.5]
 
     def switch(self):
@@ -238,5 +206,3 @@ class UserInfoDialogContent(PBoxLayout):
     title = StringProperty()
     image = StringProperty()
     about = StringProperty()
-
-

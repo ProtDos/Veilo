@@ -48,7 +48,7 @@
                 MDRelativeLayout:
                     size_hint: None, None
                     # height: 110
-                    width: 320
+                    width: app.wwwindow.size[0] * 0.9
                     pos_hint: {"center_x": .5, "top": .95}
                     Label:
                         text: "Main Colors"
@@ -123,7 +123,7 @@
                 MDRelativeLayout:
                     size_hint: None, None
                     # height: 110
-                    width: 320
+                    width: app.wwwindow.size[0] * 0.9
                     pos_hint: {"center_x": .5, "top": .55}
                     Label:
                         text: "Second Colors"
@@ -194,21 +194,20 @@
                                 md_bg_color: get_color_from_hex("#e0e1dd")
 
 
+        ScrollView:
+            id: chat_rv
+            do_scroll_y: True
+            do_scroll_x: False
 
-
-            MDFloatLayout:
-                ScrollView:
-                    id: chat_rv
-
-                    PBoxLayout:
-                        id: box
-                        padding: dp(10)
-                        spacing: dp(15)
-                        orientation: "vertical"
-                        size_hint_y: None
-                        height: self.minimum_size[1]
-                        default_size_hint: .8, None
-                        default_size: None, None
+            PBoxLayout:
+                id: box
+                padding: dp(10)
+                spacing: dp(15)
+                orientation: "vertical"
+                size_hint_y: None
+                height: self.minimum_size[1]
+                default_size_hint: .8, None
+                default_size: None, None
 
         PButton:
             text: "Set Theme"

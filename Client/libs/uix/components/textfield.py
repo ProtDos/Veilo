@@ -1,7 +1,6 @@
 from kivy.animation import Animation
 from kivy.lang import Builder
 from kivy.uix.textinput import TextInput
-
 from core.theming import ThemableBehavior
 
 Builder.load_string(
@@ -15,7 +14,6 @@ Builder.load_string(
     background_normal: 'assets/images/transparent.png'
     cursor_color: self.theme_cls.primary_color
     padding: [0, dp(10), 0, 0]
-    
     
 
     canvas.before:
