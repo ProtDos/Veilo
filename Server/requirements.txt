@@ -1,3 +1,5 @@
 flask
 pyotp
 bcrypt
+werkzeug
+password_strength

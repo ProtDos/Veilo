@@ -1,18 +1,17 @@
-import base64
 import hashlib
 import os
-import random
 import re
 import sqlite3
 import threading
 
 import pyotp
-from PIL import Image
 from flask import Flask, request, jsonify, session, send_file
 import bcrypt
 from password_strength import PasswordPolicy
 from werkzeug.security import safe_join
 import secrets
+
+from NotifySystem.send_notify import send_token_push
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = str(os.urandom(50))
@@ -20,6 +19,7 @@ app.config["SECRET_KEY"] = str(os.urandom(50))
 local_data = threading.local()
 
 message_storage = []
+message_storage2 = []
 mailbox_system = []
 message_storage_v2 = []
 
@@ -36,8 +36,8 @@ def get_database_connection():
         secret_key VARCHAR(50) NOT NULL,
         authenticated INTEGER,
         twofaenabled INTEGER,
-        bio TEXT,
-        aboutme TEXT
+        device_token TEXT,
+        bio TEXT
     )
 """)
 
@@ -139,12 +139,80 @@ def close_mailbox():
 
 @app.route("/v2/send", methods=["POST"])
 def v2_send():
-    pass
+    message = request.json.get('message', None)
+    reply_to = request.json.get('reply_to', None)
+    signature = request.json.get('signature', None)
+    recipient = request.json.get('recipient', None)
+
+
+    if message is None or recipient is None or signature is None or reply_to is None:
+        return jsonify({'error': 'Incomplete data.', "code": 10017})
+
+    conn = sqlite3.connect('database.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM users WHERE username = ?", (recipient,))
+    user = cursor.fetchone()
+
+    if user:
+        message_storage2.append(
+            {"message": message, "recipient": recipient, "signature": signature, "reply_to": reply_to})
+
+        if user[6] and len(user[6]) > 5:
+            send_token_push("New message!", "You have received a new message.", user[6])
+
+        return jsonify({'success': 'Sent message', "code": 11110})
+    return jsonify({'error': 'User not found', "code": 10002})
 
 
 @app.route("/v2/receive", methods=["POST"])
 def v2_receive():
     pass
+
+
+@app.route("/user_all", methods=["POST"])
+def user_all():
+    recipient = request.json.get('recipient', None)
+
+    con = get_database_connection()
+
+    cursor = con.cursor()
+
+    cursor.execute("SELECT * FROM users WHERE username = ?", [recipient])
+    dat = cursor.fetchone()
+
+    if not dat:
+        con.close()
+        return jsonify({"error": "User not found", "code": 10002}), 404
+
+    con.close()
+
+    idd = dat[0]
+
+    base_directory = 'Avatars/'
+    file_path = os.path.join(base_directory, f'{idd}.txt')
+
+    if not file_path.startswith(base_directory):
+        return jsonify({"error": "Invalid file path", "code": 10019}), 400
+
+    file_path = f'Publics/{idd}.txt'
+    public_read = open(file_path, "r").read()
+
+    key = secrets.token_hex(32)
+    new_mailbox = 000000
+    f = False
+    for i in range(25):
+        new_mailbox = key = secrets.token_hex(16)
+        if not any(str(new_mailbox) in d for d in mailbox_system):
+            mailbox_system.append({str(new_mailbox): key})
+            f = True
+            break
+
+    if not f:
+        return jsonify(
+            {"message": "Couldn't create a secure mailbox in time. Try again later.", "code": 100000, "key": None,
+             "mailbox": None})
+
+    return jsonify({"message": "success", "code": 123456, "key": key, "mailbox": new_mailbox, "public": public_read, "user_id": idd})
 
 
 ################################# ERROR HANDLING #################################
@@ -214,6 +282,7 @@ def register():
         username = request.json.get('username', None)
         password = request.json.get('password', None)
         public = request.json.get('public', None)
+        device_token = request.json.get("device_token", None)
 
         if not username:
             return jsonify({"error": "Missing Username", "code": 10000}), 400
@@ -247,8 +316,8 @@ def register():
 
         # Update the value in the SQLite database
         cursor.execute(
-            "INSERT OR IGNORE INTO users (username, password, secret_key, authenticated, twofaenabled) VALUES (?, ?, 0, 0, 0)",
-            (username, hashed))
+            "INSERT OR IGNORE INTO users (username, password, secret_key, authenticated, twofaenabled, device_token) VALUES (?, ?, 0, 0, 0, ?)",
+            (username, hashed, device_token))
 
         con.commit()
 
@@ -619,6 +688,38 @@ def change_username():
     return jsonify({'error': 'Access denied', "code": 10011})
 
 
+@app.route("/change/biography", methods=["POST"])
+def change_biography():
+    new = request.json.get('new', None)
+
+    if 'user_id' in session:
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE id = ?", (session['user_id'],))
+        user = cursor.fetchone()
+
+        if user and user[3] == "0":
+            pass
+        else:
+            conn.close()
+            return jsonify({"error": "Unauthorized access.", "code": 10010})
+
+        if user and user[4] == 1:
+            pass
+        else:
+            conn.close()
+            return jsonify({"error": "Unauthorized access.", "code": 10010})
+
+        cursor.execute("UPDATE users SET bio = ? WHERE id = ?",
+                       (new, session['user_id'],))
+        conn.commit()
+        conn.close()
+
+        return jsonify({"success": "Biography Changed.", "code": 11110})
+
+    return jsonify({'error': 'Access denied', "code": 10011})
+
+
 @app.route("/user/block", methods=["POST"])
 def block():
     pass
@@ -664,6 +765,9 @@ def send_message():
         if user:
             message_storage.append(
                 {"message": message, "recipient": recipient, "signature": signature, "identity": identity})
+
+            if user[6] and len(user[6]) > 5:
+                send_token_push("New message!", "You have received a new message.", user[6])
 
             return jsonify({'success': 'Sent message', "code": 11110})
         return jsonify({'error': 'User not found', "code": 10002})
@@ -816,8 +920,6 @@ def get_avatar_hash():
         return jsonify({"error": "Invalid file path", "code": 10019}), 400
 
     file_path = safe_join("Avatars", f"{idd}.png")
-
-    print(idd, file_path, hash_, hashlib.sha256(open(file_path, "rb").read()).hexdigest())
 
     try:
         if hashlib.sha256(open(file_path, "rb").read()).hexdigest() == hash_:
