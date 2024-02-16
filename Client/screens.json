@@ -1,4 +1,9 @@
 {
+    "display_name": {
+        "import": "from baseclass.display_name import DisplayName",
+        "object": "DisplayName()",
+        "kv": "libs/uix/kv/display_name.kv"
+    },
     "auth": {
         "import": "from baseclass.auth_screen import AuthScreen",
         "object": "AuthScreen()",

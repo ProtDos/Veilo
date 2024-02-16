@@ -13,7 +13,7 @@ from kivy.app import App
 from kivy.core.window import Window
 from kivy.utils import platform
 from datetime import datetime
-from extensions.dmk_support import *
+from extensions.key_saver import *
 import requests
 import shutil
 from kivy.properties import BooleanProperty, ObjectProperty, StringProperty, OptionProperty, DictProperty
@@ -45,7 +45,8 @@ if platform != "android":
     Window.size = (350, 650)
 else:
     from android.permissions import request_permissions, Permission
-    from android.permissions import request_permission, check_permission
+    from android.permissions import check_permission
+    from android.storage import primary_external_storage_path
     from android.runnable import run_on_ui_thread
     from android import mActivity as mA
     from jnius import autoclass
@@ -55,8 +56,15 @@ else:
     from pushyy import Pushyy
     from pushyy import RemoteMessage
 
-    if not check_permission('READ_EXTERNAL_STORAGE'):
-        request_permission('READ_EXTERNAL_STORAGE')
+    WebView = autoclass('android.webkit.WebView')
+    WebViewClient = autoclass('android.webkit.WebViewClient')
+    LayoutParams = autoclass('android.view.ViewGroup$LayoutParams')
+    LinearLayout = autoclass('android.widget.LinearLayout')
+    activity = autoclass('org.kivy.android.PythonActivity').mActivity
+    KeyEvent = autoclass('android.view.KeyEvent')
+    EditText = autoclass('android.widget.EditText')
+    InputType = autoclass('android.text.InputType')
+    ViewGroup = autoclass('android.view.ViewGroup')
 
 
 def is_image_file(file_path):
@@ -138,7 +146,32 @@ def delete_all():
     a.write("{}")
     a.close()
 
+    script_path = os.path.abspath(__file__)
+    files = os.listdir(script_path)
+
+    for file_name in files:
+        if "_key_" in file_name:
+            file_path = os.path.join(script_path, file_name)
+            os.remove(file_path)
+            print(f"Deleted: {file_path}")
+
+    r = App.get_running_app().session.post(App.get_running_app().api_url + "/account/delete")
+    print(r.json())
+
     return True
+
+
+def read_mailboxes():
+    with open('mailboxes.json', 'r') as file:
+        data = json.load(file)
+    return data.get('mailboxes', [])
+
+
+def add_mailbox(mailbox):
+    mailboxes = read_mailboxes()
+    mailboxes.append(mailbox)
+    with open('mailboxes.json', 'w') as file:
+        json.dump({"mailboxes": mailboxes}, file, indent=4)
 
 
 
@@ -189,13 +222,16 @@ class PurpApp(App):
         'EN', 'DE', "ES", "FR", "ZH", "AR", "BN", "RU", "PT", "UR", "ID", "JA", "SW", "PA"))
     show_message_content = BooleanProperty(config.message_opt())
 
-    # This is for "check_for_messages_on_home_screen" thread:
     pause_event = threading.Event()
-    pause_event.set()  # Initially, the thread is paused
+    pause_event.set()
     is_running = True
     in_chat = False
 
     buffer_messages = []
+    KeyStore = None
+    context = None
+    
+    api_url = "http://api.protdos.com"
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -244,9 +280,6 @@ class PurpApp(App):
         return Pushyy().get_device_token(my_token_callback)
 
     def build(self):
-        if platform == "android":
-            request_permissions([Permission.READ_EXTERNAL_STORAGE])
-
         # try:
         #     if platform == 'android':
         #         # Get the current Android activity
@@ -272,24 +305,36 @@ class PurpApp(App):
         else:
             self.root.set_current("auth")  # auth
 
-    def on_request_permissions_done(self, _permissions, grant_results):
-        print(_permissions, grant_results)
-        for granted in grant_results:
-            if not granted:
-                print("aasdasd")
-        if all(grant_results):
-            print("All granted.")
+    """
+        These functions are for saving / loading our private and public keys to the android keystorage
+    """
+    if platform == "android":
+        @run_on_ui_thread
+        def set_to_keystore(self, message: str, alias: str):
+            print(self.KeyStore)
+            print(self.context)
+            print(alias)
+            self.KeyStore.generateKeyPair(self.context, alias)
+            enc = self.KeyStore.saveEncryptedText(self.context, message, alias)
+            print(enc)
+            return enc
+
+        @run_on_ui_thread
+        def load_from_keystore(self, encrypted: str, alias: str):
+            dec = self.KeyStore.getDecryptedText(self.context, encrypted, alias)
+            print(dec)
+            return dec
+
 
     def check_for_messages_on_home_screen(self):
         while self.is_running:
             try:
                 self.pause_event.wait()
-                res = self.session.post(f"http://api.protdos.com/receive")
+                res = self.session.post(self.api_url + "/receive")
                 print(f"    [DEBUG] (check_for_messages_on_home_screen) - {res.json()}")
                 if res.json()["code"] == 11110:
                     for message in res.json()["messages"]:
                         if not message.get("file"):
-
                             try:
                                 _ = self.root.get_screen("home").chats
                                 _ = self.root.get_screen("home").data
@@ -299,6 +344,8 @@ class PurpApp(App):
                             full_sign = eval(message["signature"])
                             sealed_sender = eval(message["identity"])
                             enc_message = eval(message["message"])
+
+                            print(self.private_key)
 
                             sender = rsa.decrypt(sealed_sender, self.private_key)
                             dec_message = rsa.decrypt(enc_message, self.private_key)
@@ -358,12 +405,14 @@ class PurpApp(App):
                             if not user_in_contacts:
                                 rec = sender.decode().split('---')[0]
                                 try:
-                                    idd = requests.post("http://api.protdos.com/user/id", json={"recipient": rec}).json()["id"]
+                                    idd = requests.post(self.api_url + "/user/id", json={"recipient": rec}).json()["id"]
                                 except Exception as _:
                                     return
 
 
-                                r = self.session.post("http://api.protdos.com/user/avatar", json={"id": idd})
+                                r = self.session.post(self.api_url + "/user/avatar", json={"id": idd})
+                                display_name = self.session.post(self.api_url + "/user/display", json={"id": idd}).json()["display_name"]
+                                public = self.session.post(self.api_url + "/user/public", json={"id": idd}).text
 
                                 file_name = f'user_avatars/{idd}.png'
 
@@ -375,8 +424,8 @@ class PurpApp(App):
 
                                 t = str(f"{datetime.now().strftime('%H:%M')}")
 
-                                secondary_text = "test"
-                                about = "test bio"
+                                secondary_text = rec
+                                about = "*No Bio Available*"
 
                                 data[encrypt(rec, self.unhashed_password)] = {
                                     "image": file_name,
@@ -384,7 +433,9 @@ class PurpApp(App):
                                     "time": t,
                                     "about": encrypt(about, self.unhashed_password),
                                     "unread_messages": False,
-                                    "user_id": idd
+                                    "user_id": idd,
+                                    "public": str(public),
+                                    "display": display_name
                                 }
 
                                 with open('assets/users.json', 'w') as file:
@@ -396,15 +447,17 @@ class PurpApp(App):
                                     "time": t,
                                     "image": file_name,
                                     "unread_messages": True,
-                                    "user_id": idd
+                                    "user_id": idd,
+                                    "public": str(public),
+                                    "display": display_name
                                 }
-                                self.root.get_screen("home").chats.append(user_data)
 
-                                self.root.get_screen("home").text_hidden = "0"
+                                print(user_data)
+
+                                self.root.get_screen("home").chats.append(user_data)
+                                Clock.schedule_once(self.update_text, 0)
 
                             self.root.get_screen("home").ids.aaaa.refresh_from_data()
-
-
                         else:
                             notification.notify(
                                 title="New Message",
@@ -415,12 +468,17 @@ class PurpApp(App):
                             )
             except Exception as e:
                 print(f"        [ERROR] (check_for_messages_on_home_screen) {e}")
+                print(traceback.format_exc())
             time.sleep(5)
 
+    def update_text(self, _):
+        self.root.get_screen("home").text_hidden = "0"
+
     def receive_notify(self):
+        print("Yeah")
         if not self.in_chat:
             try:
-                res = self.session.post(f"http://api.protdos.com/receive")
+                res = self.session.post(self.api_url + "/receive")
                 print(f"    [DEBUG] (receive_notify) - {res.json()}")
                 if res.json()["code"] == 11110:
                     for message in res.json()["messages"]:
@@ -436,10 +494,13 @@ class PurpApp(App):
                             sealed_sender = eval(message["identity"])
                             enc_message = eval(message["message"])
 
+                            print(self.private_key)
+
                             sender = rsa.decrypt(sealed_sender, self.private_key)
                             dec_message = rsa.decrypt(enc_message, self.private_key)
 
-                            self.buffer_messages.append({"sender": sender, "dec_message": dec_message, "full_sign": full_sign})
+                            self.buffer_messages.append(
+                                {"sender": sender, "dec_message": dec_message, "full_sign": full_sign})
 
                             try:
                                 if self.show_message_content:
@@ -456,30 +517,37 @@ class PurpApp(App):
                                         notification.notify(
                                             title="New Message",
                                             message=f"{sender.decode().split('---')[0]}: {dec_message.decode()}",
-                                            app_icon=os.path.join(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                                                               r'assets\images\logo.ico')),
+                                            app_icon=os.path.join(
+                                                os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                                             r'assets\images\logo.ico')),
                                             timeout=30
                                         )
                                 else:
                                     if platform == "android":
+                                        # print(os.path.join(
+                                        #         os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                        #                      r'assets/images/logo.ico')))
+                                        # TODO: Fix this part
                                         notification.notify(
                                             title="New Message",
                                             message=f"You have received a new message. Tap here to view!",
-                                            app_icon=os.path.join(
-                                                os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                                             r'assets/images/logo.ico')),
+                                            # app_icon=os.path.join(
+                                            #     os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                            #                  r'assets/images/logo.ico')),
                                             timeout=30
                                         )
                                     else:
                                         notification.notify(
                                             title="New Message",
                                             message=f"You have received a new message. Tap here to view!",
-                                            app_icon=os.path.join(os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                                                               r'assets\images\logo.ico')),
+                                            app_icon=os.path.join(
+                                                os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                                             r'assets\images\logo.ico')),
                                             timeout=30
                                         )
                             except Exception:
-                                print("     [ERROR] Couldn't send notification (2).")
+                                print(traceback.format_exc())
+                                print("     [ERROR] Couldn't send notification 2.")
 
                             user_in_contacts = False
 
@@ -492,12 +560,13 @@ class PurpApp(App):
                             if not user_in_contacts:
                                 rec = sender.decode().split('---')[0]
                                 try:
-                                    idd = requests.post("http://api.protdos.com/user/id", json={"recipient": rec}).json()["id"]
+                                    idd = requests.post(self.api_url + "/user/id", json={"recipient": rec}).json()["id"]
                                 except Exception as _:
                                     return
 
-
-                                r = self.session.post("http://api.protdos.com/user/avatar", json={"id": idd})
+                                r = self.session.post(self.api_url + "/user/avatar", json={"id": idd})
+                                display_name = self.session.post(self.api_url + "/user/display", json={"id": idd}).json()["display_name"]
+                                public = self.session.post(self.api_url + "/user/public", json={"id": idd}).text
 
                                 file_name = f'user_avatars/{idd}.png'
 
@@ -509,8 +578,8 @@ class PurpApp(App):
 
                                 t = str(f"{datetime.now().strftime('%H:%M')}")
 
-                                secondary_text = "test"
-                                about = "test bio"
+                                secondary_text = rec
+                                about = "*No Bio Available*"
 
                                 data[encrypt(rec, self.unhashed_password)] = {
                                     "image": file_name,
@@ -518,7 +587,9 @@ class PurpApp(App):
                                     "time": t,
                                     "about": encrypt(about, self.unhashed_password),
                                     "unread_messages": False,
-                                    "user_id": idd
+                                    "user_id": idd,
+                                    "public": str(public),
+                                    "display": display_name
                                 }
 
                                 with open('assets/users.json', 'w') as file:
@@ -530,25 +601,30 @@ class PurpApp(App):
                                     "time": t,
                                     "image": file_name,
                                     "unread_messages": True,
-                                    "user_id": idd
+                                    "user_id": idd,
+                                    "public": str(public),
+                                    "display": display_name
                                 }
+
+                                print(user_data)
+
                                 self.root.get_screen("home").chats.append(user_data)
 
                                 self.root.get_screen("home").text_hidden = "0"
 
                             self.root.get_screen("home").ids.aaaa.refresh_from_data()
-
-
                         else:
                             notification.notify(
                                 title="New Message",
                                 message=f"Attachment",
                                 app_icon=os.path.join(
-                                    os.path.join(os.path.dirname(os.path.abspath(__file__)), r'assets\images\logo.ico')),
+                                    os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                                 r'assets\images\logo.ico')),
                                 timeout=30
                             )
             except Exception as e:
                 print(f"     [DEBUG] (receive_notify) Error: {e}")
+                print(traceback.format_exc())
 
     def pause_thread2(self):
 
@@ -568,40 +644,31 @@ class PurpApp(App):
         @run_on_ui_thread
         def on_start(self):
             statusbar.set_color(self.theme_cls.primary_color)
-            if platform == "android":
-                request_permissions([Permission.READ_EXTERNAL_STORAGE])
-                Pushyy().foreground_message_handler(my_foreground_callback)
-                Pushyy().notification_click_handler(my_notification_click_callback)
-                Pushyy().token_change_listener(new_token_callback)
 
-                LayoutParams = autoclass('android.view.WindowManager$LayoutParams')
-                window = mA.getWindow()
-                params = window.getAttributes()
-                params.setDecorFitsSystemWindows = False
-                params.layoutInDisplayCutoutMode = LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
-                window.setAttributes(params)
-                window.setFlags(LayoutParams.FLAG_SECURE, LayoutParams.FLAG_SECURE)
-                window.addFlags(LayoutParams.FLAG_SECURE)
+            Pushyy().foreground_message_handler(my_foreground_callback)
+            Pushyy().notification_click_handler(my_notification_click_callback)
+            Pushyy().token_change_listener(new_token_callback)
 
-                # Incognito keyboard
-                print("Incognito Keyboard init")
-                PythonActivity = autoclass('org.kivy.android.PythonActivity')
-                print(PythonActivity)
-                context = cast('android.content.Context', PythonActivity.mActivity)
-                print(context)
+            self.get_token()
 
-                java_class_name = 'android.widget.EditText'  # android.view.inputmethod.EditorInfo
+            print(self.device_token)
 
-                EditText = autoclass(java_class_name)
-                print(EditText)
+            # TODO: For Release: ENABLE THIS
+            # LayoutParams = autoclass('android.view.WindowManager$LayoutParams')
+            # window = mA.getWindow()
+            # params = window.getAttributes()
+            # params.setDecorFitsSystemWindows = False
+            # params.layoutInDisplayCutoutMode = LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
+            # window.setAttributes(params)
+            # window.setFlags(LayoutParams.FLAG_SECURE, LayoutParams.FLAG_SECURE)
+            # window.addFlags(LayoutParams.FLAG_SECURE)
 
-                my_edit_text = EditText(context)
-                print(my_edit_text)
-
-                try:
-                    my_edit_text.setImeOptions(16777216)
-                except:
-                    my_edit_text.setImeOptions(EditText.IME_FLAG_NO_PERSONALIZED_LEARNING)
+            # Not quite sure if this works
+            EditorInfo = autoclass("android.view.inputmethod.EditorInfo")
+            editText = EditText(activity)
+            editorInfo = EditorInfo()
+            editorInfo.imeOptions |= EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING
+            editText.setImeOptions(editorInfo.imeOptions)
     else:
         def on_start(self):
             statusbar.set_color(self.theme_cls.primary_color)
@@ -613,16 +680,17 @@ class PurpApp(App):
     def toast(self, message):
         toast(message)
 
+    @mainthread
     def create_chat(self, rec):
         self.root.get_screen("home").popup.dismiss(force=True)
-        Clock.schedule_once(partial(self.create_chat_0, rec), 0)
+        Clock.schedule_once(partial(self.create_chat_0, rec), 0.1)
 
     def create_chat_0(self, rec, *_):
         if rec == "":
             self.root.get_screen("home").popup.content.ids.recipient.foreground_color = [255, 0, 0, 0.9]
             return self.toast("Please enter a recipient")
 
-        r = self.session.post("http://api.protdos.com/user/id", json={"recipient": rec}).json()
+        r = self.session.post(self.api_url + "/user/id", json={"recipient": rec}).json()
         if r["code"] != 11110:
             self.root.get_screen("home").popup.content.ids.recipient.foreground_color = [255, 0, 0, 0.9]
             self.toast("Invalid recipient.")
@@ -643,22 +711,25 @@ class PurpApp(App):
         Clock.schedule_once(partial(self.create_chat_3, rec, idd), 0)
 
     def create_chat_3(self, rec, idd, *_):
-        r = self.session.post("http://api.protdos.com/user/avatar", json={"id": idd})
+        avatar = self.session.post(self.api_url + "/user/avatar", json={"id": idd})
 
-        public = self.session.post("http://api.protdos.com/user/public", json={"id": idd}).text
+        r = self.session.post(self.api_url + "/user/user_create", json={"id": idd}).json()
+
+        display_name = r["display_name"]
+        public = r["public"]
 
         file_name = f'user_avatars/{idd}.png'
 
         with open(file_name, "wb") as f:
-            f.write(r.content)
+            f.write(avatar.content)
 
         with open('assets/users.json', 'r') as file:
             data = json.load(file)
 
         t = str(f"{datetime.now().strftime('%H:%M')}")
 
-        message = "test"
-        about = "test bio"
+        message = rec
+        about = "*No Bio Available*"
 
         data[encrypt(rec, self.unhashed_password)] = {
             "image": file_name,
@@ -667,7 +738,8 @@ class PurpApp(App):
             "about": encrypt(about, self.unhashed_password),
             "unread_messages": False,
             "user_id": idd,
-            "public": str(public)
+            "public": str(public),
+            "display": display_name
         }
 
         with open('assets/users.json', 'w') as file:
@@ -681,7 +753,8 @@ class PurpApp(App):
             "unread_messages": False,
             "user_id": idd,
             "about": about,
-            "public": str(public)
+            "public": str(public),
+            "display": display_name
         }
         self.root.get_screen("home").chats.append(user_data)
         self.root.get_screen("home").original.append(user_data)
@@ -693,7 +766,7 @@ class PurpApp(App):
                 return
             self.is_touching = True
             self.long_press_trigger = Clock.schedule_once(partial(self.check_press_type, name),
-                                                          self.long_press_duration)
+                                                          0.1)
 
     def no(self, n, touch):
         if self.is_touching:
@@ -704,7 +777,6 @@ class PurpApp(App):
         if self.is_touching:
             self.cancel_press()
             if n.collide_point(*touch.pos):
-                print("Here")
                 self.current_chat_with = text
                 self.start_chat(text)
 
@@ -720,61 +792,57 @@ class PurpApp(App):
             self.long_press_trigger = None
 
     def delete_user2(self, user):
-        print(user)
+        try:
+            for item in self.root.get_screen("home").chats:
+                if item["text"] == user:
+                    self.root.get_screen("home").chats.remove(item)
+                    self.root.get_screen("home").original.remove(item)
+                    break
 
-        for item in self.root.get_screen("home").chats:
-            if item["text"] == user:
-                self.root.get_screen("home").chats.remove(item)
-                self.root.get_screen("home").original.remove(item)
-                break
+            with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), f"assets/users.json"), 'r') as file:
+                data = json.load(file)
 
-        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), f"assets/users.json"), 'r') as file:
-            data = json.load(file)
+            for item in data:
+                dec = decrypt(item, self.unhashed_password)
+                if dec and dec == user:
+                    data.pop(item)
+                    break
 
-        print(data)
+            with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), f"assets/users.json"), 'w') as file:
+                json.dump(data, file, indent=4)
 
-        for item in data:
-            dec = decrypt(item, self.unhashed_password)
-            if dec and dec == user:
-                data.pop(item)
-                break
+            self.root.get_screen("contact_profile").popup2.dismiss(force=True)
 
-        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), f"assets/users.json"), 'w') as file:
-            json.dump(data, file, indent=4)
+            self.set_current("home")
+            self.in_chat = False
+            threading.Thread(target=self.close_chat_2).start()
 
-        self.root.get_screen("contact_profile").popup2.dismiss(force=True)
+            self.root.get_screen("home").ids.aaaa.refresh_from_data()
 
-        self.set_current("home")
+            if len(self.root.get_screen("home").original) == 0:
+                Clock.schedule_once(self.hide_search, 0)
 
-        self.root.get_screen("home").ids.aaaa.refresh_from_data()
+                self.root.get_screen("home").ids.first.opacity = 1
+                self.root.get_screen("home").text_hidden = "1"
 
-        if len(self.root.get_screen("home").original) == 0:
-            self.root.get_screen("home").search_bar = False
-            self.root.get_screen("home").ids.field.text = ""
+            self.root.get_screen("home").ids.aaaa.refresh_from_data()
+        except:
+            print(traceback.format_exc())
+            pass
 
-            self.root.get_screen("home").ids.first.opacity = 1
-            self.root.get_screen("home").text_hidden = "1"
+    @mainthread
+    def hide_search(self, *_):
+        self.root.get_screen("home").ids.field.text = ""
+        self.root.get_screen("home").search_bar = True
 
-        self.root.get_screen("home").ids.aaaa.refresh_from_data()
-
-    def signup(self, username, password):
-        if username == "" or password == "":
-            return
-
-        # print(calculate_password_strength(password))
-        # if calculate_password_strength(password) <= 20:
-        #     self.set_current("auth")
-        #     self.root.get_screen("auth").password.shake()
-        #     self.toast("Password isn't strong enough.")
-        #     return
-
+    def signup(self, username, password, display_name):
         self.set_current("processing")
-        threading.Thread(target=self.signup2, args=(username, password,)).start()
+        threading.Thread(target=self.signup2, args=(username, password, display_name,)).start()
 
-    def signup2(self, username, password):
+    def signup2(self, username, password, display_name):
         try:
             self.root.get_screen("processing").animate_text = "Processing"
-            r = requests.post("http://api.protdos.com/user/exists", json={"username": username})
+            r = requests.post(self.api_url + "/user/exists", json={"username": username})
             if r.json()["exists"]:
                 self.set_current("auth")
                 self.toast("Username taken. Try again.")
@@ -784,10 +852,9 @@ class PurpApp(App):
             self.root.get_screen("processing").animate_text = "Loading"
 
             if len(username) > 12:
+                self.set_current("auth")
+                self.root.get_screen("auth").uname.shake()
                 self.toast("Username too long.")
-                return
-            if " " in username:
-                self.toast("No space allowed.")
                 return
 
             self.root.get_screen("processing").animate_text = "Generating Keys"
@@ -796,10 +863,11 @@ class PurpApp(App):
 
             self.root.get_screen("processing").animate_text = "Setting everything up"
 
-            r = self.session.post("http://api.protdos.com/register",
-                                  json={"username": username, "password": password, "public": public.save_pkcs1().decode(), "device_token": self.device_token})
+            r = self.session.post(self.api_url + "/register",
+                                  json={"username": username, "password": password, "public": public.save_pkcs1().decode(), "device_token": self.device_token, "display_name": display_name})
 
             if r.json()["code"] == 11110:
+                print(public, private)
                 print("     [SUCCESS] Register successfull")
                 set_public_key(username, password, public.save_pkcs1().decode())
                 set_private_key(username, password, private.save_pkcs1().decode())
@@ -817,10 +885,15 @@ class PurpApp(App):
                 return
         except Exception as e:
             print(e)
+            print(traceback.format_exc())
             self.set_current("auth")
             self.toast("Error signing in! Check connection.")
 
     def login(self, username, password):
+        if not username:
+            return self.root.get_screen("auth").uname.shake()
+        if not password:
+            return self.root.get_screen("auth").password.shake()
         self.set_current("processing")
         threading.Thread(target=self.login2, args=(username, password,)).start()
 
@@ -833,7 +906,7 @@ class PurpApp(App):
             if username == "" or password == "":
                 return
             self.root.get_screen("processing").animate_text = "Logging in"
-            r = self.session.post("http://api.protdos.com/login", json={"username": username, "password": password})
+            r = self.session.post(self.api_url + "/login", json={"username": username, "password": password})
             if r.json()["code"] == 10003:
                 self.username = username
                 self.unhashed_password = password
@@ -844,9 +917,13 @@ class PurpApp(App):
                 if username != "Google":
                     public = get_public_key(username, password)
                     private = get_private_key(username, password)
+                    print(public)
+                    print(private)
                     if public and private:
                         self.public_key = rsa.PublicKey.load_pkcs1(public)
                         self.private_key = rsa.PrivateKey.load_pkcs1(private)
+                        print(self.public_key)
+                        print(self.private_key)
                     else:
                         self.toast("Invalid credentials")
                         return
@@ -873,10 +950,6 @@ class PurpApp(App):
                 self.set_current("home")
 
                 print(self.device_token)
-
-                if platform == "android":
-                    request_permissions([Permission.READ_EXTERNAL_STORAGE])
-
             else:
                 self.set_current("auth")
                 if self.tries_left <= 3:
@@ -891,6 +964,7 @@ class PurpApp(App):
                     delete_all()
                 return
         except Exception as e:
+            print(traceback.format_exc())
             print(e)
             self.set_current("auth")
             self.toast("Error signing in! Check connection.")
@@ -899,6 +973,10 @@ class PurpApp(App):
         try:
             if not text:
                 return
+
+            print(self.public_key_of_partner)
+            print(self.public_key)
+            print(self.private_key)
 
             enc_identity = rsa.encrypt(f"{self.username}---{self.id}".encode(), self.public_key_of_partner)
             enc = rsa.encrypt(text.encode(), self.public_key_of_partner)
@@ -919,11 +997,11 @@ class PurpApp(App):
             }
 
 
-            r0 = requests.post("http://api.protdos.com/v2/send", json=d0).json()
+            r0 = requests.post(self.api_url + "/v2/send", json=d0).json()
             print(r0)
 
 
-            r = requests.post("http://api.protdos.com/send", json=d).json()
+            r = requests.post(self.api_url + "/send", json=d).json()
 
             if r["code"] != 11110:  # 11110
                 delete_dict_by_uid(self.root.get_screen("chat").chat_logs, uid)
@@ -950,6 +1028,10 @@ class PurpApp(App):
     def change_avatar(self, *args):
         element = self.root.get_screen("user_settings").ids.profile_img
         if element.collide_point(*args[1].pos):
+            if platform == "android":
+                if not check_permission("android.permission.READ_MEDIA_IMAGES"):
+                    return request_permissions([Permission.READ_MEDIA_IMAGES, Permission.READ_MEDIA_VIDEO])
+
             filechooser.open_file(on_selection=self.selected, multiple=False)
 
     def selected(self, selection):
@@ -963,7 +1045,7 @@ class PurpApp(App):
             self.toast("Unsupported ending.")
             return
 
-        r = self.session.post("http://api.protdos.com/change/avatar", files={"upload_file": open(sel, "rb")})
+        r = self.session.post(self.api_url + "/change/avatar", files={"upload_file": open(sel, "rb")})
 
         if r.json()["code"] == 11110:
             self.do_thing_with_selected(sel)
@@ -987,8 +1069,6 @@ class PurpApp(App):
         self.root.get_screen("user_settings").av(sel)
 
     def start_chat(self, user):
-        rec = self.current_chat_with
-        print(rec)
         self.set_current("chat")
         Clock.schedule_once(partial(self.start_chat_2, user), 0)
 
@@ -1004,6 +1084,8 @@ class PurpApp(App):
 
         public = rsa.PublicKey.load_pkcs1(abs_usr["public"])
         self.public_key_of_partner = public
+        print(user)
+        self.current_chat_with = user
 
         chat_screen.user = abs_usr
         chat_screen.image = abs_usr["image"]
@@ -1012,9 +1094,16 @@ class PurpApp(App):
 
         threading.Thread(target=self.do_thing_thread, args=(abs_usr["text"], public,)).start()
 
+        r = requests.post(self.api_url + "/mailbox/open").json()
+        print(r)
+        self.mailbox = r["mailbox"]
+        self.mailbox_key = r["key"]
+
+        add_mailbox({"number": self.mailbox, "auth": self.mailbox_key})
+
     def do_thing_thread(self, rec, public):
         self._stop_event = threading.Event()
-        self.message_thread = threading.Thread(target=self.receive_messages_private, args=(public,))
+        self.message_thread = threading.Thread(target=self.receive_messages_private, args=(public,rec,))
         self.message_thread.start()
 
         for item in self.root.get_screen("home").ids.aaaa.data:
@@ -1029,16 +1118,17 @@ class PurpApp(App):
         self.pause_thread2()
 
         for item in self.buffer_messages:
-            try:
-                rsa.verify(item["dec_message"], item["full_sign"], App.get_running_app().public_key_of_partner)
-            except Exception as e:
-                App.get_running_app().open_warning(item["dec_message"])
-                print(e)
-                print("No verification")
+            if item["sender"].split("---")[0] == rec:
+                try:
+                    rsa.verify(item["dec_message"], item["full_sign"], self.public_key_of_partner)
+                except Exception as e:
+                    self.open_warning(item["dec_message"])
+                    print(e)
+                    print("No verification")
 
-            self.add_resp(item["dec_message"].decode())
+                self.add_resp(item["dec_message"].decode())
 
-            self.buffer_messages.remove(item)
+                self.buffer_messages.remove(item)
 
     @mainthread
     def open_warning(self, mess):
@@ -1082,22 +1172,34 @@ class PurpApp(App):
         self.root.get_screen("chat").ids.box.add_widget(
             Attachment(source_=file_path, send_by_user=False, filename=filename, base="a", file_size=get_file_size(file_path)))
 
-    def receive_messages_private(self, _):
+    def receive_messages_private(self, _, rec):
         print("     [DEBUG] (receive_messages_private) Started...")
         while not self._stop_event.is_set():
             try:
-                res = self.session.post(f"http://api.protdos.com/receive")
-                if res.json()["code"] == 11110:
-                    for message in res.json()["messages"]:
+                res = self.session.post(self.api_url + "/receive")
+                all_mailboxed = read_mailboxes()
+                responses = []
+                # for mailbox in all_mailboxed:
+                #     r = requests.post(self.api_url + "/v2/receive", json={"mailbox": mailbox["number"], "key": mailbox["auth"]}).json()
+                #     responses += r["messages"]
 
+                responses += res.json()["messages"]
+
+                if res.json()["code"] == 11110:
+                    for message in responses:
                         if not message.get("file"):
                             full_sign = eval(message["signature"])
                             sealed_sender = eval(message["identity"])
                             enc_message = eval(message["message"])
 
                             sender = rsa.decrypt(sealed_sender, self.private_key)
-                            # TODO: Check if sender is really the person currently communicating with
                             dec_message = rsa.decrypt(enc_message, self.private_key)
+
+                            sender_username = sender.split(b"---")[0]
+                            if sender_username != rec:
+                                self.buffer_messages.append(
+                                    {"sender": sender, "dec_message": dec_message, "full_sign": full_sign})
+                                return
 
                             try:
                                 rsa.verify(dec_message, full_sign, self.public_key_of_partner)
@@ -1110,7 +1212,6 @@ class PurpApp(App):
                                 self.add_image(base64.b64decode(message["file"].encode()))
                             else:
                                 self.add_file(base64.b64decode(message["file"].encode()), message["filename"])
-
             except Exception as e:
                 print(e)
                 print("Not established yet")
@@ -1161,7 +1262,7 @@ class PurpApp(App):
             self.toast("Current Password is wrong.")
             return
 
-        r = self.session.post("http://api.protdos.com/change/password", json={"new": new, "old": old})
+        r = self.session.post(self.api_url + "/change/password", json={"new": new, "old": old})
 
         if r.json()["code"] == 11110:
             self.password = hash_pwd(new)
@@ -1178,7 +1279,7 @@ class PurpApp(App):
             return
 
     def change_username(self, uname):
-        r = self.session.post("http://api.protdos.com/change/username", json={"new": uname})
+        r = self.session.post(self.api_url + "/change/username", json={"new": uname})
 
         if r.json()["code"] == 11110:
             self.username = uname
@@ -1233,7 +1334,7 @@ class PurpApp(App):
             # TODO: Implement
             self.set_current("disable_2fa")
         else:
-            r = self.session.post("http://api.protdos.com/2fa/enable",
+            r = self.session.post(self.api_url + "/2fa/enable",
                                   json={"username": self.username, "password": self.unhashed_password})
             out = r.json()
             secret_key = out["secret_key"]
@@ -1251,7 +1352,7 @@ class PurpApp(App):
         if self.has_2fa:
             return
 
-        r = self.session.post("http://api.protdos.com/2fa/verify",
+        r = self.session.post(self.api_url + "/2fa/verify",
                               json={"username": self.username, "password": self.unhashed_password, "code": code})
         if r.json()["code"] != 11110:
             self.toast("Error verifying 2fa")
@@ -1281,14 +1382,13 @@ class PurpApp(App):
         self.set_current("home")
 
     @staticmethod
-    def disable_2fa( _):
+    def disable_2fa(_):
         return False
 
     def file_chooser(self):
-        if not check_permission("android.permission.READ_MEDIA_IMAGES"):
-            return request_permissions([Permission.READ_MEDIA_IMAGES])
-        if not check_permission("android.permission.READ_MEDIA_VIDEO"):
-            return request_permissions([Permission.READ_MEDIA_VIDEO])
+        if platform == "android":
+            if not check_permission("android.permission.READ_MEDIA_IMAGES"):
+                return request_permissions([Permission.READ_MEDIA_IMAGES, Permission.READ_MEDIA_VIDEO])
 
         try:
             filechooser.open_file(on_selection=self.selected_file)
@@ -1334,7 +1434,9 @@ class PurpApp(App):
                     self.toast("Error sending file...")
         except Exception as _:
             self.toast("Error sending message...")
+            print(traceback.format_exc())
 
+    @mainthread
     def selected_file(self, selection):
         print(selection)
         # TODO: Implement multi-file sending
@@ -1391,18 +1493,35 @@ class PurpApp(App):
     def delete_account(self):
         self.set_current("auth")
 
-        # TODO: Send request to server for account deletion
+        self.username = None
+        self.password = None
+        self.unhashed_password = None
+
+        self.private_key = None
+        self.public_key = None
 
         a = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), f"assets/users.json"), "w")
         a.write("{}")
         a.close()
 
-        self.stop()
+        script_path = os.path.dirname(os.path.abspath(__file__))
+        files = os.listdir(script_path)
 
-        raise Exception("Stopping Program")
+        for file_name in files:
+            if "_key_" in file_name:
+                file_path = os.path.join(script_path, file_name)
+                os.remove(file_path)
+                # print(f"Deleted: {file_path}")
+
+        r = App.get_running_app().session.post(App.get_running_app().api_url + "/account/delete")
+
+        self.is_running = False
+        self.pause_event.set()
+
+        return self.stop()
 
     def detect_breaches(self, email, phone):
-        r = requests.post("http://api.protdos.com/breach", json={"email": email, "phone": phone})
+        r = requests.post(self.api_url + "/breach", json={"email": email, "phone": phone})
 
         if r.json()["code"] == 11110:
             self.toast("Added.")
@@ -1439,6 +1558,11 @@ class PurpApp(App):
     def download_file(self, path):
         try:
             filename = os.path.basename(path)
+            if platform == "android":
+                full_path = os.path.join(primary_external_storage_path(), "DCIM", f"{str(uuid.uuid4())}_{filename}")
+                Image.open(path).save(full_path)
+                self.toast("Downloaded.")
+                return
             Image.open(path).save(f"{str(uuid.uuid4())}_{filename}")
             self.toast("Downloaded.")
         except:
@@ -1493,7 +1617,7 @@ class PurpApp(App):
             img_path = item["image"]
             img_hash = hashlib.sha256(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), img_path.split("/")[0], img_path.split("/")[1]), "rb").read()).hexdigest()
 
-            r = requests.post("http://api.protdos.com/user/avatar/hash_verify", json={"id": item["user_id"], "hash": img_hash})
+            r = requests.post(self.api_url + "/user/avatar/hash_verify", json={"id": item["user_id"], "hash": img_hash})
             try:
                 _ = r.json()
             except:
@@ -1587,8 +1711,8 @@ class PurpApp(App):
         for item in chats:
             try:
                 name = item["text"]
-                idd = requests.post("http://api.protdos.com/user/id", json={"recipient": name}).json()["id"]
-                r = requests.post("http://api.protdos.com/user/avatar", json={"id": idd})
+                idd = requests.post(self.api_url + "/user/id", json={"recipient": name}).json()["id"]
+                r = requests.post(self.api_url + "/user/avatar", json={"id": idd})
                 file_name = f'user_avatars/{idd}.png'
                 item["image"] = f'user_avatars/{idd}.png'
                 with open(file_name, "wb") as f:
@@ -1641,7 +1765,7 @@ class PurpApp(App):
         self.refreshing = False
 
     def change_bio(self, bio_text):
-        r = self.session.post("http://api.protdos.com/change/biography", json={"new": bio_text}).json()
+        r = self.session.post(self.api_url + "/change/biography", json={"new": bio_text}).json()
         if r["code"] == 11110:
             return toast("Successfully changed bio.")
         return toast("Error occurred.")

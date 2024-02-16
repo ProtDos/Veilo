@@ -1,0 +1,40 @@
+{
+    "mailboxes": [
+        {
+            "number": 12345,
+            "auth": "password"
+        },
+        {
+            "number": "9949684530f1bdfcb88b64af2f220dea",
+            "auth": "9949684530f1bdfcb88b64af2f220dea"
+        },
+        {
+            "number": "789dc13d79eb73ee1b508921bcd2b0a2",
+            "auth": "789dc13d79eb73ee1b508921bcd2b0a2"
+        },
+        {
+            "number": "5faea037b6121f58a1223243433dd0e2",
+            "auth": "5faea037b6121f58a1223243433dd0e2"
+        },
+        {
+            "number": "1aed391609bb2385dced5380fd125cc0",
+            "auth": "1aed391609bb2385dced5380fd125cc0"
+        },
+        {
+            "number": "3b8678bea98463b10f5492eb300e92f3",
+            "auth": "3b8678bea98463b10f5492eb300e92f3"
+        },
+        {
+            "number": "25c6406d35527c1d7c345ed6ec052ad1",
+            "auth": "25c6406d35527c1d7c345ed6ec052ad1"
+        },
+        {
+            "number": "f9e660bf7ba9c8276f458dbd3cafa51b",
+            "auth": "f9e660bf7ba9c8276f458dbd3cafa51b"
+        },
+        {
+            "number": "f421898777df78010075956ca8a8a50c",
+            "auth": "f421898777df78010075956ca8a8a50c"
+        }
+    ]
+}
