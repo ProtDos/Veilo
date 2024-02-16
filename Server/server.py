@@ -1,8 +1,10 @@
+import datetime
 import hashlib
 import os
 import re
 import sqlite3
 import threading
+import traceback
 
 import pyotp
 from flask import Flask, request, jsonify, session, send_file
@@ -37,7 +39,8 @@ def get_database_connection():
         authenticated INTEGER,
         twofaenabled INTEGER,
         device_token TEXT,
-        bio TEXT
+        bio TEXT,
+        display_name TEXT
     )
 """)
 
@@ -166,7 +169,58 @@ def v2_send():
 
 @app.route("/v2/receive", methods=["POST"])
 def v2_receive():
-    pass
+    print(session)
+    if 'user_id' in session:
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE id = ?", (session['user_id'],))
+        user = cursor.fetchone()
+
+        print(user)
+
+        if user and user[4] == 1:
+            pass
+        else:
+            conn.close()
+            return jsonify({"error": "Unauthorized access.", "code": 10010, "messages": []})
+
+        messages = []
+        for item in message_storage:
+            if item["recipient"] == user[1]:
+                messages.append(item)
+                message_storage.remove(item)
+
+        print(
+            f"     [INFO v2] User [{user[1]}] checks messages at {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} and has [{len(messages)}]")
+
+        return jsonify({"success": "Access granted", "code": 11110, "messages": messages})
+
+    mailbox_no = request.json.get('mailbox', None)
+    mailbox_key = request.json.get('key', None)
+
+    if not mailbox_no:
+        return jsonify({"message": "Mailbox number missing.", "messages": []}), 400
+    elif not mailbox_key:
+        return jsonify({"message": "Mailbox key missing.", "messages": []}), 400
+
+    s = False
+    for item in mailbox_system:
+        k, v = list(item.items())[0]
+        if k == mailbox_no:
+            if v == mailbox_key:
+                s = True
+                break
+
+    if not s:
+        return jsonify({"message": "Mailbox key invalid.", "messages": []}), 400
+
+    all_msgs = []
+
+    for msg in message_storage2:
+        if msg["recipient"] == mailbox_no:
+            all_msgs.append(msg)
+
+    return jsonify({"success": "Access granted", "code": 11110, "messages": all_msgs})
 
 
 @app.route("/user_all", methods=["POST"])
@@ -213,6 +267,31 @@ def user_all():
              "mailbox": None})
 
     return jsonify({"message": "success", "code": 123456, "key": key, "mailbox": new_mailbox, "public": public_read, "user_id": idd})
+
+
+@app.route("/user/user_create", methods=["POST"])
+def user_create():
+    idd = request.json.get('id', None)
+
+    con = get_database_connection()
+
+    cursor = con.cursor()
+
+    cursor.execute("SELECT * FROM users WHERE id = ?", [idd])
+    dat = cursor.fetchone()
+
+    if not dat:
+        con.close()
+        return jsonify({"error": "User not found", "code": 10002}), 404
+
+    con.close()
+
+    file_path = f'Publics/{idd}.txt'
+    public_read = open(file_path, "r").read()
+
+
+    return jsonify({"message": "success", "code": 123456, "public": public_read,
+                    "user_id": idd, "display_name": dat[-1]})
 
 
 ################################# ERROR HANDLING #################################
@@ -280,6 +359,7 @@ def register():
         print(request.json)
         print(request.data)
         username = request.json.get('username', None)
+        display_name = request.json.get('display_name', None)
         password = request.json.get('password', None)
         public = request.json.get('public', None)
         device_token = request.json.get("device_token", None)
@@ -316,8 +396,8 @@ def register():
 
         # Update the value in the SQLite database
         cursor.execute(
-            "INSERT OR IGNORE INTO users (username, password, secret_key, authenticated, twofaenabled, device_token) VALUES (?, ?, 0, 0, 0, ?)",
-            (username, hashed, device_token))
+            "INSERT OR IGNORE INTO users (username, password, secret_key, authenticated, twofaenabled, device_token, display_name) VALUES (?, ?, 0, 0, 0, ?, ?)",
+            (username, hashed, device_token, display_name))
 
         con.commit()
 
@@ -730,9 +810,45 @@ def unblock():
     pass
 
 
+def remove_user_from_session(user_id):
+    for key in list(session.keys()):
+        if session[key].get('user_id') == user_id:
+            session.pop(key)
+
+
 @app.route("/account/delete", methods=["POST"])
 def delete():
-    pass
+    if 'user_id' in session:
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE id = ?", (session['user_id'],))
+        user = cursor.fetchone()
+
+        if user and user[3] == "0":
+            pass
+        else:
+            conn.close()
+            return jsonify({"error": "Unauthorized access.", "code": 10010})
+
+        if user and user[4] == 1:
+            pass
+        else:
+            conn.close()
+            return jsonify({"error": "Unauthorized access.", "code": 10010})
+
+        if os.path.exists(f"Publics/{user[0]}.txt"):
+            os.remove(f"Publics/{user[0]}.txt")
+        if os.path.exists(f"Avatars/{user[0]}.txt"):
+            os.remove(f"Publics/{user[0]}.txt")
+
+        cursor.execute("DELETE FROM users WHERE id = ?", (session['user_id'],))
+        conn.commit()
+        conn.close()
+
+        session.pop(session['user_id'])
+
+        return jsonify({"success": "Account deleted.", "code": 11110})
+    return jsonify({'error': 'Access denied', "code": 10011})
 
 
 ################################# MESSAGING #################################
@@ -765,6 +881,9 @@ def send_message():
         if user:
             message_storage.append(
                 {"message": message, "recipient": recipient, "signature": signature, "identity": identity})
+
+            print(
+                f"     [INFO] User [ ] sent a message to [{recipient}] at [{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}]")
 
             if user[6] and len(user[6]) > 5:
                 send_token_push("New message!", "You have received a new message.", user[6])
@@ -844,6 +963,9 @@ def receive_messages():
                 messages.append(item)
                 message_storage.remove(item)
 
+        print(
+            f"     [INFO] User [{user[1]}] checks messages at {datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')} and has [{len(messages)}]")
+
         return jsonify({"success": "Access granted", "code": 11110, "messages": messages})
 
     return jsonify({'error': 'Access denied', "code": 10011})
@@ -867,9 +989,34 @@ def get_public():
     return send_file(file_path, as_attachment=True)
 
 
+@app.route("/user/display", methods=["POST"])
+def get_display():
+    try:
+        idd = int(request.json.get('id', None))
+    except (ValueError, TypeError):
+        return jsonify({"error": "Invalid ID", "code": 10018}), 400
+
+    try:
+        conn = sqlite3.connect('database.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE id = ?", (idd,))
+        user = cursor.fetchone()
+
+        display_name = user[-1]
+
+        return jsonify({"id": idd, "display_name": display_name})
+    except:
+        print(traceback.format_exc())
+        return jsonify({"error": "User not found."})
+
+
+
 @app.route("/user/exists", methods=["POST"])
 def user_exists():
-    username = request.json.get("username")
+    username = request.json.get("username", None)
+
+    if not username:
+        return jsonify({"error": "Invalid Username", "code": 10018}), 400
 
     con = get_database_connection()
     cursor = con.cursor()
@@ -940,6 +1087,10 @@ def get_username():
 @app.route("/user/id", methods=["POST"])
 def get_id():
     recipient = request.json.get('recipient', None)
+
+    if not recipient:
+        return jsonify({"error": "Invalid Recipient", "code": 10018})
+
 
     con = get_database_connection()
 

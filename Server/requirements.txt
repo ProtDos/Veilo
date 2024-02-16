@@ -3,3 +3,4 @@ pyotp
 bcrypt
 werkzeug
 password_strength
+firebase_admin
