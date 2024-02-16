@@ -21,26 +21,35 @@
 
             PFloatLayout:
                 orientation: "vertical"
+                canvas.before:
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                        source: 'assets/images/startup/bgs/image1x1.png'
+
                 Image:
                     source: "assets/images/startup/online_chat.png"
                     pos_hint: {"center_x": .5, "center_y": .7}
                     size_hint: .8, .8
                 PLabel:
-                    text: "Welcome to Veilo"
+                    text: "Boost Your Chatting"
                     pos_hint: {"center_y": .47}
                     halign: "center"
                     font_name: "BPoppins"
-                    font_size: "14sp"
-                    text_color: rgba(95, 88, 117, 255)
+                    font_size: "20sp"
+                    text_color: rgba(255, 255, 255, 200)
 
                 PLabel:
-                    text: "Your World, Your Rules."
+                    text: "Welcome to Veilo, where cutting-edge technology meets seamless chatting."
                     pos_hint: {"center_x": .5, "center_y": .35}
                     size_hint_x: .92
                     font_name: "MPoppins"
+
+                    text_size: self.width, None
                     halign: "center"
-                    font_size: "14sp"
-                    text_color: rgba(135, 143, 158, 255)
+
+                    font_size: "16sp"
+                    text_color: rgba(255, 255, 255, 255)
 
                 PButton:
                     mode: "custom"
@@ -48,22 +57,27 @@
                     pos_hint: {"center_x": .88, "center_y": .95}
                     font_name: "MPoppins"
                     font_size: "13sp"
-                    text_color: rgba(111, 111, 111, 255)
+                    text_color: rgba(255, 255, 255, 200)
                     on_release:
                         root.end()
 
                 PButton:
                     mode: "custom"
                     text: "Next"
-                    pos_hint: {"center_x": .88, "center_y": .13}
+                    pos_hint: {"center_x": .88, "center_y": .06}
                     font_name: "MPoppins"
                     font_size: "13sp"
-                    text_color: rgba(111, 111, 111, 255)
+                    text_color: rgba(255, 255, 255, 200)
                     on_release:
                         root.next()
 
             PFloatLayout:
                 orientation: "vertical"
+                canvas.before:
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                        source: 'assets/images/startup/bgs/image2x1.png'
                 Image:
                     source: "assets/images/startup/writer.png"
                     pos_hint: {"center_x": .5, "center_y": .7}
@@ -74,35 +88,38 @@
                     pos_hint: {"center_y": .47}
                     halign: "center"
                     font_name: "BPoppins"
-                    font_size: "14sp"
-                    text_color: rgba(95, 88, 117, 255)
+                    font_size: "20sp"
+                    text_color: rgba(255, 255, 255, 200)
 
                 PLabel:
-                    text: "Elevate Your Experience."
+                    text: "Enjoy lightning-fast conversations that put you in control, coupled with state-of-the-art security measures ensuring your peace of mind in every chat."
                     pos_hint: {"center_x": .5, "center_y": .35}
                     size_hint_x: .92
                     font_name: "MPoppins"
+
+                    text_size: self.width, None
                     halign: "center"
-                    font_size: "14sp"
-                    text_color: rgba(135, 143, 158, 255)
+
+                    font_size: "16sp"
+                    text_color: rgba(255, 255, 255, 255)
 
                 PButton:
                     mode: "custom"
                     text: "Next"
-                    pos_hint: {"center_x": .88, "center_y": .13}
+                    pos_hint: {"center_x": .88, "center_y": .06}
                     font_name: "MPoppins"
                     font_size: "13sp"
-                    text_color: rgba(111, 111, 111, 255)
+                    text_color: rgba(255, 255, 255, 200)
                     on_release:
                         root.next()
 
                 PButton:
                     mode: "custom"
                     text: "Previous"
-                    pos_hint: {"center_x": .15, "center_y": .13}
+                    pos_hint: {"center_x": .15, "center_y": .06}
                     font_name: "MPoppins"
                     font_size: "13sp"
-                    text_color: rgba(111, 111, 111, 255)
+                    text_color: rgba(255, 255, 255, 200)
                     on_release:
                         root.before()
 
@@ -111,33 +128,41 @@
 
             PFloatLayout:
                 orientation: "vertical"
+                canvas.before:
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                        source: 'assets/images/startup/bgs/image3x1.png'
                 Image:
                     source: "assets/images/startup/complete.png"
                     pos_hint: {"center_x": .5, "center_y": .7}
-                    size_hint: .8, .8
+                    size_hint: .7, .7
                 PLabel:
-                    text: "Unlock Veilo"
-                    pos_hint: {"center_y": .47}
+                    text: "Start chatting more securely"
+                    pos_hint: {"center_y": .4}
                     halign: "center"
                     font_name: "BPoppins"
-                    font_size: "14sp"
-                    text_color: rgba(95, 88, 117, 255)
+                    font_size: "20sp"
+                    text_color: rgba(255, 255, 255, 200)
 
                 PLabel:
-                    text: "And start messaging securely\nand free"
+                    text: "Take charge of your conversations with Veilo's seamless chat management. "
                     pos_hint: {"center_x": .5, "center_y": .35}
                     size_hint_x: .92
                     font_name: "MPoppins"
+
+                    text_size: self.width, None
                     halign: "center"
-                    font_size: "14sp"
-                    text_color: rgba(135, 143, 158, 255)
+
+                    font_size: "16sp"
+                    text_color: rgba(255, 255, 255, 255)
                 PButton:
                     mode: "custom"
                     text: "Previous"
                     pos_hint: {"center_x": .15, "center_y": .13}
                     font_name: "MPoppins"
                     font_size: "13sp"
-                    text_color: rgba(111, 111, 111, 255)
+                    text_color: rgba(255, 255, 255, 200)
                     on_release:
                         root.before()
                 PButton:
@@ -155,7 +180,7 @@
                         RoundedRectangle:
                             size: self.size
                             pos: self.pos
-                            radius: [15]
+                            radius: [30]
 
                     on_release:
                         root.get_started()
@@ -166,7 +191,7 @@
 
         text: "."
         text_color: rgba(253, 140, 95, 255)
-        pos_hint: {"center_x": .45, "center_y": .22}
+        pos_hint: {"center_x": .45, "center_y": .1}
         font_size: "80sp"
     PLabel:
         id: slide1
@@ -175,7 +200,7 @@
 
         text: "."
         text_color: rgba(233, 237, 240, 255)
-        pos_hint: {"center_x": .5, "center_y": .22}
+        pos_hint: {"center_x": .5, "center_y": .1}
         halign: "center"
         font_size: "80sp"
     PLabel:
@@ -185,7 +210,7 @@
 
         text: "."
         text_color: rgba(233, 237, 240, 255)
-        pos_hint: {"center_x": .55, "center_y": .22}
+        pos_hint: {"center_x": .55, "center_y": .1}
         font_size: "80sp"
 
 

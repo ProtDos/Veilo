@@ -38,6 +38,7 @@
                 PLabel:
                     text: root.about
                     halign: "center"
+                    markup: True
                     font_name: "LexendLight"
                     font_size: sp(16)
                     adaptive_height: True
@@ -53,6 +54,28 @@
                     icon: "account_lock"
                     on_release:
                         root.verify()
+
+                ListItem2:
+                    original: "Set Chat Background"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    original2: f"Change the Background of the Chat"
+                    secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
+
+                    icon: "refresh"
+                    on_release:
+                        root.change_bg()
+
+                ListItem2:
+                    original: "Reset Background"
+                    text: self.original if app.language == 'EN' else app.translate(self.original)
+
+                    original2: f"Reset the Background of the Chat"
+                    secondary_text: self.original2 if app.language == 'EN' else app.translate(self.original2)
+
+                    icon: "refresh"
+                    on_release:
+                        root.reset_bg()
 
                 #ListItem2:
                 #    original: "Encryption"

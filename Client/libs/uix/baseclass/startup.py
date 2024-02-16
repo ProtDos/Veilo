@@ -27,7 +27,7 @@ class Startup(PScreen):
 
         Clock.schedule_once(self.show_form, 5)
 
-    def show_form(self, dt):
+    def show_form(self, _):
         Animation(bg_color=gch("FFFFFF"), d=0.4).start(self)
 
         Animation(
@@ -44,6 +44,15 @@ class Startup(PScreen):
         self.bg_color = gch("FFFFFF")
 
     def current_slide(self, index):
+        if index == 2:
+            Animation(d=0.2, pos_hint={"center_y": 0.17}).start(self.ids.slide0)
+            Animation(d=0.2, pos_hint={"center_y": 0.17}).start(self.ids.slide1)
+            Animation(d=0.2, pos_hint={"center_y": 0.17}).start(self.ids.slide2)
+        else:
+            Animation(d=0.2, pos_hint={"center_y": 0.1}).start(self.ids.slide0)
+            Animation(d=0.2, pos_hint={"center_y": 0.1}).start(self.ids.slide1)
+            Animation(d=0.2, pos_hint={"center_y": 0.1}).start(self.ids.slide2)
+
         for i in range(3):
             if index == i:
                 self.ids[f"slide{index}"].text_color = rgba(253, 140, 95, 255)

@@ -12,33 +12,33 @@
             size: self.size
             pos: self.pos
 
-    PIconButton2:
-        id: btn_1
-        disabled: True
-        opacity: 0 if self.disabled else 1
-
-        icon: "help"
-        mode: "unstyled"
-        pos_hint: {"center_x": .95, "center_y": .97}
-        font_size: dp(20)
-        text_color: get_color_from_hex("#B2B2B2")
-
-        on_release:
-            webbrowser.open("https://veilo.protdos.com/help")
-
-    PIconButton2:
-        id: btn_2
-        disabled: True
-        opacity: 0 if self.disabled else 1
-
-        icon: "import"
-        mode: "unstyled"
-        pos_hint: {"center_x": .85, "center_y": .97}
-        font_size: dp(20)
-        text_color: get_color_from_hex("#B2B2B2")
-
-        on_release:
-            app.stop()
+    # PIconButton2:
+    #     id: btn_1
+    #     disabled: True
+    #     opacity: 0 if self.disabled else 1
+#
+    #     icon: "help"
+    #     mode: "unstyled"
+    #     pos_hint: {"center_x": .95, "center_y": .97}
+    #     font_size: dp(20)
+    #     text_color: get_color_from_hex("#B2B2B2")
+#
+    #     on_release:
+    #         webbrowser.open("https://veilo.protdos.com/help")
+#
+    # PIconButton2:
+    #     id: btn_2
+    #     disabled: True
+    #     opacity: 0 if self.disabled else 1
+#
+    #     icon: "import"
+    #     mode: "unstyled"
+    #     pos_hint: {"center_x": .85, "center_y": .97}
+    #     font_size: dp(20)
+    #     text_color: get_color_from_hex("#B2B2B2")
+#
+    #     on_release:
+    #         app.stop()
 
     PBoxLayout:
         id: form
@@ -125,6 +125,8 @@
             theme_text_color: "Custom"
             pos_hint: {"center_x": .84}
 
+            y: password.y - 2
+
             on_release:
                 root.show_password()
 
@@ -161,10 +163,13 @@
             spacing: dp(10)
 
             PButton:
+
                 original: "Sign Up"
                 text: self.original if app.language == 'EN' else app.translate(self.original)
                 disabled: form.disabled
-                on_release: app.signup(uname.text, password.text)
+                on_release:
+                    # app.signup(uname.text, password.text)
+                    root.signup(uname.text, password.text)
 
             PButton:
                 original: "Sign In"
@@ -204,6 +209,7 @@
         #    text_color: 1, 1, 1, 1
         #    pos_hint: {"center_x": .5}
         #    on_release: root.show_form()
+
 
 <AboutDialogContent2>
     adaptive_height: True

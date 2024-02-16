@@ -76,7 +76,8 @@ class HomeScreen(PScreen):
                         "name": i,
                         "unread_messages": self.data[i]["unread_messages"],
                         "about": decrypt(self.data[i]["about"], ps),
-                        "public": self.data[i]["public"]
+                        "public": self.data[i]["public"],
+                        "display": self.data[i]["display"]
                     }
                     self.chats.append(user_data)
             if len(self.chats) == 0:

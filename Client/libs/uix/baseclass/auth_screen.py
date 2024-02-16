@@ -1,3 +1,4 @@
+import requests
 from kivy.animation import Animation
 from kivy.app import App
 from kivy.clock import Clock
@@ -71,12 +72,9 @@ class AuthScreen(PScreen):
         Animation(d=0.7, pos_hint={"center_y": 0.75}).start(self.ids.intro)
 
         self.ids.form.disabled = False
-        self.ids.btn_1.disabled = False
-        self.ids.btn_2.disabled = False
 
         a = config.is_startup()
 
-        self.ids.btn.y = self.ids.password.y - 2
 
         if a == "True" or a is True:
             PDialog(content=AboutDialogContent2()).open()
@@ -86,9 +84,22 @@ class AuthScreen(PScreen):
         toast("Signed In successfully!")
 
 
-    def sign_up(self):
-        self.ids.uname.shake()
-        toast("Account created successfully! Please Sign In to jump in!")
+    def signup(self, username, password):
+        if not username:
+            return self.ids.uname.shake()
+        if not password:
+            return self.ids.password.shake()
+
+        r = requests.post(App.get_running_app().api_url + "/user/exists", json={"username": username})
+        if r.json()["exists"]:
+            toast("Username taken.")
+            self.ids.uname.shake()
+            return
+
+        App.get_running_app().root.set_current("display_name")
+        self.manager.get_screen("display_name").username = username
+        self.manager.get_screen("display_name").password = password
+
 
     def show_password(self):
         if self.ids.password.password:

@@ -1,14 +1,16 @@
+import random
 from kivy.lang import Builder
 from kivy.metrics import dp
 from kivy.properties import ColorProperty, ListProperty, StringProperty
 from kivy.uix.boxlayout import BoxLayout
-
+from kivy.utils import get_color_from_hex
 from components.button import PIconButton, PIconButton2
 from core.theming import ThemableBehavior
-from kivy.utils import get_color_from_hex
+
 
 Builder.load_string(
     """
+#: import get_color_from_hex kivy.utils.get_color_from_hex
 <PToolbar>
     size_hint_y: None
     height: dp(56)
@@ -44,7 +46,15 @@ Builder.load_string(
 <PToolbar_Chat>
     size_hint_y: None
     height: dp(56)
-    padding: [dp(15), dp(25), dp(15), dp(10)]
+    padding: [dp(15), dp(25), dp(15), dp(20)]
+    
+    canvas.before:
+        Color:
+            rgba: get_color_from_hex("#ffffff")
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [0, 0, 20, 20]
 
     PBoxLayout:
         id: left_actions
@@ -52,6 +62,22 @@ Builder.load_string(
         size_hint_x: None
         padding: [0, (self.height - dp(48)) / 2]
     
+    PBoxLayout:
+        padding: [dp(10),]
+       
+        adaptive_size: True
+        pos_hint: {"center_y": .5}
+        
+        FitImage:
+            source: root.image
+            size_hint: None, None
+            size: dp(40), dp(40)
+            radius: [dp(15),]    
+            
+            on_touch_down:
+                if self.collide_point(*args[1].pos): \
+                root.dispatch('on_title_press')
+          
 
     PBoxLayout:
         padding: [dp(10), 0]
@@ -89,11 +115,12 @@ class PToolbar(BoxLayout, ThemableBehavior):
     def on_left_action_items(self, _, value):
         self.update_action_bar(self.ids["left_actions"], value)
 
-    def on_right_action_items(self, instance, value):
+    def on_right_action_items(self, _, value):
         print(self.ids["right_actions"], value)
         self.update_action_bar2(self.ids["right_actions"], value)
 
-    def update_action_bar(self, action_bar, action_bar_items):
+    @staticmethod
+    def update_action_bar(action_bar, action_bar_items):
         action_bar.clear_widgets()
         new_width = 0
         for item in action_bar_items:
@@ -109,7 +136,8 @@ class PToolbar(BoxLayout, ThemableBehavior):
             )
         action_bar.width = new_width
 
-    def update_action_bar2(self, action_bar, action_bar_items):
+    @staticmethod
+    def update_action_bar2(action_bar, action_bar_items):
         action_bar.clear_widgets()
         new_width = 0
         for item in action_bar_items:
@@ -136,6 +164,8 @@ class PToolbar_Chat(BoxLayout, ThemableBehavior):
     left_action_items = ListProperty()
     right_action_items = ListProperty()
 
+    image = StringProperty()
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.register_event_type("on_title_press")
@@ -146,7 +176,8 @@ class PToolbar_Chat(BoxLayout, ThemableBehavior):
     def on_right_action_items(self, _, value):
         self.update_action_bar2(self.ids["right_actions"], value)
 
-    def update_action_bar(self, action_bar, action_bar_items):
+    @staticmethod
+    def update_action_bar(action_bar, action_bar_items):
         action_bar.clear_widgets()
         new_width = 0
         for item in action_bar_items:
@@ -163,7 +194,8 @@ class PToolbar_Chat(BoxLayout, ThemableBehavior):
             )
         action_bar.width = new_width
 
-    def update_action_bar2(self, action_bar, action_bar_items):
+    @staticmethod
+    def update_action_bar2(action_bar, action_bar_items):
         action_bar.clear_widgets()
         new_width = 0
         for item in action_bar_items:
@@ -181,3 +213,11 @@ class PToolbar_Chat(BoxLayout, ThemableBehavior):
 
     def on_title_press(self):
         pass
+
+    @staticmethod
+    def get_creamy_color():
+        red = random.randint(200, 255)
+        green = random.randint(180, 220)
+        blue = random.randint(150, 200)
+
+        return "#{:02X}{:02X}{:02X}".format(red, green, blue)

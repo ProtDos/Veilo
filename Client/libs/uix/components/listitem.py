@@ -242,14 +242,14 @@ Builder.load_string(
         pos_hint: {"center_y": .5}
 
         PLabel:
-            text: root.text
+            text: root.display
             adaptive_height: True
             shorten: True
             shorten_from: 'right'
             text_size: self.width, None
 
         PLabel:
-            text: root.secondary_text
+            text: "@" + root.text
             font_name: 'LexendLight'
             text_color: 0.5, 0.5, 0.5, 0.5
             adaptive_height: True
@@ -475,6 +475,8 @@ class ListItemSwitch(ButtonBehavior, ThemableBehavior, PBoxLayout):
 
 class ChatListItem(ListItem):
     image = StringProperty()
+
+    display = StringProperty()
 
     name = StringProperty()
 

@@ -2,13 +2,12 @@ from __future__ import annotations
 from components.screen import PScreen
 from components.dialog import PDialog
 from components.boxlayout import PBoxLayout
-from kivy.clock import Clock
-from kivy.properties import AliasProperty, ColorProperty, ListProperty, BoundedNumericProperty, NumericProperty, \
-    VariableListProperty, StringProperty
+from kivy.properties import ColorProperty, ListProperty
 from kivy.uix.behaviors import ButtonBehavior
+from kivy.uix.floatlayout import FloatLayout
 from kivy.utils import get_color_from_hex
 from kivymd.uix.behaviors import RectangularElevationBehavior
-from kivymd.uix.floatlayout import MDFloatLayout
+# from kivymd.uix.floatlayout import MDFloatLayout
 from kivy.uix.colorpicker import ColorWheel
 from utils.configparser import config
 from components.chat_bubble import ChatBubble2
@@ -87,11 +86,11 @@ class Theming(PScreen):
         config.set_colors(main, secondary)
 
 
-class MainColors(ButtonBehavior, MDFloatLayout, RectangularElevationBehavior):
+class MainColors(ButtonBehavior, FloatLayout, RectangularElevationBehavior):
     pass
 
 
-class SecondaryColors(ButtonBehavior, MDFloatLayout, RectangularElevationBehavior):
+class SecondaryColors(ButtonBehavior, FloatLayout, RectangularElevationBehavior):
     pass
 
 

@@ -1,0 +1,106 @@
+#: import get_color_from_hex kivy.utils.get_color_from_hex
+#: import webbrowser webbrowser
+
+<DisplayName>
+    uname: uname
+
+    canvas.before:
+        Color:
+            rgba: self.bg_color
+        Rectangle:
+            size: self.size
+            pos: self.pos
+
+    PBoxLayout:
+        id: form
+        orientation: "vertical"
+        adaptive_height: True
+        spacing: dp(15)
+        pos_hint: {"center_x": .5, "center_y": .4}
+
+        PLabel:
+            text: "Nearly done!"
+            font_size: dp(20)
+            font_name: "LexendMedium"
+            adaptive_height: True
+
+        PTextField:
+            id: uname
+            text: ""
+            hint_text: "Display Name"
+            disabled: form.disabled
+            size_hint: .7, None
+            height: dp(40)
+            pos_hint: {"center_x": .5}
+
+            translate_x: 0
+            translate_y: 0
+            scale_x: 1
+            scale_y: 1
+            rotate: 0
+
+            canvas.before:
+                PushMatrix
+                Translate:
+                    x: self.translate_x or 0
+                    y: self.translate_y or 0
+
+                Rotate:
+                    origin: self.center
+                    angle: self.rotate or 0
+
+                Scale:
+                    origin: self.center
+                    x: self.scale_x or 1
+                    y: self.scale_y or 1
+            canvas.after:
+                PopMatrix
+
+
+        Widget:
+            size_hint_y: None
+            height: dp(25)
+
+        PButton:
+            id: get_btn
+            original: "Sign Up"
+            text: self.original if app.language == 'EN' else app.translate(self.original)
+
+            pos_hint: {"center_x": .5, "center_y": .2}
+
+            on_release:
+                root.get_started()
+                # app.signup(root.username, root.password, uname.text)
+
+    PButton:
+        mode: "custom"
+        text: "Back"
+        pos_hint: {"center_x": .15, "center_y": .1}
+        font_name: "MPoppins"
+        font_size: "13sp"
+        text_color: rgba(50, 50, 50, 200)
+        on_release:
+            app.root.set_current("auth")
+
+    PBoxLayout:
+        id: intro
+        orientation: "vertical"
+        adaptive_height: True
+        pos_hint: {"center_x": .5, "center_y": .8}
+
+        PLabel:
+            id: title
+            text: "veilo[size=150sp].[/size]"
+            font_size: sp(100)
+            markup: True
+            font_name: "LexendMedium"
+            scale: 1
+            adaptive_height: True
+            canvas.before:
+                PushMatrix
+                Scale:
+                    origin: self.center
+                    x: self.scale
+                    y: self.scale
+            canvas.after:
+                PopMatrix

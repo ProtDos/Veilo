@@ -1,14 +1,13 @@
 #: import webbrowser webbrowser
 #: import get_color_from_hex kivy.utils.get_color_from_hex
 
-# TODO:
-# Add Profile Image
-# Center the text
-# Smaller Top-Bar
-
-# More modern message sending
-
 <ChatScreen>
+    # Image:
+    #     source: r"C:\Users\Admin\Downloads\photo_2024-02-09_21-17-26.jpg"
+    #     allow_stretch: True
+    #     keep_ratio: False
+    #     size_hint: (None, None)
+    #     size: root.size
 
     PBoxLayout:
         orientation: "vertical"
@@ -20,6 +19,7 @@
             left_action_items: [["arrow-left", lambda x: app.close_chat()]]
             # right_action_items: [["phone_lock", lambda x: app.nothing()]]
             on_title_press: root.show_user_info()
+
 
         ScrollView:
             id: chat_rv
@@ -50,12 +50,12 @@
                     RoundedRectangle:
                         size: self.size
                         pos: self.pos
-                        radius: [dp(25),]
-                    Color:
-                        rgba: get_color_from_hex("#E5E5E3")
-                    Line:
-                        width: 1
-                        rounded_rectangle: self.x, self.y, self.width, self.height, dp(25)
+                        radius: [dp(20),]
+                    # Color:
+                    #     rgba: get_color_from_hex("#E5E5E3")
+                    # Line:
+                    #     width: 1
+                    #     rounded_rectangle: self.x, self.y, self.width, self.height, dp(25)
 
                 PIconButton2:
                     mode: "unstyled"
@@ -78,7 +78,7 @@
 
                     size_hint: 1, .7
                     pos_hint: {"center_x": -.1, "center_y": .5}
-                    font_size: "12sp"
+                    font_size: "14sp"
                     height: self.minimum_height
                     multiline: False
                     valign: "center"
