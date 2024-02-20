@@ -1177,6 +1177,7 @@ class PurpApp(App):
         while not self._stop_event.is_set():
             try:
                 res = self.session.post(self.api_url + "/receive")
+                print(res.json())
                 all_mailboxed = read_mailboxes()
                 responses = []
                 # for mailbox in all_mailboxed:
@@ -1184,6 +1185,7 @@ class PurpApp(App):
                 #     responses += r["messages"]
 
                 responses += res.json()["messages"]
+                print(responses)
 
                 if res.json()["code"] == 11110:
                     for message in responses:
@@ -1195,7 +1197,10 @@ class PurpApp(App):
                             sender = rsa.decrypt(sealed_sender, self.private_key)
                             dec_message = rsa.decrypt(enc_message, self.private_key)
 
-                            sender_username = sender.split(b"---")[0]
+                            sender_username = sender.split(b"---")[0].decode()
+                            print(sender_username)
+                            print(rec)
+                            print(self.current_chat_with)
                             if sender_username != rec:
                                 self.buffer_messages.append(
                                     {"sender": sender, "dec_message": dec_message, "full_sign": full_sign})
