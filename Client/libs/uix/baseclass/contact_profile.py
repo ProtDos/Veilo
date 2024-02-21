@@ -36,11 +36,6 @@ class ContactProfile(PScreen):
 
     def verify(self):
         return toast("Not implemented yet.")
-        # self.manager.set_current("verify_identity")
-        # verify_identity = self.manager.get_screen("verify_identity")
-        # verify_identity.name_of_contact = str(self.title)
-
-        # PDialog(content=IdentityCheck(image=self.image)).open()
 
     def change_p2p(self):
         return toast("Not implemented yet")

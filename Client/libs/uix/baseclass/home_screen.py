@@ -17,7 +17,6 @@ from core.encryption import encrypt, decrypt
 
 
 class HomeScreen(PScreen):
-
     chats = ListProperty()
     original = ListProperty()
 
@@ -40,26 +39,30 @@ class HomeScreen(PScreen):
     def on_text(self, _, value):
         if value:
             for item in self.original:
-                if value.lower() not in item["text"].lower():
+                val = value.lower()
+                if val in item["text"].lower() or val in item["display"].lower():
+                    if item not in self.chats:
+                        self.chats.append(item)
+                else:
                     try:
                         self.chats.remove(item)
                     except:
                         pass
-                else:
-                    if item not in self.chats:
-                        self.chats.append(item)
+
         else:
             self.chats = self.original
 
     def show_original(self, *_):
         self.chats = [i for i in self.original]
-        with open(os.path.join(os.path.join(os.path.dirname(os.path.abspath(App.get_running_app().my_file_path)), 'assets/users.json')), 'r') as f:
+        with open(os.path.join(os.path.join(os.path.dirname(os.path.abspath(App.get_running_app().my_file_path)),
+                                            'assets/users.json')), 'r') as f:
             self.data = json.load(f)
 
     def load_all(self, *_):
         ps = App.get_running_app().unhashed_password
 
-        with open(os.path.join(os.path.join(os.path.dirname(os.path.abspath(App.get_running_app().my_file_path)), 'assets/users.json')), 'r') as f:
+        with open(os.path.join(os.path.join(os.path.dirname(os.path.abspath(App.get_running_app().my_file_path)),
+                                            'assets/users.json')), 'r') as f:
             self.data = json.load(f)
 
         self.chats = []
@@ -90,7 +93,6 @@ class HomeScreen(PScreen):
         for item in self.chats:
             self.original.append(item)
 
-
     def goto_chat_screen(self, user3):
         try:
             print("GOING TO USER:", user3)
@@ -113,8 +115,8 @@ class HomeScreen(PScreen):
             for item in self.data:
                 if decrypt(item, ps) == user3:
                     user = {
-                         "name": user3,
-                         **self.data[item],
+                        "name": user3,
+                        **self.data[item],
                     }
                     break
 
@@ -134,7 +136,6 @@ class HomeScreen(PScreen):
             print(e)
             print(traceback.format_exc())
 
-
     def show_menu(self, *_):
         PDialog(content=MenuDialogContent()).open()
 
@@ -143,7 +144,8 @@ class HomeScreen(PScreen):
         self.popup.open()
 
     def user_settings(self, name):
-        with open(os.path.join(os.path.join(os.path.dirname(os.path.abspath(App.get_running_app().my_file_path)), 'assets/users.json'))) as f:
+        with open(os.path.join(os.path.join(os.path.dirname(os.path.abspath(App.get_running_app().my_file_path)),
+                                            'assets/users.json'))) as f:
             data = json.load(f)
         ps = App.get_running_app().unhashed_password
         for item in data:
