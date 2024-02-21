@@ -162,7 +162,7 @@ def delete_all():
 
 
 def read_mailboxes():
-    with open('mailboxes.json', 'r') as file:
+    with open(os.path.join(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'mailboxes.json')), 'r') as file:
         data = json.load(file)
     return data.get('mailboxes', [])
 
@@ -170,7 +170,7 @@ def read_mailboxes():
 def add_mailbox(mailbox):
     mailboxes = read_mailboxes()
     mailboxes.append(mailbox)
-    with open('mailboxes.json', 'w') as file:
+    with open(os.path.join(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'mailboxes.json')), 'w') as file:
         json.dump({"mailboxes": mailboxes}, file, indent=4)
 
 
@@ -416,10 +416,10 @@ class PurpApp(App):
 
                                 file_name = f'user_avatars/{idd}.png'
 
-                                with open(file_name, "wb") as f:
+                                with open(os.path.join(os.path.join(os.path.dirname(os.path.abspath(__file__)), f'user_avatars/{idd}.png')), "wb") as f:
                                     f.write(r.content)
 
-                                with open('assets/users.json', 'r') as file:
+                                with open(os.path.join(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets/users.json')), 'r') as file:
                                     data = json.load(file)
 
                                 t = str(f"{datetime.now().strftime('%H:%M')}")
@@ -438,7 +438,7 @@ class PurpApp(App):
                                     "display": display_name
                                 }
 
-                                with open('assets/users.json', 'w') as file:
+                                with open(os.path.join(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets/users.json')), 'w') as file:
                                     json.dump(data, file, indent=4)
 
                                 user_data = {
@@ -449,6 +449,7 @@ class PurpApp(App):
                                     "unread_messages": True,
                                     "user_id": idd,
                                     "public": str(public),
+                                    "about": about,
                                     "display": display_name
                                 }
 
@@ -570,10 +571,10 @@ class PurpApp(App):
 
                                 file_name = f'user_avatars/{idd}.png'
 
-                                with open(file_name, "wb") as f:
+                                with open(os.path.join(os.path.join(os.path.dirname(os.path.abspath(__file__)), f'user_avatars/{idd}.png')), "wb") as f:
                                     f.write(r.content)
 
-                                with open('assets/users.json', 'r') as file:
+                                with open(os.path.join(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets/users.json')), 'r') as file:
                                     data = json.load(file)
 
                                 t = str(f"{datetime.now().strftime('%H:%M')}")
@@ -592,7 +593,7 @@ class PurpApp(App):
                                     "display": display_name
                                 }
 
-                                with open('assets/users.json', 'w') as file:
+                                with open(os.path.join(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets/users.json')), 'w') as file:
                                     json.dump(data, file, indent=4)
 
                                 user_data = {
@@ -603,6 +604,7 @@ class PurpApp(App):
                                     "unread_messages": True,
                                     "user_id": idd,
                                     "public": str(public),
+                                    "about": about,
                                     "display": display_name
                                 }
 
@@ -720,10 +722,10 @@ class PurpApp(App):
 
         file_name = f'user_avatars/{idd}.png'
 
-        with open(file_name, "wb") as f:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), f"user_avatars/{idd}.png"), 'wb') as f:
             f.write(avatar.content)
 
-        with open('assets/users.json', 'r') as file:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), f"assets/users.json"), 'r') as file:
             data = json.load(file)
 
         t = str(f"{datetime.now().strftime('%H:%M')}")
@@ -742,7 +744,7 @@ class PurpApp(App):
             "display": display_name
         }
 
-        with open('assets/users.json', 'w') as file:
+        with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), f"assets/users.json"), 'w') as file:
             json.dump(data, file, indent=4)
 
         user_data = {
@@ -1118,7 +1120,8 @@ class PurpApp(App):
         self.pause_thread2()
 
         for item in self.buffer_messages:
-            if item["sender"].split("---")[0] == rec:
+            print(item)
+            if item["sender"].decode().split("---")[0] == rec:
                 try:
                     rsa.verify(item["dec_message"], item["full_sign"], self.public_key_of_partner)
                 except Exception as e:
@@ -1244,8 +1247,11 @@ class PurpApp(App):
 
     @mainthread
     def close_chat3(self):
-        self.root.get_screen("chat").ids.box.clear_widgets()
-        self.root.get_screen("chat").chat_logs = []
+        try:
+            self.root.get_screen("chat").ids.box.clear_widgets()
+            self.root.get_screen("chat").chat_logs = []
+        except:
+            pass
 
     def nothing(self):
         pass
@@ -1311,8 +1317,7 @@ class PurpApp(App):
     @staticmethod
     def translate(text):
         c = config.get_language()
-        with open(os.path.join(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets/translations.json')),
-                  "r") as file:
+        with open(os.path.join(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'assets/translations.json')), "r") as file:
             j = json.load(file)
         try:
             t = j["translations"][str(c)][text]
@@ -1353,7 +1358,7 @@ class PurpApp(App):
     def set_token_2fa(self, rr):
         self.root.get_screen("enable_2fa").token = rr
 
-    def verify_2fa(self, code):
+    def verify_2fa(self, code):  # TODO: Fix this (load pk from file)
         if self.has_2fa:
             return
 
@@ -1470,7 +1475,9 @@ class PurpApp(App):
                          file_size=self.get_image_size(selection)))
 
     def on_stop(self):
-        pass
+        self._stop_event.set()
+        self.is_running = False
+        return False
 
     def on_pause(self):
         return True
@@ -1561,6 +1568,7 @@ class PurpApp(App):
         self.root.get_screen("chat").open_preview(file_path, size=(new_width, new_height))
 
     def download_file(self, path):
+        path = os.path.join(os.path.join(os.path.dirname(os.path.abspath(__file__)), path))
         try:
             filename = os.path.basename(path)
             if platform == "android":
@@ -1720,7 +1728,7 @@ class PurpApp(App):
                 r = requests.post(self.api_url + "/user/avatar", json={"id": idd})
                 file_name = f'user_avatars/{idd}.png'
                 item["image"] = f'user_avatars/{idd}.png'
-                with open(file_name, "wb") as f:
+                with open(os.path.join(os.path.join(os.path.dirname(os.path.abspath(__file__)), file_name)), "wb") as f:
                     f.write(r.content)
             except:
                 pass
