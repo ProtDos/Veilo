@@ -1087,7 +1087,7 @@ class VeiloApp(App):
 
         chat_screen.user = abs_usr
         chat_screen.image = abs_usr["image"]
-        chat_screen.chat_logs = []
+        chat_screen.chat_logs = []  # TODO: Fix this? Not working properly
         chat_screen.title = abs_usr["text"]
 
         threading.Thread(target=self.do_thing_thread, args=(abs_usr["text"], public,)).start()
