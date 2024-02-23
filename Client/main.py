@@ -56,15 +56,19 @@ else:
     from pushyy import Pushyy
     from pushyy import RemoteMessage
 
-    WebView = autoclass('android.webkit.WebView')
-    WebViewClient = autoclass('android.webkit.WebViewClient')
-    LayoutParams = autoclass('android.view.ViewGroup$LayoutParams')
-    LinearLayout = autoclass('android.widget.LinearLayout')
-    activity = autoclass('org.kivy.android.PythonActivity').mActivity
-    KeyEvent = autoclass('android.view.KeyEvent')
-    EditText = autoclass('android.widget.EditText')
-    InputType = autoclass('android.text.InputType')
-    ViewGroup = autoclass('android.view.ViewGroup')
+    try:
+
+        WebView = autoclass('android.webkit.WebView')
+        WebViewClient = autoclass('android.webkit.WebViewClient')
+        LayoutParams = autoclass('android.view.ViewGroup$LayoutParams')
+        LinearLayout = autoclass('android.widget.LinearLayout')
+        activity = autoclass('org.kivy.android.PythonActivity').mActivity
+        KeyEvent = autoclass('android.view.KeyEvent')
+        EditText = autoclass('android.widget.EditText')
+        InputType = autoclass('android.text.InputType')
+        ViewGroup = autoclass('android.view.ViewGroup')
+    except Exception as e:
+        print(f"[ERROR]: {traceback.format_exc()}")
 
 
 def is_image_file(file_path):
@@ -201,7 +205,7 @@ if platform == "android":
         App.get_running_app().device_token = data
 
 
-class PurpApp(App):
+class VeiloApp(App):
     recent_notification_data = DictProperty(rebind=True)
 
     theme_cls = ThemeManager()
@@ -280,30 +284,16 @@ class PurpApp(App):
         return Pushyy().get_device_token(my_token_callback)
 
     def build(self):
-        # try:
-        #     if platform == 'android':
-        #         # Get the current Android activity
-        #         PythonActivity = autoclass('org.kivy.android.PythonActivity')
-        #         context = cast('android.content.Context', PythonActivity.mActivity)
-#
-        #         java_class_name = 'android.widget.EditText'
-#
-        #         EditText = autoclass(java_class_name)
-#
-        #         my_edit_text = EditText(context)
-#
-        #         my_edit_text.setImeOptions(16777216)
-        # except:
-        #     print("Private keyboard didn't work.")
-
-        self.icon = r"assets/images/logo.png"
-        self.root = Root()
-        c = config.is_startup()
-        # Pushyy().get_device_token(my_token_callback)
-        if c != "False":
-            self.root.set_current("startup")
-        else:
-            self.root.set_current("auth")  # auth
+        try:
+            self.icon = r"assets/images/logo.png"
+            self.root = Root()
+            c = config.is_startup()
+            if c != "False":
+                self.root.set_current("startup")
+            else:
+                self.root.set_current("auth")
+        except Exception as e:
+            print(f"[ERROR]: {traceback.format_exc()}")
 
     """
         These functions are for saving / loading our private and public keys to the android keystorage
@@ -352,6 +342,7 @@ class PurpApp(App):
 
                             self.buffer_messages.append({"sender": sender, "dec_message": dec_message, "full_sign": full_sign})
 
+                            # Getting this error: (Fix needed)
                             # Unable to decode stream: java.io.FileNotFoundException: /data/data/org.test.myapp/files/app/assets\images\logo.ico: open failed: ENOENT (No such file or directory)
 
                             try:
@@ -629,7 +620,6 @@ class PurpApp(App):
                 print(traceback.format_exc())
 
     def pause_thread2(self):
-
         self.pause_event.clear()
 
     def resume_thread2(self):
@@ -645,38 +635,44 @@ class PurpApp(App):
     if platform == "android":
         @run_on_ui_thread
         def on_start(self):
-            statusbar.set_color(self.theme_cls.primary_color)
-
-            Pushyy().foreground_message_handler(my_foreground_callback)
-            Pushyy().notification_click_handler(my_notification_click_callback)
-            Pushyy().token_change_listener(new_token_callback)
-
-            self.get_token()
-
-            print(self.device_token)
-
-            # TODO: For Release: ENABLE THIS
-            # LayoutParams = autoclass('android.view.WindowManager$LayoutParams')
-            # window = mA.getWindow()
-            # params = window.getAttributes()
-            # params.setDecorFitsSystemWindows = False
-            # params.layoutInDisplayCutoutMode = LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
-            # window.setAttributes(params)
-            # window.setFlags(LayoutParams.FLAG_SECURE, LayoutParams.FLAG_SECURE)
-            # window.addFlags(LayoutParams.FLAG_SECURE)
-
-            # Not quite sure if this works
-            EditorInfo = autoclass("android.view.inputmethod.EditorInfo")
-            editText = EditText(activity)
-            editorInfo = EditorInfo()
-            editorInfo.imeOptions |= EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING
-            editText.setImeOptions(editorInfo.imeOptions)
+            try:
+                statusbar.set_color(self.theme_cls.primary_color)
+    
+                Pushyy().foreground_message_handler(my_foreground_callback)
+                Pushyy().notification_click_handler(my_notification_click_callback)
+                Pushyy().token_change_listener(new_token_callback)
+    
+                self.get_token()
+    
+                print(self.device_token)
+    
+                # TODO: For Release: ENABLE THIS
+                # LayoutParams = autoclass('android.view.WindowManager$LayoutParams')
+                # window = mA.getWindow()
+                # params = window.getAttributes()
+                # params.setDecorFitsSystemWindows = False
+                # params.layoutInDisplayCutoutMode = LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
+                # window.setAttributes(params)
+                # window.setFlags(LayoutParams.FLAG_SECURE, LayoutParams.FLAG_SECURE)
+                # window.addFlags(LayoutParams.FLAG_SECURE)
+    
+                # Not quite sure if this works
+                EditorInfo = autoclass("android.view.inputmethod.EditorInfo")
+                editText = EditText(activity)
+                editorInfo = EditorInfo()
+                editorInfo.imeOptions |= EditorInfo.IME_FLAG_NO_PERSONALIZED_LEARNING
+                editText.setImeOptions(editorInfo.imeOptions)
+            except Exception as e:
+                print(f"[ERROR]: {traceback.format_exc()}")
     else:
         def on_start(self):
             statusbar.set_color(self.theme_cls.primary_color)
 
     def destroy_pop(self, _):
-        self.root.get_screen("home").popup.dismiss(force=True)
+        try:
+            self.root.get_screen("home").popup.dismiss(force=True)
+        except Exception as e:
+            print(f"[ERROR]: {traceback.format_exc()}")
 
     @mainthread
     def toast(self, message):
@@ -1813,4 +1809,4 @@ class PurpApp(App):
 
 
 if __name__ == "__main__":
-    PurpApp().run()
+    VeiloApp().run()
