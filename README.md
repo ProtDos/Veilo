@@ -19,7 +19,7 @@
     <a href="https://github.com/ProtDos/Veilo"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://www.figma.com/file/riznxVrGXa1qv7zJ6zmXrT/Untitled?type=design&node-id=0:1&mode=design&t=LFuWTY9TnOLtCaNf-1">View Demo</a>
+    <a href="https://veilo.protdos.com">View Demo</a>
     ·
     <a href="https://github.com/ProtDos/Veilo/issues">Report Bug</a>
     ·
@@ -60,23 +60,28 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
+> The uploaded source-code may not be complete, as the app is still in beta-development.
+
 Revolutionize your chats with our quantum-secure app, ensuring the highest levels of privacy and security. The aim of this project is to create an app that is absolutely secure, but also very easy to use. Quantum-safe algorithms will help with this and (virtually) no metadata will be sent.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Warning
-> **Warning**
 > This project is not finished and should definetly not be used at this points. Some mentioned features are not implemented yet and the version may be unstable. This App currently only has RSA as encryption, no post quantum algorithms are implemented yet.
 
 ---
 
 ## Play Store
-Link: https://play.google.com/store/apps/details?id=org.privchat.veilo <br />
-Note: This project isn't listed on the App Store yet*
 
-<a href='https://play.google.com/store/apps/details?id=org.privchat.veilo'><img alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png' height='80px'/></a>
 
-*this is because of the high costs.
+
+<div align=center>
+  <a href="https://play.google.com/store/apps/details?id=org.privchat.veilo">
+    <img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" height="90px"/>
+  </a>
+</div>
+
+*Note: This project isn't listed on the App Store yet*
 
 ### Built With
 
