@@ -59,7 +59,6 @@
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-
 > The uploaded source-code may not be complete, as the app is still in beta-development.
 
 Revolutionize your chats with our quantum-secure app, ensuring the highest levels of privacy and security. The aim of this project is to create an app that is absolutely secure, but also very easy to use. Quantum-safe algorithms will help with this and (virtually) no metadata will be sent.
@@ -67,6 +66,7 @@ Revolutionize your chats with our quantum-secure app, ensuring the highest level
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Warning
+> [!Warning]
 > This project is not finished and should definetly not be used at this points. Some mentioned features are not implemented yet and the version may be unstable. This App currently only has RSA as encryption, no post quantum algorithms are implemented yet.
 
 ---
@@ -101,7 +101,7 @@ Here is a list of any major frameworks/libraries used to bootstrap your project
 <div style="text-align: center;" align="center">
   <img src="https://github.com/ProtDos/Veilo/assets/69071809/92792b31-55fc-48ea-8a62-6a397fcc237a" style="display: inline-block; margin-left: auto; margin-right: auto;">
   <img src="https://github.com/ProtDos/Veilo/assets/69071809/32af12b2-e823-4887-8c8e-b920d10f9a9e"style="display: inline-block; margin-left: auto; margin-right: auto;">
-  <p>Click <a href="https://www.figma.com/file/riznxVrGXa1qv7zJ6zmXrT/Untitled?type=design&node-id=0:1&mode=design&t=LFuWTY9TnOLtCaNf-1">here</a> for a gallery view of every screen!</p>
+  <!-- <p>Click <a href="https://www.figma.com/file/riznxVrGXa1qv7zJ6zmXrT/Untitled?type=design&node-id=0:1&mode=design&t=LFuWTY9TnOLtCaNf-1">here</a> for a gallery view of every screen!</p> -->
 </div>
 
 
@@ -142,8 +142,8 @@ cd Veilo/Client
 buildozer android debug
 ```
 The result will be within the bin/ directory. 
-> Note:
-> This is only for android.
+> [!Warning]
+> Please note: This is only for android. You can export it for IOS too using `buildozer ios debug` and use it with Flightest, but no support currently provided
 
 ### Prerequisites
 
@@ -190,6 +190,8 @@ If you want to learn more about support for different versions, visit [SECURITY.
 - **Sealed Sender** : ⚪
 - **Sealed Receiver** : ⚪
 - **Peer to Peer** : ⚪
+- **Perfect Forward Secrecy**: ⚪
+- - **Certificate Authority**: ⚪
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -198,6 +200,7 @@ If you want to learn more about support for different versions, visit [SECURITY.
 
 <!-- ROADMAP -->
 ## Roadmap / TODO
+*not up-to-date*
 
 ### Main
 - [ ] Post Quantum
